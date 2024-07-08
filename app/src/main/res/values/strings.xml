@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">WorkTimeTracker</string>
+
+<!--    Auth Screen-->
+    <string name="auth_welcome">Welcome to WorkTimeTracker</string>
+    <string name="auth_des">Please login to your account or create new account to continue</string>
+
+<!--    Login SignUp Screen-->
+    <string name="login">Login</string>
+    <string name="create_account">Create Account</string>
+    <string name="username">Username</string>
+    <string name="username_hint">Enter your username</string>
+    <string name="password">Password</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="email">Email</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="login_google">Login with google</string>
+
+<!--    Home Screen-->
+    <string name="search">Search</string>
+</resources>
