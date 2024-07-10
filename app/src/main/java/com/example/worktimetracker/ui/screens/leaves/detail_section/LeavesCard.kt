@@ -23,9 +23,14 @@ import com.example.worktimetracker.ui.util.LeavesDetail
 import com.example.worktimetracker.ui.util.lLeavesDetail
 
 
+/* for upcoming and past leaves card
+* */
 //@Preview(showBackground = true)
 @Composable
-fun LeavesCard(modifier: Modifier = Modifier, leavesDetail: LeavesDetail = lLeavesDetail[0]) {
+fun LeavesCard(
+    modifier: Modifier = Modifier,
+    leavesDetail: LeavesDetail = lLeavesDetail[0]
+) {
     val textColor =
         if (leavesDetail.isApproved) colorResource(id = R.color.blue) else colorResource(id = R.color.red)
     Column(
@@ -71,11 +76,11 @@ fun LeavesCard(modifier: Modifier = Modifier, leavesDetail: LeavesDetail = lLeav
             ) {
                 Text(
                     text = "Apply Days",
-                    style = Typography.displayMedium
+                    style = Typography.displaySmall
                 )
                 Text(
                     text = leavesDetail.applyDays.toString().plus(" days"),
-                    style = Typography.labelLarge
+                    style = Typography.displayMedium
                 )
             }
             Column (
@@ -83,11 +88,11 @@ fun LeavesCard(modifier: Modifier = Modifier, leavesDetail: LeavesDetail = lLeav
             ) {
                 Text(
                     text = "Leave Balance",
-                    style = Typography.displayMedium
+                    style = Typography.displaySmall
                 )
                 Text(
                     text = leavesDetail.leaveBalance.toString(),
-                    style = Typography.labelLarge
+                    style = Typography.displayMedium
 
                 )
             }
@@ -96,11 +101,11 @@ fun LeavesCard(modifier: Modifier = Modifier, leavesDetail: LeavesDetail = lLeav
             ) {
                 Text(
                     text = "Approved By",
-                    style = Typography.displayMedium
+                    style = Typography.displaySmall
                 )
                 Text(
                     text = leavesDetail.approvedBy.username,
-                    style = Typography.labelLarge
+                    style = Typography.displayMedium
                 )
             }
 

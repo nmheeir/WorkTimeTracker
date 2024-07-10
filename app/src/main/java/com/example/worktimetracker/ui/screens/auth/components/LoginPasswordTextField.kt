@@ -25,13 +25,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 
 @Composable
-fun AuthPasswordTextField(
+fun LoginPasswordTextField(
     label: String,
-    text: String,
+    state: LoginUiState,
     hint: String,
-    onChangeValue: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
 ) {
@@ -44,9 +45,9 @@ fun AuthPasswordTextField(
             fontSize = 16.sp,
         )
         OutlinedTextField(
-            value = text,
-            onValueChange = {
-                onChangeValue(it)
+            value = state.password,
+            onValueChange = {newPassword ->
+                onPasswordChange(newPassword)
             },
             placeholder = {
                 Text(text = hint)

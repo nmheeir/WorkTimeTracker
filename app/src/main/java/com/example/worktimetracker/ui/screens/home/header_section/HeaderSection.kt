@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worktimetracker.R
-import com.example.worktimetracker.data.local.User
 import com.example.worktimetracker.ui.screens.home.components.Avatar
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
+import com.example.worktimetracker.ui.util.User
 import com.example.worktimetracker.ui.util.exampleUser
 
 

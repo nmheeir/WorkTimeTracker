@@ -88,4 +88,18 @@ dependencies {
 
     //Navigation Compose
     implementation libs.androidx.navigation.compose
+
+    //Retrofit
+    implementation libs.retrofit
+    implementation libs.converter.gson
+
+    //Datastore
+    implementation libs.androidx.datastore.preferences
+    implementation libs.androidx.datastore.core
+
+    //Jwt
+    implementation libs.jjwt.api
+    runtimeOnly libs.jjwt.impl
+    runtimeOnly libs.jjwt.gson
+
 }

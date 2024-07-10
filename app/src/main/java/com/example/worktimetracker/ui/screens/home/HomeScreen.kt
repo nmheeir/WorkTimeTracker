@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,33 +13,34 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.navigation.MainNavGraph
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.HomeNavGraph
 import com.example.worktimetracker.ui.navigation.lNavItem
 import com.example.worktimetracker.ui.screens.home.activity_section.ActivitySection
 import com.example.worktimetracker.ui.screens.home.attendance_section.AttendanceSection
 import com.example.worktimetracker.ui.screens.home.header_section.HeaderSection
-import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.util.exampleUser
 
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController()) {
+fun AppScaffold(
+    navController: NavHostController = rememberNavController(),
+    logout: () -> Unit
+) {
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController)
@@ -47,18 +49,24 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
             .fillMaxSize()
             .background(colorResource(id = R.color.white))
     ) {
-        val paddingValues = it
-        MainNavGraph(navController = navController)
+        Box(
+            modifier = Modifier.padding(bottom = it.calculateBottomPadding())
+        ) {
+            HomeNavGraph(
+                navController = navController,
+                logout = logout
+            )
+        }
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeContent(modifier: Modifier = Modifier) {
+fun HomeContent() {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(colorResource(id = R.color.white))
-//                .padding(it)
     ) {
         Box(
             modifier = Modifier
@@ -96,21 +104,20 @@ fun HomeContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+fun BottomNavigationBar(navController: NavHostController = rememberNavController()) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
-    var selectedItem by remember { mutableIntStateOf(0) }
+    var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
-    NavigationBar {
+    NavigationBar(
+        modifier = Modifier.height(60.dp)
+    ) {
         lNavItem.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = currentDestination?.route == item.title,
+                selected = currentDestination?.route == item.route,
                 onClick = {
                     selectedItem = index
-                    navController.navigate(item.title) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
+                    navController.navigate(item.route) {
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -119,7 +126,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                 icon = {
                     Icon(
                         painter = painterResource(id = item.icon),
-                        contentDescription = item.title,
+                        contentDescription = item.route,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -127,3 +134,4 @@ fun BottomNavigationBar(navController: NavHostController) {
         }
     }
 }
+

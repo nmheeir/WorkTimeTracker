@@ -36,7 +36,7 @@ fun LeavesDetailSection(modifier: Modifier = Modifier) {
     }
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(12.dp)
@@ -58,16 +58,16 @@ fun LeavesDetailSection(modifier: Modifier = Modifier) {
             }
         }
         when (selectedIndex) {
-            "Upcoming" -> {
+            lDetailOption[0] -> {
                 val leavesList = lLeavesDetail.filter { it.isApproved }
                 ListLeavesCard(listLeavesDetail = leavesList)
             }
-            "Past" -> {
+            lDetailOption[1] -> {
                 val leavesList = lLeavesDetail.filter { !it.isApproved }
                 ListLeavesCard(listLeavesDetail = leavesList)
             }
-            else -> {
-
+            lDetailOption[2] -> {
+                ListTeamLeaves()
             }
         }
     }

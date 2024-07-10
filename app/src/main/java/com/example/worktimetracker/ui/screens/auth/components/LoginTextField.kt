@@ -8,26 +8,20 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 
 @Composable
-fun AuthTextField(
+fun LoginTextField(
     label: String,
-    text: String,
+    state: LoginUiState,
     hint: String,
-    onChangeValue: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
 ) {
@@ -39,9 +33,9 @@ fun AuthTextField(
             fontSize = 16.sp,
         )
         OutlinedTextField(
-            value = text,
-            onValueChange = {
-                onChangeValue(it)
+            value = state.username,
+            onValueChange = { newUsername ->
+                onUsernameChange(newUsername)
             },
             placeholder = {
                 Text(text = hint)
@@ -52,27 +46,15 @@ fun AuthTextField(
             ),
             keyboardOptions = keyboardOptions,
             singleLine = true,
+            supportingText = {
+                if (state.usernameError != null) {
+                    Text(text = state.usernameError)
+                }
+            },
+            isError = state.usernameError != null,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp)
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AuthTextFieldPreview() {
-    var text by remember {
-        mutableStateOf("")
-    }
-    AuthTextField(
-        label = "Username",
-        text = text,
-        hint = "Enter your username",
-        onChangeValue = {
-            text = it
-        },
-        keyboardOptions = KeyboardOptions.Default,
-        modifier = Modifier.fillMaxWidth()
-    )
 }

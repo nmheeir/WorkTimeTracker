@@ -22,10 +22,10 @@ sealed class Route(
     data object LeavesScreen : Route("Leaves")
 
      data object AttendanceScreen : Route("Attendance")
-     data object ProfileScreen : Route("Setting")
+     data object ProfileScreen : Route("Profile")
 
-    //Navigation
-    data object AuthNavigation : Route("AuthNavigation")
-    data object MainNavigation : Route("MainNavigation")
+    //Navigator
+    data object AuthNavigator : Route("AuthNavigator")
+    data object MainNavigator : Route("MainNavigator")
 
 }

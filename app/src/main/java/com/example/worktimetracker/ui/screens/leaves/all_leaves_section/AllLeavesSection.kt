@@ -39,17 +39,17 @@ fun AllLeavesSection(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .padding(horizontal = 12.dp)
     ) {
         AllLeavesHeader()
         LazyVerticalGrid(
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.SpaceAround,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 12.dp),
             columns = GridCells.Fixed(2)
         ) {
             items(listLeaves.size) {
-                LeavesCard(leave = listLeaves[it], cardBackground = cardColor[it])
+                LeavesTypeCard(leave = listLeaves[it], cardBackground = cardColor[it])
             }
         }
     }
@@ -91,7 +91,7 @@ fun AllLeavesHeader(
 @SuppressLint("ResourceType")
 //@Preview(showBackground = true)
 @Composable
-fun LeavesCard(
+fun LeavesTypeCard(
     modifier: Modifier = Modifier,
     leave: Leaves = listLeaves[0],
     @DrawableRes cardBackground: Int = cardColor[1]

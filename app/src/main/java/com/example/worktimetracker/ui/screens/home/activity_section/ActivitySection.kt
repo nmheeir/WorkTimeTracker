@@ -54,7 +54,7 @@ fun ActivitySection(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(10) {
-                ActivitySectionItem()
+                ActivitySectionItem(number = it)
             }
         }
     }
@@ -62,7 +62,7 @@ fun ActivitySection(modifier: Modifier = Modifier) {
 
 //@Preview(showBackground = true)
 @Composable
-fun ActivitySectionItem(modifier: Modifier = Modifier) {
+fun ActivitySectionItem(modifier: Modifier = Modifier, number: Int) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -96,7 +96,7 @@ fun ActivitySectionItem(modifier: Modifier = Modifier) {
         ) {
             Column {
                 Text(
-                    text = "Check In",
+                    text = "Check In $number",
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.SemiBold
                 )

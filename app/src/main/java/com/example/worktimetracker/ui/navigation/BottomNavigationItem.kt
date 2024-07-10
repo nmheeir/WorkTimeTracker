@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import com.example.worktimetracker.R
 
 data class BottomNavigationItem (
-    val title: String,
+    val route: String,
     @DrawableRes val icon : Int
 )
 

@@ -18,8 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,37 +32,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.R
+import com.example.worktimetracker.data.manager.LocalUserManager
+import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.ui.navigation.Route
-import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.auth.components.AuthButton
-import com.example.worktimetracker.ui.screens.auth.components.AuthPasswordTextField
-import com.example.worktimetracker.ui.screens.auth.components.AuthTextField
+import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
+import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
+import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier, navController: NavHostController) {
-    var username by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel,
+    onLoginSuccess: (Route) -> Unit,
+) {
+    val context = LocalContext.current
 
-    val viewModel = hiltViewModel<LoginViewModel>()
-    val loginSuccess by viewModel.loginSuccess.observeAsState()
+    val localUserManager = LocalUserManager(context)
 
-    loginSuccess?.let {
-        if (it) {
-            navController.navigateSingleTopTo(Route.HomeScreen.route)
-        }
-        else {
-            Toast.makeText(LocalContext.current, "Login failed", Toast.LENGTH_SHORT).show()
+    LaunchedEffect(viewModel, context) {
+        viewModel.loginUiEvent.collect {
+            when (it) {
+                is ApiResult.Success -> {
+                    localUserManager.saveAccessToken(it.data?.token!!)
+                    onLoginSuccess(Route.MainNavigator)
+                }
+
+                is ApiResult.Error -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -80,33 +82,35 @@ fun LoginScreen(modifier: Modifier = Modifier, navController: NavHostController)
         Spacer(modifier = Modifier.height(36.dp))
         Text(
             text = stringResource(id = R.string.login),
+            fontFamily = poppinsFontFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 32.sp
         )
         Spacer(modifier = Modifier.height(12.dp))
-        AuthTextField(
+        LoginTextField(
             label = stringResource(id = R.string.username),
-            text = username,
+            state = viewModel.state,
             hint = stringResource(id = R.string.username_hint),
+            onUsernameChange = {
+                viewModel.onEvent(LoginUiEvent.UsernameChange(it))
+            },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Text
-            ),
-            onChangeValue = {
-                username = it
-            }
+                keyboardType = KeyboardType.Text,
+            )
         )
+
         Spacer(modifier = Modifier.height(16.dp))
-        AuthPasswordTextField(
+        LoginPasswordTextField(
             label = stringResource(id = R.string.password),
-            text = password,
+            state = viewModel.state,
             hint = stringResource(id = R.string.password_hint),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password,
             ),
-            onChangeValue = {
-                password = it
+            onPasswordChange = {
+                viewModel.onEvent(LoginUiEvent.PasswordChange(it))
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -114,7 +118,7 @@ fun LoginScreen(modifier: Modifier = Modifier, navController: NavHostController)
             text = stringResource(id = R.string.login),
             backgroundColor = colorResource(id = R.color.purple_200),
             onClick = {
-                viewModel.login(username, password)
+
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -143,15 +147,15 @@ fun LoginScreen(modifier: Modifier = Modifier, navController: NavHostController)
             text = stringResource(id = R.string.login_google),
             icon = R.drawable.ic_google,
             onClick = {
-
+                viewModel.onEvent(LoginUiEvent.Login)
             }
         )
     }
 }
 
-@Preview(showBackground = true, device = "id:pixel_4")
-@Composable
-private fun LoginPreview() {
-    val navController = rememberNavController()
-    LoginScreen(navController = navController)
-}
+//@Preview(showBackground = true, device = "id:pixel_4")
+//@Composable
+//private fun LoginPreview() {
+//    val navController = rememberNavController()
+//    LoginScreen(navController = navController)
+//}

@@ -25,7 +25,10 @@ import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.auth.components.AuthButton
 
 @Composable
-fun AuthScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun AuthScreen(
+    modifier: Modifier = Modifier,
+    onNavigateTo: (Route) -> Unit
+) {
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp),
@@ -69,23 +72,16 @@ fun AuthScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 text = stringResource(id = R.string.login).uppercase(),
                 backgroundColor = colorResource(id = R.color.purple_200),
                 onClick = {
-                    navController.navigateSingleTopTo(Route.LoginScreen.route)
+                    onNavigateTo(Route.LoginScreen)
                 }
             )
             Spacer(modifier = Modifier.height(10.dp))
             AuthButton(
                 text = stringResource(id = R.string.create_account).uppercase(),
                 onClick = {
-                    navController.navigate(Route.SignUpScreen.route)
+                    onNavigateTo(Route.SignUpScreen)
                 }
             )
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun AuthScreenPreview() {
-    val navController = rememberNavController()
-    AuthScreen(navController = navController)
 }

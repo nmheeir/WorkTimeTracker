@@ -66,7 +66,8 @@ fun AttendanceItem(modifier: Modifier = Modifier) {
     ConstraintLayout(
         modifier = modifier
             .padding(8.dp)
-            .height(120.dp)
+//            .height(120.dp)
+            .fillMaxWidth()
             .aspectRatio(1.5f)
             .clip(RoundedCornerShape(16.dp))
             .border(1.dp, colorResource(id = R.color.sub_color), RoundedCornerShape(16.dp))
