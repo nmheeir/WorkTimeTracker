@@ -117,7 +117,6 @@ fun LoginScreen(
             text = stringResource(id = R.string.login),
             backgroundColor = colorResource(id = R.color.purple_200),
             onClick = {
-                Log.d("app_login_screen", "login button clicked")
                 viewModel.onEvent(LoginUiEvent.Login)
             }
         )

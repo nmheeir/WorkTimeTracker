@@ -63,11 +63,16 @@ class LoginViewModel @Inject constructor(
             state = state.copy(
                 isLoading = true
             )
+
+            Log.d("login", "chạy logn")
+
             val result = authRepository.login(
                 username = state.username,
                 password = state.password
             )
             loginUiEventChannel.send(result)
+            Log.d("login", result.toString())
+
             state = state.copy(
                 isLoading = false
             )
