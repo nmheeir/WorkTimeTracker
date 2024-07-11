@@ -1,6 +1,5 @@
 package com.example.worktimetracker.data.remote
 
-import com.example.worktimetracker.data.remote.api.AuthApi
 import com.example.worktimetracker.ui.util.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -20,6 +19,7 @@ class RemoteDataSource @Inject constructor() {
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -20,10 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +39,7 @@ import com.example.worktimetracker.ui.screens.auth.components.AuthButton
 import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
 import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
+import com.example.worktimetracker.ui.util.BASE_LOG
 
 @Composable
 fun LoginScreen(
@@ -58,11 +55,12 @@ fun LoginScreen(
         viewModel.loginUiEvent.collect {
             when (it) {
                 is ApiResult.Success -> {
-                    localUserManager.saveAccessToken(it.data?.token!!)
+                    localUserManager.saveAccessToken(it.data?._data?.token!!)
                     onLoginSuccess(Route.MainNavigator)
                 }
 
                 is ApiResult.Error -> {
+                    Log.d("${BASE_LOG}_login_error", it.message)
                     Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 }
             }
