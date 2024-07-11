@@ -1,9 +1,9 @@
 package com.example.worktimetracker.data.remote
 
-import com.example.worktimetracker.data.remote.api.AuthApi
 import com.example.worktimetracker.ui.util.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -19,6 +19,7 @@ class RemoteDataSource @Inject constructor() {
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
             .create(api)

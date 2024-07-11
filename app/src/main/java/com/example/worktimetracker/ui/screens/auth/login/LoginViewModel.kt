@@ -1,13 +1,16 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.worktimetracker.data.remote.response.User
+import com.example.worktimetracker.data.remote.response.DataResponse
+import com.example.worktimetracker.data.remote.response.Token
 import com.example.worktimetracker.domain.repository.remote.AuthRepository
 import com.example.worktimetracker.domain.result.ApiResult
+import com.example.worktimetracker.ui.util.BASE_LOG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -20,7 +23,7 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginUiState())
-    private val loginUiEventChannel = Channel<ApiResult<User>>()
+    private val loginUiEventChannel = Channel<ApiResult<DataResponse<Token>>>()
     val loginUiEvent = loginUiEventChannel.receiveAsFlow()
 
     fun onEvent(event: LoginUiEvent) {
@@ -54,8 +57,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    // TODO:
     private fun login() {
+        Log.d("$BASE_LOG login viewmodel", "Login ViewModel, login function called")
         viewModelScope.launch {
             state = state.copy(
                 isLoading = true
@@ -70,5 +73,4 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
-
 }
