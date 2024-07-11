@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -60,11 +61,16 @@ class LoginViewModel @Inject constructor(
             state = state.copy(
                 isLoading = true
             )
+
+            Log.d("login", "chạy logn")
+
             val result = authRepository.login(
                 username = state.username,
                 password = state.password
             )
             loginUiEventChannel.send(result)
+            Log.d("login", result.toString())
+
             state = state.copy(
                 isLoading = false
             )

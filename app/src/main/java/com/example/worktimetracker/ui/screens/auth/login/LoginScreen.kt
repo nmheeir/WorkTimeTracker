@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -118,7 +119,7 @@ fun LoginScreen(
             text = stringResource(id = R.string.login),
             backgroundColor = colorResource(id = R.color.purple_200),
             onClick = {
-
+                viewModel.onEvent(LoginUiEvent.Login)
             }
         )
         Spacer(modifier = Modifier.height(16.dp))

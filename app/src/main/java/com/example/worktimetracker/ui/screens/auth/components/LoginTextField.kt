@@ -41,8 +41,8 @@ fun LoginTextField(
                 Text(text = hint)
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedPlaceholderColor = Color.LightGray,
-                unfocusedPlaceholderColor = colorResource(id = R.color.light_gray)
+                focusedPlaceholderColor = colorResource(id = R.color.purple_200),
+                unfocusedPlaceholderColor = colorResource(id = R.color.purple_200)
             ),
             keyboardOptions = keyboardOptions,
             singleLine = true,
