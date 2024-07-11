@@ -55,7 +55,7 @@ fun LoginScreen(
         viewModel.loginUiEvent.collect {
             when (it) {
                 is ApiResult.Success -> {
-                    localUserManager.saveAccessToken(it.data?._data?.token!!)
+                    localUserManager.saveAccessToken(it.response?._data?.token!!)
                     onLoginSuccess(Route.MainNavigator)
                 }
 

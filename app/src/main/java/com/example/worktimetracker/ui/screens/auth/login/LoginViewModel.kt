@@ -10,7 +10,6 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
 import com.example.worktimetracker.domain.repository.remote.AuthRepository
 import com.example.worktimetracker.domain.result.ApiResult
-import com.example.worktimetracker.ui.util.BASE_LOG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -58,7 +57,6 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login() {
-        Log.d("$BASE_LOG login viewmodel", "Login ViewModel, login function called")
         viewModelScope.launch {
             state = state.copy(
                 isLoading = true
@@ -71,7 +69,7 @@ class LoginViewModel @Inject constructor(
                 password = state.password
             )
             loginUiEventChannel.send(result)
-            Log.d("login", result.toString())
+            Log.d("login_viewmodel", result.toString())
 
             state = state.copy(
                 isLoading = false

@@ -9,7 +9,6 @@ import com.example.worktimetracker.ui.screens.auth.AuthScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginViewModel
 import com.example.worktimetracker.ui.screens.auth.signup.SignUpScreen
-import kotlinx.coroutines.coroutineScope
 
 fun NavGraphBuilder.authNavigator(navController: NavHostController) {
     navigation(
@@ -32,7 +31,7 @@ fun NavGraphBuilder.authNavigator(navController: NavHostController) {
             LoginScreen(
                 viewModel = loginViewModel,
                 onLoginSuccess = {
-                    navController.navigateAndClearStack(Route.HomeScreen.route)
+                    navController.navigateAndClearStack(it.route)
                 }
             )
         }

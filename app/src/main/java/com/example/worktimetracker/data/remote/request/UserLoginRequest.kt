@@ -1,4 +1,4 @@
-package com.example.worktimetracker.data.remote.response.user
+package com.example.worktimetracker.data.remote.request
 
 data class UserLoginRequest(
     val username: String,
