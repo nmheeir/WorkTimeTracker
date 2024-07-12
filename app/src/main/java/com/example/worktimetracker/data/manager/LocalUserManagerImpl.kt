@@ -53,6 +53,12 @@ class LocalUserManagerImpl @Inject constructor(
         }
     }
 
+    override fun readAccessToken(): Flow<String> {
+        return appContext.dataStore.data.map {
+            it[ACCESS_TOKEN] ?: ""
+        }
+    }
+
     suspend fun clear() {
         appContext.dataStore.edit {
             it.clear()

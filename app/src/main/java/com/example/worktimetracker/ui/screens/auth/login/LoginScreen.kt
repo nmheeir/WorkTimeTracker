@@ -103,9 +103,8 @@ fun LoginTopSection(modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.login_desc),
             fontFamily = poppinsFontFamily,
             fontWeight = FontWeight.Normal,
-            style = Typography.titleMedium,
-
-            )
+            style = Typography.titleMedium
+        )
     }
 }
 

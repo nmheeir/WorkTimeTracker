@@ -102,4 +102,7 @@ dependencies {
     runtimeOnly libs.jjwt.impl
     runtimeOnly libs.jjwt.gson
 
+    //splash screen
+    implementation libs.androidx.core.splashscreen
+
 }

@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
-import com.example.worktimetracker.domain.repository.AuthRepository
 import com.example.worktimetracker.domain.result.ApiResult
+import com.example.worktimetracker.domain.use_case.login.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginUiState())
@@ -64,7 +64,7 @@ class LoginViewModel @Inject constructor(
 
             Log.d("login", "chạy logn")
 
-            val result = authRepository.login(
+            val result = loginUseCase.login(
                 username = state.username,
                 password = state.password
             )

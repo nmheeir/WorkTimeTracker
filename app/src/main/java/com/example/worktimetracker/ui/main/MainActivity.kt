@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.ui.navigation.NavGraph
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
@@ -32,6 +33,13 @@ class MainActivity : ComponentActivity() {
                 Color.TRANSPARENT, Color.TRANSPARENT
             )
         )
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.splashCondition.value
+            }
+        }
+
         setContent {
             WorkTimeTrackerTheme {
                 Surface(

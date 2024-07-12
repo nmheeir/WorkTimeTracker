@@ -22,6 +22,9 @@ class AuthRepositoryImpl(
                 200 -> {
                     ApiResult.Success(response.body()!!)
                 }
+                400 -> {
+                    ApiResult.Error(response.message())
+                }
 
                 else -> ApiResult.Error("Sign in error: " + response.message())
             }
