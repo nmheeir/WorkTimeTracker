@@ -5,7 +5,7 @@ import com.example.worktimetracker.data.remote.api.AuthApi
 import com.example.worktimetracker.data.remote.request.UserLoginRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
-import com.example.worktimetracker.domain.repository.remote.AuthRepository
+import com.example.worktimetracker.domain.repository.AuthRepository
 import com.example.worktimetracker.domain.result.ApiResult
 
 class AuthRepositoryImpl(
@@ -20,7 +20,7 @@ class AuthRepositoryImpl(
 
             when (response.code()) {
                 200 -> {
-                    ApiResult.Success(response.body())
+                    ApiResult.Success(response.body()!!)
                 }
 
                 else -> ApiResult.Error("Sign in error: " + response.message())

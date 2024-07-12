@@ -1,6 +1,7 @@
 package com.example.worktimetracker.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +10,8 @@ import com.example.worktimetracker.ui.screens.attendance.AttendanceScreen
 import com.example.worktimetracker.ui.screens.home.AppScaffold
 import com.example.worktimetracker.ui.screens.home.HomeContent
 import com.example.worktimetracker.ui.screens.leaves.LeavesScreen
+import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
+import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
 import com.example.worktimetracker.ui.screens.profile.ProfileScreen
 
 @Composable
@@ -17,6 +20,16 @@ fun NavGraph(
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = sDestination) {
+        composable(route = Route.OnboardingScreen.route) {
+            val viewModel: OnboardingViewModel = hiltViewModel()
+            OnboardingScreen(
+                onNavigateTo = {
+                    navController.navigateAndClearStack(it.route)
+                },
+                event = viewModel::onEvent
+            )
+        }
+
         authNavigator(navController)
         composable(route = Route.MainNavigator.route) {
             AppScaffold(

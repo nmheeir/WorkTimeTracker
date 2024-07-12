@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
-import com.example.worktimetracker.domain.repository.remote.AuthRepository
+import com.example.worktimetracker.domain.repository.AuthRepository
 import com.example.worktimetracker.domain.result.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

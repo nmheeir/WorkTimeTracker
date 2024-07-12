@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
@@ -48,7 +49,11 @@ fun LeavesCard(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Date", style = Typography.displayMedium)
+                Text(
+                    text = "Date",
+                    style = Typography.titleMedium,
+                    fontWeight = FontWeight.Normal
+                )
                 Text(text = leavesDetail.date, style = Typography.labelLarge)
             }
             Text(
@@ -71,41 +76,44 @@ fun LeavesCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column (
+            Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = "Apply Days",
-                    style = Typography.displaySmall
+                    style = Typography.titleSmall,
+                    fontWeight = FontWeight.Normal
                 )
                 Text(
                     text = leavesDetail.applyDays.toString().plus(" days"),
-                    style = Typography.displayMedium
+                    style = Typography.titleMedium
                 )
             }
-            Column (
+            Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = "Leave Balance",
-                    style = Typography.displaySmall
+                    style = Typography.titleSmall,
+                    fontWeight = FontWeight.Normal
                 )
                 Text(
                     text = leavesDetail.leaveBalance.toString(),
-                    style = Typography.displayMedium
+                    style = Typography.titleMedium
 
                 )
             }
-            Column (
+            Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = "Approved By",
-                    style = Typography.displaySmall
+                    style = Typography.titleSmall,
+                    fontWeight = FontWeight.Normal
                 )
                 Text(
                     text = leavesDetail.approvedBy.username,
-                    style = Typography.displayMedium
+                    style = Typography.titleMedium
                 )
             }
 
@@ -115,8 +123,11 @@ fun LeavesCard(
 
 @Preview(showBackground = true)
 @Composable
-fun ListLeavesCard(modifier: Modifier = Modifier, listLeavesDetail: List<LeavesDetail> = lLeavesDetail) {
-    LazyColumn (
+fun ListLeavesCard(
+    modifier: Modifier = Modifier,
+    listLeavesDetail: List<LeavesDetail> = lLeavesDetail
+) {
+    LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
     ) {
