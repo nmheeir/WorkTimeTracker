@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -53,10 +54,10 @@ class LocalUserManagerImpl @Inject constructor(
         }
     }
 
-    override fun readAccessToken(): Flow<String> {
+    override suspend fun readAccessToken(): String? {
         return appContext.dataStore.data.map {
             it[ACCESS_TOKEN] ?: ""
-        }
+        }.firstOrNull()
     }
 
     suspend fun clear() {

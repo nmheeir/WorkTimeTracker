@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.ui.screens.attendance.AttendanceScreen
 import com.example.worktimetracker.ui.screens.home.AppScaffold
 import com.example.worktimetracker.ui.screens.home.HomeContent
+import com.example.worktimetracker.ui.screens.home.HomeViewModel
 import com.example.worktimetracker.ui.screens.leaves.LeavesScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
@@ -32,6 +33,7 @@ fun NavGraph(
 
         authNavigator(navController)
         composable(route = Route.MainNavigator.route) {
+            val homeViewModel: HomeViewModel = hiltViewModel()
             AppScaffold(
                 logout = {
                     navController.navigate(Route.AuthNavigator.route) {
@@ -39,7 +41,8 @@ fun NavGraph(
                             inclusive = true
                         }
                     }
-                }
+                },
+                viewModel = homeViewModel
             )
         }
     }
@@ -48,11 +51,14 @@ fun NavGraph(
 @Composable
 fun HomeNavGraph(
     navController: NavHostController = rememberNavController(),
-    logout: () -> Unit
+    logout: () -> Unit,
+    homeViewModel: HomeViewModel
 ) {
     NavHost(navController = navController, startDestination = Route.HomeScreen.route) {
         composable(route = Route.HomeScreen.route) {
-            HomeContent()
+            HomeContent(
+                state = homeViewModel.state
+            )
         }
         composable(route = Route.LeavesScreen.route) {
             LeavesScreen()
@@ -64,7 +70,9 @@ fun HomeNavGraph(
             ProfileScreen(
                 onLogoutClick = {
                     logout()
-                }
+                },
+                state = homeViewModel.state,
+                event = homeViewModel::onEvent
             )
         }
         authNavigator(navController)

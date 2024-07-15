@@ -19,19 +19,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.screens.home.HomeUiState
 import com.example.worktimetracker.ui.screens.home.components.Avatar
 import com.example.worktimetracker.ui.theme.Typography
-import com.example.worktimetracker.ui.util.User
-import com.example.worktimetracker.ui.util.exampleUser
 
-@Preview(showBackground = true)
 @Composable
 fun GreetingSection(
     modifier: Modifier = Modifier,
-    user: User = exampleUser,
+    state: HomeUiState,
     onCameraClick: () -> Unit = {}
 ) {
     Column(
@@ -67,11 +64,11 @@ fun GreetingSection(
             )
         }
         Text(
-            text = user.username,
+            text = state.userName,
             style = Typography.titleLarge
         )
         Text(
-            text = user.job,
+            text = state.job,
             style = Typography.titleMedium,
             fontWeight = FontWeight.Normal
         )

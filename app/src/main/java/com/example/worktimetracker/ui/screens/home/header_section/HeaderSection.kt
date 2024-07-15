@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,14 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.screens.home.HomeUiState
 import com.example.worktimetracker.ui.screens.home.components.Avatar
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
-import com.example.worktimetracker.ui.util.User
-import com.example.worktimetracker.ui.util.exampleUser
 
 
 @Composable
-fun HeaderSection(modifier: Modifier = Modifier, user: User) {
+fun HeaderSection(modifier: Modifier = Modifier, state: HomeUiState) {
     Column (
         modifier = modifier
             .padding(horizontal = 12.dp, vertical = 6.dp)
@@ -59,14 +56,14 @@ fun HeaderSection(modifier: Modifier = Modifier, user: User) {
                     .weight(1f)
             ) {
                 Text(
-                    text = user.username,
+                    text = state.userName,
                     fontSize = 16.sp,
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
-                    text = user.job,
+                    text = state.job,
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
@@ -130,10 +127,4 @@ fun HeaderCalendarItem(modifier: Modifier = Modifier) {
             fontSize = 12.sp,
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DetailSectionPreview(modifier: Modifier = Modifier) {
-    HeaderSection(user = exampleUser)
 }

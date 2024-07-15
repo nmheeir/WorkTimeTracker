@@ -7,6 +7,6 @@ interface LocalUserManager {
     suspend fun saveAppEntry()
     fun readAppEntry(): Flow<Boolean>
     suspend fun saveAccessToken(accessToken: String)
-    fun readAccessToken(): Flow<String>
+    suspend fun readAccessToken(): String?
 
 }

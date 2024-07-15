@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
@@ -34,12 +33,12 @@ import com.example.worktimetracker.ui.navigation.lNavItem
 import com.example.worktimetracker.ui.screens.home.activity_section.ActivitySection
 import com.example.worktimetracker.ui.screens.home.attendance_section.AttendanceSection
 import com.example.worktimetracker.ui.screens.home.header_section.HeaderSection
-import com.example.worktimetracker.ui.util.exampleUser
 
 @Composable
 fun AppScaffold(
     navController: NavHostController = rememberNavController(),
-    logout: () -> Unit
+    logout: () -> Unit,
+    viewModel: HomeViewModel
 ) {
     Scaffold(
         bottomBar = {
@@ -54,15 +53,17 @@ fun AppScaffold(
         ) {
             HomeNavGraph(
                 navController = navController,
-                logout = logout
+                logout = logout,
+                homeViewModel = viewModel
             )
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeContent() {
+fun HomeContent(
+    state: HomeUiState
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +74,7 @@ fun HomeContent() {
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 12.dp)
         ) {
-            HeaderSection(user = exampleUser)
+            HeaderSection(state = state)
         }
 
         ConstraintLayout(

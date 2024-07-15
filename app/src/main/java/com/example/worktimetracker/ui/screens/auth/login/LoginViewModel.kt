@@ -22,6 +22,7 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginUiState())
+
     private val loginUiEventChannel = Channel<ApiResult<DataResponse<Token>>>()
     val loginUiEvent = loginUiEventChannel.receiveAsFlow()
 

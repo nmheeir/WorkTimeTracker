@@ -13,18 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.navigation.Route
-import com.example.worktimetracker.ui.navigation.navigateAndClearStack
+import com.example.worktimetracker.ui.screens.home.HomeUiEvent
+import com.example.worktimetracker.ui.screens.home.HomeUiState
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun ProfileScreen(
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    state: HomeUiState,
+    event: (HomeUiEvent) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -33,7 +32,9 @@ fun ProfileScreen(
             .fillMaxSize()
             .padding(12.dp)
     ) {
-        GreetingSection()
+        GreetingSection(
+            state = state
+        )
         EditProfileButton()
         OptionSection()
         Logout(
