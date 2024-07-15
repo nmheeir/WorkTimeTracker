@@ -2,16 +2,23 @@ package com.example.worktimetracker.ui.util
 
 import androidx.annotation.DrawableRes
 import com.example.worktimetracker.R
-
-data class User(
-    val username: String,
-    @DrawableRes val avatar: Int,
-    val job: String
-)
-
+import com.example.worktimetracker.data.remote.response.User
+import com.example.worktimetracker.ui.navigation.Route
 
 val exampleUser = User(
-    username = "John Doe", avatar = R.drawable.avatar, job = "Developer"
+    address = "address",
+    avatarURL = "avatarURL",
+    createdAt = "",
+    department = "department",
+    designation = "designation",
+    email = "email",
+    employeeType = 0,
+    id = 0,
+    password = "password",
+    phoneNumber = "phoneNumber",
+    role = 0,
+    userFullName = "userFullName",
+    userName = "userName"
 )
 
 data class Leaves(
@@ -74,21 +81,31 @@ val lLeavesDetail = listOf(
 )
 
 data class ProfileOption(
-    @DrawableRes val icon: Int, val title: String
+    @DrawableRes val icon: Int,
+    val title: String,
+    val route: Route? = null
 )
 
 val lOptionProfile = listOf(
     ProfileOption(
-        icon = R.drawable.ic_user, title = "My Profile"
+        icon = R.drawable.ic_user,
+        title = "My Profile",
+        route = Route.MyProfileScreen
     ),
-    ProfileOption(icon = R.drawable.ic_setting, title = "Settings"),
+    ProfileOption(
+        icon = R.drawable.ic_setting,
+        title = "Settings",
+        route = Route.SettingScreen
+    ),
     ProfileOption(
         icon = R.drawable.ic_file,
-        title = "Terms & Conditions"
+        title = "Terms & Conditions",
+        route = Route.TermConditionScreen
     ),
     ProfileOption(
         icon = R.drawable.ic_privacy_policy,
-        title = "Privacy Policy"
+        title = "Privacy Policy",
+        route = Route.PrivacyScreen
     ),
     ProfileOption(
         icon = R.drawable.ic_logout,

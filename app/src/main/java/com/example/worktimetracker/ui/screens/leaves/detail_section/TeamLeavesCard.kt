@@ -55,7 +55,7 @@ fun TeamLeavesCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = leavesDetail.approvedBy.username,
+                    text = leavesDetail.approvedBy.userName,
                     style = Typography.labelLarge
                 )
                 Text(text = leavesDetail.date,

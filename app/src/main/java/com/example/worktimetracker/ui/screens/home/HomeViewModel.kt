@@ -24,27 +24,18 @@ class HomeViewModel @Inject constructor(
 
     private val jwtUtils = JwtUtils()
     var state by mutableStateOf(HomeUiState())
-
-    //    private val homeUiEventChannel = Channel<ApiResult<DataResponse<User>>>()
-//    val homeUiEvent = homeUiEventChannel.receiveAsFlow()
-    init {
-        getUser()
-    }
+        private set
 
     fun onEvent(event: HomeUiEvent) {
+        Log.d("viewmodel_home_before_state", state.toString())
         when (event) {
-            HomeUiEvent.GetUser -> {
+            HomeUiEvent.GetUserInfo -> {
                 getUser()
             }
         }
     }
 
     private fun getUser() {
-        state = state.copy(
-            userName = "Loading",
-            job = "Loading",
-        )
-
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
             val username = jwtUtils.extractUsername(token!!)
@@ -55,8 +46,7 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is ApiResult.Success -> {
                     state = state.copy(
-                        userName = result.response._data!!.userName,
-                        job = result.response._data.email
+                        user = result.response._data!!
                     )
                 }
 

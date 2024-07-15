@@ -1,11 +1,15 @@
 package com.example.worktimetracker.data.remote.response
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class User(
     val address: String,
     val avatarURL: String,
-    val company: Any,
-    val companyId: Int,
-    val companyTeam: Any,
+    val company: Company? = null,
+    val companyId: Int? = null,
+    val companyTeam: Team? = null,
     val createdAt: String,
     val department: String,
     val designation: String,
@@ -15,7 +19,7 @@ data class User(
     val password: String,
     val phoneNumber: String,
     val role: Int,
-    val teamId: Any,
+    val teamId: Int? = null,
     val userFullName: String,
     val userName: String
-)
+) : Parcelable

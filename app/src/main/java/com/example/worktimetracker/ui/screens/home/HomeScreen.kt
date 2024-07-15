@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.HomeNavGraph
+import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.navigation.lNavItem
 import com.example.worktimetracker.ui.screens.home.activity_section.ActivitySection
 import com.example.worktimetracker.ui.screens.home.attendance_section.AttendanceSection
@@ -38,8 +41,13 @@ import com.example.worktimetracker.ui.screens.home.header_section.HeaderSection
 fun AppScaffold(
     navController: NavHostController = rememberNavController(),
     logout: () -> Unit,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    onNavigateTo: (Route) -> Unit
 ) {
+    LaunchedEffect(viewModel) {
+        Log.d("viewmodel_app_scaffold", viewModel.state.toString())
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController)
@@ -51,10 +59,12 @@ fun AppScaffold(
         Box(
             modifier = Modifier.padding(bottom = it.calculateBottomPadding())
         ) {
+            Log.d("viewmodel_home", "app scaffold")
             HomeNavGraph(
                 navController = navController,
                 logout = logout,
-                homeViewModel = viewModel
+                homeViewModel = viewModel,
+                onNavigateTo = onNavigateTo
             )
         }
     }

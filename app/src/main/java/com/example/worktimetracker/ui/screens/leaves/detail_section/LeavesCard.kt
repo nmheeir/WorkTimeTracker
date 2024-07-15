@@ -112,7 +112,7 @@ fun LeavesCard(
                     fontWeight = FontWeight.Normal
                 )
                 Text(
-                    text = leavesDetail.approvedBy.username,
+                    text = leavesDetail.approvedBy.userName,
                     style = Typography.titleMedium
                 )
             }

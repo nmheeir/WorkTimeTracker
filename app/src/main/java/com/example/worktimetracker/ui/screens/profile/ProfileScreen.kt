@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.home.HomeUiEvent
 import com.example.worktimetracker.ui.screens.home.HomeUiState
 import com.example.worktimetracker.ui.theme.Typography
@@ -23,7 +24,8 @@ import com.example.worktimetracker.ui.theme.Typography
 fun ProfileScreen(
     onLogoutClick: () -> Unit,
     state: HomeUiState,
-    event: (HomeUiEvent) -> Unit
+    event: (HomeUiEvent) -> Unit,
+    onNavigateTo: (Route) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -36,7 +38,9 @@ fun ProfileScreen(
             state = state
         )
         EditProfileButton()
-        OptionSection()
+        OptionSection(
+            onNavigateTo = onNavigateTo
+        )
         Logout(
             onClick = {
                 onLogoutClick()

@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,21 +17,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.util.ProfileOption
 import com.example.worktimetracker.ui.util.lOptionProfile
 
-@Preview(showBackground = true)
 @Composable
-fun OptionSection(modifier: Modifier = Modifier) {
+fun OptionSection(
+    modifier: Modifier = Modifier,
+    onNavigateTo: (Route) -> Unit,
+) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.fillMaxWidth()
     ) {
         items(lOptionProfile.size - 1) {
-            OptionSectionItem(profileOption = lOptionProfile[it])
+            OptionSectionItem(
+                profileOption = lOptionProfile[it],
+                onNavigateTo = onNavigateTo
+            )
         }
     }
 }
@@ -42,7 +47,7 @@ fun OptionSection(modifier: Modifier = Modifier) {
 fun OptionSectionItem(
     modifier: Modifier = Modifier,
     profileOption: ProfileOption = lOptionProfile[0],
-    onClick: () -> Unit = {}
+    onNavigateTo: (Route) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(32.dp),
@@ -53,7 +58,9 @@ fun OptionSectionItem(
             .background(color = colorResource(id = R.color.white))
             .padding(8.dp)
             .clickable {
-                onClick()
+                onNavigateTo(
+                    profileOption.route!!
+                )
             }
     ) {
         Icon(

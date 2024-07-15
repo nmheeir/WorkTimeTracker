@@ -31,6 +31,7 @@ fun GreetingSection(
     state: HomeUiState,
     onCameraClick: () -> Unit = {}
 ) {
+    val user = state.user
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -64,11 +65,11 @@ fun GreetingSection(
             )
         }
         Text(
-            text = state.userName,
+            text = user.userName,
             style = Typography.titleLarge
         )
         Text(
-            text = state.job,
+            text = user.department,
             style = Typography.titleMedium,
             fontWeight = FontWeight.Normal
         )

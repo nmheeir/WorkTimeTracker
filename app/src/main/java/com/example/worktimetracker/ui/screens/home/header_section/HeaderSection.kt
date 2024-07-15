@@ -36,6 +36,7 @@ import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
 @Composable
 fun HeaderSection(modifier: Modifier = Modifier, state: HomeUiState) {
+    val user = state.user
     Column (
         modifier = modifier
             .padding(horizontal = 12.dp, vertical = 6.dp)
@@ -56,14 +57,14 @@ fun HeaderSection(modifier: Modifier = Modifier, state: HomeUiState) {
                     .weight(1f)
             ) {
                 Text(
-                    text = state.userName,
+                    text = user.userName,
                     fontSize = 16.sp,
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
-                    text = state.job,
+                    text = user.department,
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
