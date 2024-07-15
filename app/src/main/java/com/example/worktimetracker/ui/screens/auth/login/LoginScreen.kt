@@ -2,6 +2,9 @@ package com.example.worktimetracker.ui.screens.auth.login
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -38,6 +42,7 @@ import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 import com.example.worktimetracker.ui.util.BASE_LOG
+import com.example.worktimetracker.ui.util.rememberImeState
 
 @Composable
 fun LoginScreen(
@@ -53,13 +58,17 @@ fun LoginScreen(
         viewModel.loginUiEvent.collect {
             when (it) {
                 is ApiResult.Success -> {
-                    localUserManagerImpl.saveAccessToken(it.response._data.token)
+                    localUserManagerImpl.saveAccessToken(it.response._data!!.token)
                     onLoginSuccess(Route.MainNavigator)
                 }
 
                 is ApiResult.Error -> {
-                    Log.d("${BASE_LOG}_login_error", it.message)
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    Log.d("${BASE_LOG}_login_error", it.response._message)
+                    Toast.makeText(context, it.response._message, Toast.LENGTH_SHORT).show()
+                }
+
+                is ApiResult.NetworkError -> {
+                    //nothing
                 }
             }
         }
@@ -84,18 +93,24 @@ fun LoginTopSection(modifier: Modifier = Modifier) {
         append(stringResource(id = R.string.app_name))
     }
 
+    val imeState by rememberImeState()
+
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.fillMaxWidth()
     ) {
-        // TODO: đổi avatar thành logo
-        Image(
-            painter = painterResource(id = R.drawable.avatar),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(100.dp)
-        )
+
+        AnimatedVisibility(visible = !imeState, enter = fadeIn(), exit = fadeOut()) {
+            // TODO: đổi avatar thành logo
+            Image(
+                painter = painterResource(id = R.drawable.avatar),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(100.dp)
+            )
+        }
+
         Text(
             text = title, style = Typography.displaySmall, maxLines = 2
         )
@@ -115,13 +130,15 @@ fun LoginContent(
     onEvent: (LoginUiEvent) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
+
     Column(
         verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = modifier
             .padding(24.dp)
             .fillMaxSize()
     ) {
-        LoginTopSection()
+
+    LoginTopSection()
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
