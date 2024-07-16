@@ -60,9 +60,9 @@ class LocalUserManagerImpl @Inject constructor(
         }.firstOrNull()
     }
 
-    suspend fun clear() {
+    override suspend fun clear() {
         appContext.dataStore.edit {
-            it.clear()
+            it[ACCESS_TOKEN] = ""
         }
     }
 

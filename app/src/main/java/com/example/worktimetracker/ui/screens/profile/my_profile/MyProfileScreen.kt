@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.ui.screens.home.HomeUiState
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileItem
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileListItem
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileOptionButton
@@ -32,7 +32,7 @@ import com.example.worktimetracker.ui.screens.profile.component.lOptionMyProfile
 @Composable
 fun MyProfileScreen(
     modifier: Modifier = Modifier,
-    state: HomeUiState = HomeUiState(),
+    state: SharedUiState = SharedUiState(),
     onBack: () -> Unit = {}
 ) {
 

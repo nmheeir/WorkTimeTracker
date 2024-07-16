@@ -9,4 +9,5 @@ interface LocalUserManager {
     suspend fun saveAccessToken(accessToken: String)
     suspend fun readAccessToken(): String?
 
+    suspend fun clear()
 }
