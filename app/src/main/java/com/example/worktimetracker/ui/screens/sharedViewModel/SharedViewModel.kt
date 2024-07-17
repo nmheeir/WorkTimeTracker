@@ -48,7 +48,10 @@ class SharedViewModel @Inject constructor(
     private fun getUser() {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
-            val username = jwtUtils.extractUsername(token!!)
+            if (token.isEmpty()) {
+                return@launch
+            }
+            val username = jwtUtils.extractUsername(token)
             Log.d("viewmodel_home", username)
 
             val result: ApiResult<DataResponse<User>> = userUseCase.getUserByUserName(username)

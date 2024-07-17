@@ -1,11 +1,14 @@
 package com.example.worktimetracker.ui.main
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.util.JwtUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -14,8 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    appEntryUseCase: AppEntryUseCase
+    private val appEntryUseCase: AppEntryUseCase,
+    private val localUserManager: LocalUserManager
 ) : ViewModel() {
+
+    private val jwtUtil = JwtUtils()
 
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
@@ -26,12 +32,28 @@ class MainViewModel @Inject constructor(
     init {
         appEntryUseCase.readAppEntry().onEach { shouldStartFromAuthScreen ->
             if (shouldStartFromAuthScreen) {
-                _startDestination.value = Route.AuthNavigator.route
+                if (!checkTokenExpired()) {
+                    _startDestination.value = Route.AuthNavigator.route
+                } else {
+                    _startDestination.value = Route.MainNavigator.route
+                }
             } else {
                 _startDestination.value = Route.OnboardingScreen.route
             }
-            delay(300)
+            Log.d("viewmodel_main", _startDestination.value)
+            delay(500)
             _splashCondition.value = false
         }.launchIn(viewModelScope)
+    }
+
+    private suspend fun checkTokenExpired(): Boolean {
+        val token = localUserManager.readAccessToken()
+        if (token.isEmpty()) {
+            return false
+        }
+        if (jwtUtil.isTokenExpired(token)) {
+            return false
+        }
+        return true
     }
 }

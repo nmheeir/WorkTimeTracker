@@ -11,8 +11,6 @@ import com.example.worktimetracker.ui.navigation.navigator.authNavigator
 import com.example.worktimetracker.ui.screens.attendance.AttendanceScreen
 import com.example.worktimetracker.ui.screens.home.AppScaffold
 import com.example.worktimetracker.ui.screens.home.HomeContent
-import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
-import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.screens.leaves.LeavesScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
@@ -21,6 +19,8 @@ import com.example.worktimetracker.ui.screens.profile.my_profile.MyProfileScreen
 import com.example.worktimetracker.ui.screens.profile.setting.SettingScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPolicyScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 
 @Composable
 fun NavGraph(
@@ -45,6 +45,8 @@ fun NavGraph(
         authNavigator(navController, sharedViewModel)
 
         composable(route = Route.MainNavigator.route) {
+            // TODO: cần tối ưu lại
+            sharedViewModel.onEvent(SharedUiEvent.GetUserInfo)
             Log.d("viewmodel_home", "composable app scaffold")
             AppScaffold(
                 logout = {
