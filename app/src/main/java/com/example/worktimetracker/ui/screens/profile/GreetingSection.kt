@@ -21,14 +21,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.screens.home.HomeUiState
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.screens.home.components.Avatar
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun GreetingSection(
     modifier: Modifier = Modifier,
-    state: HomeUiState,
+    state: SharedUiState,
     onCameraClick: () -> Unit = {}
 ) {
     val user = state.user

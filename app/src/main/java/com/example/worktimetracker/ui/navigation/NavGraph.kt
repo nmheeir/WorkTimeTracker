@@ -2,7 +2,6 @@ package com.example.worktimetracker.ui.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,8 +11,6 @@ import com.example.worktimetracker.ui.navigation.navigator.authNavigator
 import com.example.worktimetracker.ui.screens.attendance.AttendanceScreen
 import com.example.worktimetracker.ui.screens.home.AppScaffold
 import com.example.worktimetracker.ui.screens.home.HomeContent
-import com.example.worktimetracker.ui.screens.home.HomeUiEvent
-import com.example.worktimetracker.ui.screens.home.HomeViewModel
 import com.example.worktimetracker.ui.screens.leaves.LeavesScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
@@ -22,42 +19,46 @@ import com.example.worktimetracker.ui.screens.profile.my_profile.MyProfileScreen
 import com.example.worktimetracker.ui.screens.profile.setting.SettingScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPolicyScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 
 @Composable
 fun NavGraph(
-    sDestination: String,
+    sDestination: String
 ) {
     val navController = rememberNavController()
-    val homeViewModel: HomeViewModel = hiltViewModel()
 
-    LaunchedEffect(homeViewModel, homeViewModel.state) {
-        homeViewModel.onEvent(HomeUiEvent.GetUserInfo)
-    }
+    //shared viewmodel
+    val sharedViewModel : SharedViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = sDestination) {
         composable(route = Route.OnboardingScreen.route) {
-            val viewModel: OnboardingViewModel = hiltViewModel()
+            val onboardingViewModel: OnboardingViewModel = hiltViewModel()
             OnboardingScreen(
                 onNavigateTo = {
                     navController.navigateAndClearStack(it.route)
                 },
-                event = viewModel::onEvent
+                event = onboardingViewModel::onEvent
             )
         }
 
-        authNavigator(navController)
+        authNavigator(navController, sharedViewModel)
 
         composable(route = Route.MainNavigator.route) {
+            // TODO: cần tối ưu lại
+            sharedViewModel.onEvent(SharedUiEvent.GetUserInfo)
             Log.d("viewmodel_home", "composable app scaffold")
             AppScaffold(
                 logout = {
+                    Log.d("viewModel_home_state", sharedViewModel.state.toString())
+                    sharedViewModel.onEvent(SharedUiEvent.Logout)
                     navController.navigate(Route.AuthNavigator.route) {
                         popUpTo(Route.MainNavigator.route) {
                             inclusive = true
                         }
                     }
                 },
-                viewModel = homeViewModel,
+                viewModel = sharedViewModel,
                 onNavigateTo = {
                     navController.navigateSingleTopTo(it.route)
                 }
@@ -67,7 +68,7 @@ fun NavGraph(
         composable(route = Route.MyProfileScreen.route) {
             Log.d("viewmodel_home", "composable my profile")
             MyProfileScreen(
-                state = homeViewModel.state,
+                state = sharedViewModel.state,
                 onBack = {
                     navController.popBackStack()
                 }
@@ -101,7 +102,7 @@ fun NavGraph(
 fun HomeNavGraph(
     navController: NavHostController = rememberNavController(),
     logout: () -> Unit,
-    homeViewModel: HomeViewModel,
+    sharedViewModel: SharedViewModel,
     onNavigateTo: (Route) -> Unit
 ) {
 
@@ -109,7 +110,7 @@ fun HomeNavGraph(
         composable(route = Route.HomeScreen.route) {
             Log.d("viewmodel_home", "composable home screen")
             HomeContent(
-                state = homeViewModel.state
+                state = sharedViewModel.state
             )
         }
         composable(route = Route.LeavesScreen.route) {
@@ -124,12 +125,12 @@ fun HomeNavGraph(
                 onLogoutClick = {
                     logout()
                 },
-                state = homeViewModel.state,
-                event = homeViewModel::onEvent,
+                state = sharedViewModel.state,
+                event = sharedViewModel::onEvent,
                 onNavigateTo = onNavigateTo
             )
         }
-        authNavigator(navController)
+        authNavigator(navController, sharedViewModel)
     }
 }
 

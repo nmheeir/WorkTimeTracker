@@ -36,12 +36,14 @@ import com.example.worktimetracker.ui.navigation.lNavItem
 import com.example.worktimetracker.ui.screens.home.activity_section.ActivitySection
 import com.example.worktimetracker.ui.screens.home.attendance_section.AttendanceSection
 import com.example.worktimetracker.ui.screens.home.header_section.HeaderSection
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 
 @Composable
 fun AppScaffold(
     navController: NavHostController = rememberNavController(),
     logout: () -> Unit,
-    viewModel: HomeViewModel,
+    viewModel: SharedViewModel,
     onNavigateTo: (Route) -> Unit
 ) {
     LaunchedEffect(viewModel) {
@@ -63,7 +65,7 @@ fun AppScaffold(
             HomeNavGraph(
                 navController = navController,
                 logout = logout,
-                homeViewModel = viewModel,
+                sharedViewModel = viewModel,
                 onNavigateTo = onNavigateTo
             )
         }
@@ -72,7 +74,7 @@ fun AppScaffold(
 
 @Composable
 fun HomeContent(
-    state: HomeUiState
+    state: SharedUiState
 ) {
     Column(
         modifier = Modifier

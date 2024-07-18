@@ -11,8 +11,12 @@ import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginViewModel
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 
-fun NavGraphBuilder.authNavigator(navController: NavHostController) {
+fun NavGraphBuilder.authNavigator(
+    navController: NavHostController,
+    sharedViewModel: SharedViewModel
+) {
     navigation(
         startDestination = Route.LoginScreen.route,
         route = Route.AuthNavigator.route
@@ -23,6 +27,7 @@ fun NavGraphBuilder.authNavigator(navController: NavHostController) {
             val loginViewModel: LoginViewModel = hiltViewModel()
             LoginScreen(
                 viewModel = loginViewModel,
+                sharedViewModel = sharedViewModel,
                 onLoginSuccess = {
                     navController.navigateAndClearStack(it.route)
                 },

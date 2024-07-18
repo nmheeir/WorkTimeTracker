@@ -39,6 +39,7 @@ import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
 import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 import com.example.worktimetracker.ui.util.BASE_LOG
@@ -47,6 +48,7 @@ import com.example.worktimetracker.ui.util.rememberImeState
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
+    sharedViewModel: SharedViewModel,
     onLoginSuccess: (Route) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
@@ -59,6 +61,7 @@ fun LoginScreen(
             when (it) {
                 is ApiResult.Success -> {
                     localUserManagerImpl.saveAccessToken(it.response._data!!.token)
+//                    sharedViewModel.onEvent(SharedUiEvent.GetUserInfo)
                     onLoginSuccess(Route.MainNavigator)
                 }
 

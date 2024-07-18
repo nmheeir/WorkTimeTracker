@@ -16,15 +16,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Route
-import com.example.worktimetracker.ui.screens.home.HomeUiEvent
-import com.example.worktimetracker.ui.screens.home.HomeUiState
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun ProfileScreen(
     onLogoutClick: () -> Unit,
-    state: HomeUiState,
-    event: (HomeUiEvent) -> Unit,
+    state: SharedUiState,
+    event: (SharedUiEvent) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
     Column(

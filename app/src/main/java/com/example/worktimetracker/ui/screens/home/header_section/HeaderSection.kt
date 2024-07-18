@@ -29,13 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.screens.home.HomeUiState
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.screens.home.components.Avatar
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
 
 @Composable
-fun HeaderSection(modifier: Modifier = Modifier, state: HomeUiState) {
+fun HeaderSection(modifier: Modifier = Modifier, state: SharedUiState) {
     val user = state.user
     Column (
         modifier = modifier

@@ -8,7 +8,7 @@ import com.example.worktimetracker.ui.navigation.Route
 val exampleUser = User(
     address = "address",
     avatarURL = "avatarURL",
-    createdAt = "",
+    createdAt = "12-12-2024",
     department = "department",
     designation = "designation",
     email = "email",

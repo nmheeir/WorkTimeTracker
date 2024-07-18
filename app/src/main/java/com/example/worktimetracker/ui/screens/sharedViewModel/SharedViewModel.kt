@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.home
+package com.example.worktimetracker.ui.screens.sharedViewModel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -17,28 +17,41 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SharedViewModel @Inject constructor(
     private val userUseCase: UserUseCase,
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
 
     private val jwtUtils = JwtUtils()
-    var state by mutableStateOf(HomeUiState())
+    var state by mutableStateOf(SharedUiState())
         private set
 
-    fun onEvent(event: HomeUiEvent) {
+    fun onEvent(event: SharedUiEvent) {
         Log.d("viewmodel_home_before_state", state.toString())
         when (event) {
-            HomeUiEvent.GetUserInfo -> {
+            SharedUiEvent.GetUserInfo -> {
                 getUser()
             }
+            SharedUiEvent.Logout -> {
+                logout()
+            }
+        }
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            state = SharedUiState()
+            localUserManager.clear()
         }
     }
 
     private fun getUser() {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
-            val username = jwtUtils.extractUsername(token!!)
+            if (token.isEmpty()) {
+                return@launch
+            }
+            val username = jwtUtils.extractUsername(token)
             Log.d("viewmodel_home", username)
 
             val result: ApiResult<DataResponse<User>> = userUseCase.getUserByUserName(username)
