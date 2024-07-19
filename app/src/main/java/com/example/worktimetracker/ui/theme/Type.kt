@@ -54,13 +54,13 @@ val Typography = Typography(
     ),
     labelMedium = TextStyle(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         letterSpacing = 0.5.sp
     ),
     labelLarge = TextStyle(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         letterSpacing = 0.5.sp
     ),

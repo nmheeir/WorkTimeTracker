@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.leaves.all_leaves_section
+package com.example.worktimetracker.ui.screens.furlough.all_leaves_section
 
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape

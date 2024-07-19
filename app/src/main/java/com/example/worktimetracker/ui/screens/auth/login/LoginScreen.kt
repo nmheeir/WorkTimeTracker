@@ -62,7 +62,7 @@ fun LoginScreen(
                 is ApiResult.Success -> {
                     localUserManagerImpl.saveAccessToken(it.response._data!!.token)
 //                    sharedViewModel.onEvent(SharedUiEvent.GetUserInfo)
-                    onLoginSuccess(Route.MainNavigator)
+                    onLoginSuccess(Route.HomeScreen)
                 }
 
                 is ApiResult.Error -> {
