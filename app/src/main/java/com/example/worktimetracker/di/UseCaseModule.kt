@@ -9,7 +9,7 @@ import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.domain.use_case.app_entry.ReadAppEntry
 import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
 import com.example.worktimetracker.domain.use_case.login.Login
-import com.example.worktimetracker.domain.use_case.login.LoginUseCase
+import com.example.worktimetracker.domain.use_case.login.AuthUseCase
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
 import dagger.Module
@@ -39,8 +39,8 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
-        return LoginUseCase(
+    fun provideLoginUseCase(authRepository: AuthRepository): AuthUseCase {
+        return AuthUseCase(
             login = Login(authRepository)
         )
     }

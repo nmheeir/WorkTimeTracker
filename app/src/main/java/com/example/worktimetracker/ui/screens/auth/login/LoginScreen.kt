@@ -39,6 +39,7 @@ import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
 import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
+import com.example.worktimetracker.ui.screens.auth.components.RegisterButton
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
@@ -182,6 +183,9 @@ fun LoginContent(
 
             LoginButton(text = stringResource(id = R.string.login), onClick = {
                 onEvent(LoginUiEvent.Login)
+            })
+            RegisterButton(text = stringResource(id = R.string.register), onClick = {
+                onEvent(LoginUiEvent.Register)
             })
         }
 

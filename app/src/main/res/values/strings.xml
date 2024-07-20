@@ -5,6 +5,7 @@
     <string name="login_title">Welcome back to</string>
     <string name="login_desc">Hello there, login to continue</string>
     <string name="login">Login</string>
+    <string name="register">Register</string>
     <string name="create_account">Create Account</string>
     <string name="username">Username</string>
     <string name="username_hint">Enter your username</string>

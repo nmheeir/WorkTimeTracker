@@ -9,4 +9,10 @@ interface AuthRepository {
         username: String,
         password: String
     ): ApiResult<DataResponse<Token>>
+
+    suspend fun register (
+        username: String,
+        password: String,
+        email: String
+    ) : ApiResult<DataResponse<Token>>
 }

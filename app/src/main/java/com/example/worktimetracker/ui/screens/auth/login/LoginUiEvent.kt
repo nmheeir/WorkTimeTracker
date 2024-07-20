@@ -4,4 +4,5 @@ sealed class LoginUiEvent {
     data class UsernameChange(val value: String) : LoginUiEvent()
     data class PasswordChange(val value: String) : LoginUiEvent()
     data object Login : LoginUiEvent()
+    data object Register : LoginUiEvent()
 }

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
 import com.example.worktimetracker.domain.result.ApiResult
-import com.example.worktimetracker.domain.use_case.login.LoginUseCase
+import com.example.worktimetracker.domain.use_case.login.AuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginUiState())
@@ -49,7 +49,9 @@ class LoginViewModel @Inject constructor(
             is LoginUiEvent.Login -> {
                 login()
             }
-
+            is LoginUiEvent.Register -> {
+                register()
+            }
             else -> {
                 //do nothing
             }
@@ -65,12 +67,33 @@ class LoginViewModel @Inject constructor(
 
             Log.d("login", "chạy logn")
 
-            val result = loginUseCase.login(
+            val result = authUseCase.login(
                 username = state.username,
                 password = state.password
             )
             loginUiEventChannel.send(result)
             Log.d("login_viewmodel", result.toString())
+
+            state = state.copy(
+                isLoading = false
+            )
+        }
+    }
+    private fun register() {
+        viewModelScope.launch {
+            state = state.copy(
+                isLoading = true
+            )
+
+            Log.d("login_viewModel", "đăng kí")
+
+            val result = authUseCase.register(
+                username = state.username,
+                password = state.password,
+                email = ""
+            )
+            loginUiEventChannel.send(result)
+            Log.d("login_viewModel", result.toString())
 
             state = state.copy(
                 isLoading = false
