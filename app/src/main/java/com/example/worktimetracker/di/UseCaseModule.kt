@@ -4,10 +4,14 @@ import android.app.Application
 import com.example.worktimetracker.data.manager.LocalUserManagerImpl
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.repository.AuthRepository
+import com.example.worktimetracker.domain.repository.LogRepository
 import com.example.worktimetracker.domain.repository.UserRepository
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.domain.use_case.app_entry.ReadAppEntry
 import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
+import com.example.worktimetracker.domain.use_case.log.CreateLog
+import com.example.worktimetracker.domain.use_case.log.GetLogs
+import com.example.worktimetracker.domain.use_case.log.LogUseCase
 import com.example.worktimetracker.domain.use_case.login.Login
 import com.example.worktimetracker.domain.use_case.login.LoginUseCase
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
@@ -50,6 +54,15 @@ class UseCaseModule {
     fun provideUserUseCase(userRepository: UserRepository): UserUseCase {
         return UserUseCase(
             getUserByUserName = GetUserByUserName(userRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideLogUseCase(logRepository: LogRepository): LogUseCase {
+        return LogUseCase(
+            createLog = CreateLog(logRepository),
+            getLogs = GetLogs(logRepository)
         )
     }
 
