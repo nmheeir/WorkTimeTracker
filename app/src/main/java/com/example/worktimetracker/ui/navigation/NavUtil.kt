@@ -1,7 +1,11 @@
 package com.example.worktimetracker.ui.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
 
 fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
     launchSingleTop = true
@@ -18,5 +22,27 @@ fun NavHostController.navigateAndClearStack(route: String) = this.navigate(route
     restoreState = true
     popUpTo(0) {
         inclusive = true
+    }
+}
+
+
+fun NavGraphBuilder.animatedComposable(
+    route: String,
+    content: @Composable () -> Unit
+) {
+    composable(
+        route = route,
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right
+            )
+        }
+    ) {
+        content()
     }
 }

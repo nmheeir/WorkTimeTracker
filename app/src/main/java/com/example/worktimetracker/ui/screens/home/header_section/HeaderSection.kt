@@ -5,15 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,15 +26,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.screens.home.components.Avatar
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
 
 @Composable
 fun HeaderSection(modifier: Modifier = Modifier, state: SharedUiState) {
     val user = state.user
-    Column (
+    Column(
         modifier = modifier
             .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
@@ -83,16 +80,6 @@ fun HeaderSection(modifier: Modifier = Modifier, state: SharedUiState) {
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
 
                     )
-            }
-        }
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(top = 16.dp, start = 12.dp, end = 12.dp),
-            modifier = Modifier
-                .wrapContentWidth()
-        ) {
-            items(5) {
-                HeaderCalendarItem()
             }
         }
     }

@@ -21,11 +21,11 @@ sealed class Route(
     data object SettingScreen : Route("Setting")
     data object TermConditionScreen : Route("TermCondition")
     data object PrivacyScreen : Route("Privacy")
+    data object PayrollScreen : Route("Payroll")
+    data object CheckInScreen : Route("CheckIn")
 
 
     //Navigator
     data object AuthNavigator : Route("AuthNavigator")
-    data object MainNavigator : Route("MainNavigator")
-    data object ProfileNavigator : Route("ProfileNavigator")
 
 }

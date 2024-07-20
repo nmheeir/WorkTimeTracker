@@ -35,7 +35,7 @@ class MainViewModel @Inject constructor(
                 if (!checkTokenExpired()) {
                     _startDestination.value = Route.AuthNavigator.route
                 } else {
-                    _startDestination.value = Route.MainNavigator.route
+                    _startDestination.value = Route.HomeScreen.route
                 }
             } else {
                 _startDestination.value = Route.OnboardingScreen.route

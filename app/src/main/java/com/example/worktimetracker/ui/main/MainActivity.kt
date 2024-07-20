@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.ui.navigation.NavGraph
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +37,8 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val navController = rememberNavController()
+
             WorkTimeTrackerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize()
@@ -46,7 +49,8 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                     ) {
                         NavGraph(
-                            sDestination = viewModel.startDestination.value
+                            sDestination = viewModel.startDestination.value,
+                            navController = navController
                         )
                     }
                 }

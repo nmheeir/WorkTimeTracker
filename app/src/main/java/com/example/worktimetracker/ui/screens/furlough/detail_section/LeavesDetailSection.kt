@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.leaves.detail_section
+package com.example.worktimetracker.ui.screens.furlough.detail_section
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec

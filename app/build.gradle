@@ -104,4 +104,7 @@ dependencies {
     //splash screen
     implementation libs.androidx.core.splashscreen
 
+    //coil
+    implementation(libs.coil.compose)
+
 }

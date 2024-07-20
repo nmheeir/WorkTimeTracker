@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.leaves.detail_section
+package com.example.worktimetracker.ui.screens.furlough.detail_section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
