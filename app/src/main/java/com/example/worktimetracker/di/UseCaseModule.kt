@@ -4,14 +4,24 @@ import android.app.Application
 import com.example.worktimetracker.data.manager.LocalUserManagerImpl
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.repository.AuthRepository
+
 import com.example.worktimetracker.domain.repository.CheckRepository
 import com.example.worktimetracker.domain.repository.ShiftRepository
+
+import com.example.worktimetracker.domain.repository.LogRepository
+
 import com.example.worktimetracker.domain.repository.UserRepository
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.domain.use_case.app_entry.ReadAppEntry
 import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
+
 import com.example.worktimetracker.domain.use_case.check.Check
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
+
+import com.example.worktimetracker.domain.use_case.log.CreateLog
+import com.example.worktimetracker.domain.use_case.log.GetLogs
+import com.example.worktimetracker.domain.use_case.log.LogUseCase
+
 import com.example.worktimetracker.domain.use_case.login.Login
 import com.example.worktimetracker.domain.use_case.login.AuthUseCase
 import com.example.worktimetracker.domain.use_case.login.Register
@@ -74,6 +84,13 @@ class UseCaseModule {
     fun provideShiftUseCase(shiftRepository: ShiftRepository) : ShiftUseCase {
         return ShiftUseCase(
             getMyShift = GetMyShift(shiftRepository)
+            )
+    }
+
+    fun provideLogUseCase(logRepository: LogRepository): LogUseCase {
+        return LogUseCase(
+            createLog = CreateLog(logRepository),
+            getLogs = GetLogs(logRepository)
         )
     }
 
