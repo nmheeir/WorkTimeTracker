@@ -49,9 +49,6 @@ class LoginViewModel @Inject constructor(
             is LoginUiEvent.Login -> {
                 login()
             }
-            is LoginUiEvent.Register -> {
-                register()
-            }
             else -> {
                 //do nothing
             }
@@ -73,27 +70,6 @@ class LoginViewModel @Inject constructor(
             )
             loginUiEventChannel.send(result)
             Log.d("login_viewmodel", result.toString())
-
-            state = state.copy(
-                isLoading = false
-            )
-        }
-    }
-    private fun register() {
-        viewModelScope.launch {
-            state = state.copy(
-                isLoading = true
-            )
-
-            Log.d("login_viewModel", "đăng kí")
-
-            val result = authUseCase.register(
-                username = state.username,
-                password = state.password,
-                email = ""
-            )
-            loginUiEventChannel.send(result)
-            Log.d("login_viewModel", result.toString())
 
             state = state.copy(
                 isLoading = false

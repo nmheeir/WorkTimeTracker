@@ -60,9 +60,9 @@ class AuthRepositoryImpl(
         username: String,
         password: String,
         email: String
-    ): ApiResult<DataResponse<Token>> {
+    ): ApiResult<DataResponse<String>> {
         return try {
-            val response: Response<DataResponse<Token>> =
+            val response: Response<DataResponse<String>> =
                 authApi.register(UserRegisterRequest(username, password, email))
 
             when (response.code()) {
@@ -72,14 +72,14 @@ class AuthRepositoryImpl(
                 400, 404 -> {
                     Log.d("register_error", response.message())
                     val errorBody = response.errorBody()?.string()
-                    val type = object : TypeToken<DataResponse<Token>>() {}.type
-                    val errorResponse: DataResponse<Token> = gson.fromJson(errorBody, type)
+                    val type = object : TypeToken<DataResponse<String>>() {}.type
+                    val errorResponse: DataResponse<String> = gson.fromJson(errorBody, type)
                     ApiResult.Error(errorResponse)
                 }
 
                 else -> {
                     Log.d("register_error", response.message())
-                    val errorResponse = DataResponse<Token>(
+                    val errorResponse = DataResponse<String>(
                         _data = null,
                         _message = "Register error: " + response.message(),
                         _success = false
@@ -89,14 +89,13 @@ class AuthRepositoryImpl(
             }
         } catch (e: Exception) {
             Log.d("register_exception", e.toString())
-            val errorResponse = DataResponse<Token>(
+            val errorResponse = DataResponse<String>(
                 _data = null,
                 _message = "Register error - lỗi local: " + e.message,
                 _success = false
             )
             ApiResult.Error(errorResponse)
         }
-
-
     }
+
 }

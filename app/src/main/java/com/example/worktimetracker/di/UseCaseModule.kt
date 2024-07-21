@@ -4,12 +4,19 @@ import android.app.Application
 import com.example.worktimetracker.data.manager.LocalUserManagerImpl
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.repository.AuthRepository
+import com.example.worktimetracker.domain.repository.CheckRepository
+import com.example.worktimetracker.domain.repository.ShiftRepository
 import com.example.worktimetracker.domain.repository.UserRepository
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.domain.use_case.app_entry.ReadAppEntry
 import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
+import com.example.worktimetracker.domain.use_case.check.Check
+import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.login.Login
 import com.example.worktimetracker.domain.use_case.login.AuthUseCase
+import com.example.worktimetracker.domain.use_case.login.Register
+import com.example.worktimetracker.domain.use_case.shift.GetMyShift
+import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
 import dagger.Module
@@ -41,7 +48,8 @@ class UseCaseModule {
     @Singleton
     fun provideLoginUseCase(authRepository: AuthRepository): AuthUseCase {
         return AuthUseCase(
-            login = Login(authRepository)
+            login = Login(authRepository),
+            register = Register(authRepository)
         )
     }
 
@@ -50,6 +58,22 @@ class UseCaseModule {
     fun provideUserUseCase(userRepository: UserRepository): UserUseCase {
         return UserUseCase(
             getUserByUserName = GetUserByUserName(userRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckUseCase(checkRepository: CheckRepository) : CheckUseCase {
+        return CheckUseCase(
+            check = Check(checkRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideShiftUseCase(shiftRepository: ShiftRepository) : ShiftUseCase {
+        return ShiftUseCase(
+            getMyShift = GetMyShift(shiftRepository)
         )
     }
 

@@ -17,10 +17,10 @@ interface AuthApi {
         @Body user: UserLoginRequest
     ): Response<DataResponse<Token>>
 
-    @POST("User/register")
+    @POST("Users/register")
     suspend fun register(
         @Body registerRequest: UserRegisterRequest
-    ): Response<DataResponse<Token>>
+    ): Response<DataResponse<String>>
 
     @GET("Users/test")
     suspend fun test() : Response<ResponseBody>

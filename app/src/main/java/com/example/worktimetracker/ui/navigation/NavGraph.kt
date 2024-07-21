@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.worktimetracker.ui.navigation.navigator.authNavigator
 import com.example.worktimetracker.ui.screens.check.CheckScreen
+import com.example.worktimetracker.ui.screens.check.CheckViewModel
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
@@ -19,6 +20,7 @@ import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPoli
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun NavGraph(
@@ -72,7 +74,16 @@ fun NavGraph(
         }
 
         composable(route = Route.CheckInScreen.route) {
-            CheckScreen()
+            val viewModel : CheckViewModel = hiltViewModel()
+            CheckScreen(
+                viewModel,
+                onCheckSuccess = {
+                    navController.popBackStack(it.route, false)
+                },
+                onNavigateTo = {
+                    navController.navigateSingleTopTo(it.route)
+                }
+            )
         }
 
         composable(route = Route.PayrollScreen.route) {

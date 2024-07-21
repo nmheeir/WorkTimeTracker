@@ -11,6 +11,8 @@ import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginViewModel
+import com.example.worktimetracker.ui.screens.auth.register.RegisterScreen
+import com.example.worktimetracker.ui.screens.auth.register.RegisterViewModel
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 
 fun NavGraphBuilder.authNavigator(
@@ -33,6 +35,23 @@ fun NavGraphBuilder.authNavigator(
                 },
                 onNavigateTo = {
                     navController.navigateSingleTopTo(it.route)
+                }
+            )
+        }
+        composable(
+            route = Route.RegisterScreen.route
+        ) {
+            val registerViewModel: RegisterViewModel = hiltViewModel()
+            RegisterScreen(
+                viewModel = registerViewModel,
+                onRegisterSuccess = {
+                    navController.navigateAndClearStack(it.route)
+                },
+                onNavigateTo = {
+                    navController.navigateSingleTopTo(it.route)
+                },
+                onBack = {
+                    navController.navigateSingleTopTo(Route.LoginScreen.route)
                 }
             )
         }

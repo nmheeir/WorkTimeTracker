@@ -14,5 +14,5 @@ interface AuthRepository {
         username: String,
         password: String,
         email: String
-    ) : ApiResult<DataResponse<Token>>
+    ) : ApiResult<DataResponse<String>>
 }
