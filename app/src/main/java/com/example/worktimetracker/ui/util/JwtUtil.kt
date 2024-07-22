@@ -1,6 +1,7 @@
 package com.example.worktimetracker.ui.util
 
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import java.nio.charset.StandardCharsets
 import java.util.Base64
@@ -35,6 +36,11 @@ class JwtUtils {
     }
 
     fun isTokenExpired(token: String): Boolean {
-        return extractClaims(token) { it.expiration }.before(Date())
+        return try {
+            val claims = extractClaims(token) {it}
+            claims.expiration.before(Date())
+        } catch (e: ExpiredJwtException) {
+            true
+        }
     }
 }

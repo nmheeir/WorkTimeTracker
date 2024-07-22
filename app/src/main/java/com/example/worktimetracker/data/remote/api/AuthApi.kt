@@ -1,6 +1,7 @@
 package com.example.worktimetracker.data.remote.api
 
 import com.example.worktimetracker.data.remote.request.UserLoginRequest
+import com.example.worktimetracker.data.remote.request.UserRegisterRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
 import okhttp3.ResponseBody
@@ -15,6 +16,11 @@ interface AuthApi {
     suspend fun login(
         @Body user: UserLoginRequest
     ): Response<DataResponse<Token>>
+
+    @POST("Users/register")
+    suspend fun register(
+        @Body registerRequest: UserRegisterRequest
+    ): Response<DataResponse<String>>
 
     @GET("Users/test")
     suspend fun test() : Response<ResponseBody>
