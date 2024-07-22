@@ -4,7 +4,7 @@ import com.example.worktimetracker.data.remote.response.LogType
 
 data class CreateLogRequest(
     val userId : Int = 0,
-    val time: String,
+    val checkTime: String,
     val type: Int,
     val createAt: String
 )

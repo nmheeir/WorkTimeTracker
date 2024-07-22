@@ -92,11 +92,11 @@ class LogViewModel @Inject constructor(
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
             val currentTime: String =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
 
             val result = logUseCase.createLog(
                 log = CreateLogRequest(
-                    time = state.date + " " + state.time,
+                    checkTime = state.date + " " + state.time,
                     type = state.type.ordinal,
                     createAt = currentTime
                 ),
