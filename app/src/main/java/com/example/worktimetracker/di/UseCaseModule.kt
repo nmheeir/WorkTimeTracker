@@ -87,6 +87,8 @@ class UseCaseModule {
             )
     }
 
+    @Provides
+    @Singleton
     fun provideLogUseCase(logRepository: LogRepository): LogUseCase {
         return LogUseCase(
             createLog = CreateLog(logRepository),

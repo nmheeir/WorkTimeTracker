@@ -107,4 +107,12 @@ dependencies {
     //coil
     implementation(libs.coil.compose)
 
+    //Sheet compose dialog
+    implementation libs.core
+    // CLOCK
+    implementation libs.clock
+
+    // CALENDAR
+    implementation libs.calendar
+
 }

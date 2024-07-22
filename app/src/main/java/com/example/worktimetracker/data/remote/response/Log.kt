@@ -75,10 +75,24 @@ enum class LogType {
     CHECK_IN,
     CHECK_OUT;
 
+    companion object {
+        fun namesToList(): List<String> {
+            return entries.map {
+                it.name.lowercase().replace('_', ' ')
+                    .replaceFirstChar {firstChar ->
+                        firstChar.uppercase()
+                    }
+            }
+        }
+    }
+
     fun displayType(): String {
         return this.name.lowercase().replace('_', ' ').replaceFirstChar { it.uppercase() }
     }
 }
+
+val listLogType = LogType.namesToList()
+val listLogStatus = LogStatus.namesToList()
 
 val exampleLogs = listOf(
     Log(

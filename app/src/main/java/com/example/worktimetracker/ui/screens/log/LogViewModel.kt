@@ -29,12 +29,30 @@ class LogViewModel @Inject constructor(
 
     fun onEvent(event: LogUiEvent) {
         when (event) {
-            LogUiEvent.CreateLog -> {
+            is LogUiEvent.CreateLog -> {
                 createLog()
             }
 
-            LogUiEvent.GetLogs -> {
+            is LogUiEvent.GetLogs -> {
                 getLogs()
+            }
+
+            is LogUiEvent.OnLogTypeChange -> {
+                state = state.copy(
+                    type = event.value
+                )
+            }
+
+            is LogUiEvent.OnDateChange -> {
+                state = state.copy(
+                    date = event.value
+                )
+            }
+
+            is LogUiEvent.OnTimeChange -> {
+                state = state.copy(
+                    time = event.value
+                )
             }
         }
     }

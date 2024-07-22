@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,17 +35,17 @@ import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.data.remote.response.LogStatus
 import com.example.worktimetracker.data.remote.response.exampleLogs
+import com.example.worktimetracker.data.remote.response.listLogStatus
 import com.example.worktimetracker.ui.screens.log.LogUiState
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun LogDetailSection(
     modifier: Modifier = Modifier,
-    state: LogUiState,
+    state: LogUiState
 ) {
-    val listStatus = LogStatus.namesToList()
     var selectedIndex by remember {
-        mutableStateOf(listStatus[0])
+        mutableStateOf(listLogStatus[0])
     }
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -56,7 +57,7 @@ fun LogDetailSection(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            items(listStatus) { status ->
+            items(listLogStatus) { status ->
                 LogChipType(
                     text = status,
                     isSelect = status == selectedIndex,
@@ -68,7 +69,7 @@ fun LogDetailSection(
         }
         Spacer(modifier = Modifier.height(8.dp))
         when (selectedIndex) {
-            listStatus[0] -> {
+            listLogStatus[0] -> {
                 val pendingLogs by remember {
                     mutableStateOf(state.listLog.filter {
                         it.status == LogStatus.PENDING.ordinal
@@ -77,7 +78,7 @@ fun LogDetailSection(
                 LogListDetail(list = pendingLogs)
             }
 
-            listStatus[1] -> {
+            listLogStatus[1] -> {
                 val approvedLogs by remember {
                     mutableStateOf(state.listLog.filter {
                         it.status == LogStatus.APPROVED.ordinal
@@ -86,7 +87,7 @@ fun LogDetailSection(
                 LogListDetail(list = approvedLogs)
             }
 
-            listStatus[2] -> {
+            listLogStatus[2] -> {
                 val rejectedLogs by remember {
                     mutableStateOf(state.listLog.filter {
                         it.status == LogStatus.REJECTED.ordinal
