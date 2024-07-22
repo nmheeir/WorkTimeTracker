@@ -16,7 +16,8 @@ class LogRepositoryImpl(
         token: String
     ): ApiResult<DataResponse<Log>> {
         return try {
-            val response = logApi.createLog(log, token)
+            val bearerToken = "Bearer $token"
+            val response = logApi.createLog(log, bearerToken)
 
             when (response.code()) {
                 200 -> {

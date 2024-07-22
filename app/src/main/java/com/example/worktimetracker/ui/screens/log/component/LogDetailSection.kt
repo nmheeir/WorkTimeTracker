@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.data.remote.response.LogStatus
-import com.example.worktimetracker.data.remote.response.exampleLogs
 import com.example.worktimetracker.data.remote.response.listLogStatus
 import com.example.worktimetracker.ui.screens.log.LogUiState
 import com.example.worktimetracker.ui.theme.Typography
@@ -157,7 +155,7 @@ fun LogListDetail(
 @Composable
 fun LogDetailCard(
     modifier: Modifier = Modifier,
-    item: Log = exampleLogs[0]
+    item: Log
 ) {
     Card(
         colors = CardDefaults.cardColors(

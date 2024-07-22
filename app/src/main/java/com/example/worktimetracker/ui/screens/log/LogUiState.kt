@@ -10,5 +10,6 @@ data class LogUiState(
     val type: LogType = LogType.CHECK_IN,
     val time: String = "",
     val date: String = "",
-    val listLog: List<Log> = exampleLogs,
+    val createAt : String = "",
+    val listLog: List<Log> = emptyList(),
 )

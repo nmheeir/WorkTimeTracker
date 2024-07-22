@@ -95,6 +95,7 @@ fun LogCreateDialog(
                         )
                     }
                 } else {
+                    event(LogUiEvent.CreateLog)
                     Log.d("log_create", "LogCreateDialog: $state")
                 }
             }
