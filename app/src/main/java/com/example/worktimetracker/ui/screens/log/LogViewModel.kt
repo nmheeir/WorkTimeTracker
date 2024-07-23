@@ -88,7 +88,7 @@ class LogViewModel @Inject constructor(
     }
 
     private fun createLog() {
-
+        // TODO: đưa phần xử lí qua bên ui để hiện thanh thông báo
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
             val currentTime: String =

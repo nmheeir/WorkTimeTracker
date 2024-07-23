@@ -89,8 +89,8 @@ val listHomeOption = listOf(
         color = R.color.purple_200
     ),
     HomeOptionItem(
-        route = Route.ProfileScreen,
-        icon = R.drawable.ic_user,
-        color = R.color.red
+        route = Route.WorkTimeScreen,
+        icon = R.drawable.ic_chart,
+        color = R.color.yellow
     ),
 )

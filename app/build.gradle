@@ -55,6 +55,7 @@ android {
 
 dependencies {
 
+    implementation libs.androidx.appcompat
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.activity.compose
@@ -111,8 +112,17 @@ dependencies {
     implementation libs.core
     // CLOCK
     implementation libs.clock
-
     // CALENDAR
     implementation libs.calendar
+
+    //Vico Chart
+    implementation(libs.compose)
+    // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
+    implementation(libs.compose.m3)
+    // Houses the core logic for charts and other elements. Included in all other modules.
+    implementation(libs.vico.core)
+
+    //Biometric auth (fingerprint)
+    implementation libs.androidx.biometric
 
 }
