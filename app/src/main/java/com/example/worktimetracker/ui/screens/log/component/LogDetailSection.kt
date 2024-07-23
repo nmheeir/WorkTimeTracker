@@ -20,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,19 +34,19 @@ import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.data.remote.response.LogStatus
-import com.example.worktimetracker.data.remote.response.exampleLogs
+import com.example.worktimetracker.data.remote.response.listLogStatus
 import com.example.worktimetracker.ui.screens.log.LogUiState
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun LogDetailSection(
     modifier: Modifier = Modifier,
-    state: LogUiState,
+    state: LogUiState
 ) {
-    val listStatus = LogStatus.namesToList()
     var selectedIndex by remember {
-        mutableStateOf(listStatus[0])
+        mutableStateOf("")
     }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,7 +57,7 @@ fun LogDetailSection(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            items(listStatus) { status ->
+            items(listLogStatus) { status ->
                 LogChipType(
                     text = status,
                     isSelect = status == selectedIndex,
@@ -67,35 +68,36 @@ fun LogDetailSection(
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        when (selectedIndex) {
-            listStatus[0] -> {
-                val pendingLogs by remember {
-                    mutableStateOf(state.listLog.filter {
-                        it.status == LogStatus.PENDING.ordinal
-                    })
+            when (selectedIndex) {
+                listLogStatus[0] -> {
+                    val pendingLogs by remember {
+                        mutableStateOf(state.listLog.filter {
+                            it.status == LogStatus.PENDING.ordinal
+                        })
+                    }
+                    LogListDetail(list = pendingLogs)
                 }
-                LogListDetail(list = pendingLogs)
-            }
 
-            listStatus[1] -> {
-                val approvedLogs by remember {
-                    mutableStateOf(state.listLog.filter {
-                        it.status == LogStatus.APPROVED.ordinal
-                    })
+                listLogStatus[1] -> {
+                    val approvedLogs by remember {
+                        mutableStateOf(state.listLog.filter {
+                            it.status == LogStatus.APPROVED.ordinal
+                        })
+                    }
+                    LogListDetail(list = approvedLogs)
                 }
-                LogListDetail(list = approvedLogs)
-            }
 
-            listStatus[2] -> {
-                val rejectedLogs by remember {
-                    mutableStateOf(state.listLog.filter {
-                        it.status == LogStatus.REJECTED.ordinal
-                    })
+                listLogStatus[2] -> {
+                    val rejectedLogs by remember {
+                        mutableStateOf(state.listLog.filter {
+                            it.status == LogStatus.REJECTED.ordinal
+                        })
+                    }
+                    LogListDetail(list = rejectedLogs)
                 }
-                LogListDetail(list = rejectedLogs)
             }
         }
-    }
+
 }
 
 @Composable
@@ -156,7 +158,7 @@ fun LogListDetail(
 @Composable
 fun LogDetailCard(
     modifier: Modifier = Modifier,
-    item: Log = exampleLogs[0]
+    item: Log
 ) {
     Card(
         colors = CardDefaults.cardColors(

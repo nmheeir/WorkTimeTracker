@@ -25,6 +25,7 @@ sealed class Route(
     data object PayrollScreen : Route("Payroll")
     data object CheckInScreen : Route("CheckIn")
     data object LogScreen : Route("Log")
+    data object WorkTimeScreen : Route("WorkTime")
 
 
     //Navigator

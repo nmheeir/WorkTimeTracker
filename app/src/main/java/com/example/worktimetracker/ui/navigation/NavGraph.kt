@@ -22,12 +22,15 @@ import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPoli
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
+import com.example.worktimetracker.ui.screens.worktime.WorkTimeScreen
+import com.example.worktimetracker.ui.util.BiometricPromptManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun NavGraph(
     sDestination: String,
-    navController: NavHostController
+    navController: NavHostController,
+    promptManager: BiometricPromptManager
 ) {
     //shared viewmodel
     val sharedViewModel: SharedViewModel = hiltViewModel()
@@ -86,6 +89,10 @@ fun NavGraph(
             )
         }
 
+        animatedComposable(route = Route.WorkTimeScreen.route) {
+            WorkTimeScreen()
+        }
+
         composable(route = Route.CheckInScreen.route) {
             val viewModel : CheckViewModel = hiltViewModel()
             CheckScreen(
@@ -95,7 +102,8 @@ fun NavGraph(
                 },
                 onNavigateTo = {
                     navController.navigateSingleTopTo(it.route)
-                }
+                },
+                promptManager = promptManager
             )
         }
 
