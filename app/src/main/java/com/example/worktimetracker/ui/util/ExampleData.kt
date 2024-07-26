@@ -146,3 +146,31 @@ val listAttendance = listOf(
         desc = "Working day"
     )
 )
+
+data class WorkTimeData(
+    val date: String,
+    val workTime: List<Int>
+)
+
+val exampleWorkTime = listOf(
+    WorkTimeData(
+        date = "Apr 10, 2023",
+        workTime = listOf(4, 4)
+    ),
+    WorkTimeData(
+        date = "Apr 11, 2023",
+        workTime = listOf(4, 8)
+    ),
+    WorkTimeData(
+        date = "Apr 12, 2023",
+        workTime = listOf(4)
+    ),
+    WorkTimeData(
+        date = "Apr 13, 2023",
+        workTime = listOf(4, 6)
+    ),
+    WorkTimeData(
+        date = "Apr 14, 2023",
+        workTime = listOf(4, 12)
+    ),
+)

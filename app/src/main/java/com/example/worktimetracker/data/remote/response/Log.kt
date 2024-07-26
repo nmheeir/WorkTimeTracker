@@ -130,7 +130,7 @@ val exampleLogs = listOf(
         checkTime = "2022-01-01 00:00:00",
         createAt = "2022-01-01 00:00:00",
         id = 1,
-        status = 0,
+        status = 2,
         type = 1,
         userId = 1
     ),
@@ -138,7 +138,7 @@ val exampleLogs = listOf(
         checkTime = "2022-01-01 00:00:00",
         createAt = "2022-01-01 00:00:00",
         id = 1,
-        status = 0,
+        status = 1,
         type = 1,
         userId = 1
     ),
