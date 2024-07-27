@@ -24,6 +24,7 @@
     <string name="home">Home</string>
 
     <!--    Profile Option-->
+    <string name="edit_profile">Edit Profile</string>
     <string name="my_profile">My Profile</string>
     <string name="settings">Settings</string>
     <string name="term_condition">Term &amp; Conditions</string>

@@ -17,11 +17,15 @@ sealed class Route(
     }
     data object LeavesScreen : Route("Leaves")
      data object AttendanceScreen : Route("Attendance")
+
+    //Profile
+    data object UpdateProfileScreen: Route("UpdateProfile")
      data object ProfileScreen : Route("Profile")
     data object MyProfileScreen : Route("MyProfile")
     data object SettingScreen : Route("Setting")
     data object TermConditionScreen : Route("TermCondition")
     data object PrivacyScreen : Route("Privacy")
+    //End Profile
     data object PayrollScreen : Route("Payroll")
     data object CheckInScreen : Route("CheckIn")
     data object LogScreen : Route("Log")

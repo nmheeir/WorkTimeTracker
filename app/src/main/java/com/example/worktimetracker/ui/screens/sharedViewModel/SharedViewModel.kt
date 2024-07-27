@@ -6,12 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.data.remote.request.UserUpdateRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.User
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
 import com.example.worktimetracker.ui.util.JwtUtils
+import com.example.worktimetracker.ui.util.validateEmail
+import com.example.worktimetracker.ui.util.validatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,9 +35,66 @@ class SharedViewModel @Inject constructor(
             SharedUiEvent.GetUserInfo -> {
                 getUser()
             }
+
             SharedUiEvent.Logout -> {
                 logout()
             }
+
+            SharedUiEvent.UpdateUser -> {
+                updateProfile()
+            }
+
+            is SharedUiEvent.OnUpdateAddressChange -> {
+                state = state.copy(
+                    updateAddress = event.address
+                )
+            }
+            is SharedUiEvent.OnUpdateEmailChange -> {
+                state = state.copy(
+                    updateEmail = event.email,
+                    isUpdateEmailValid = validateEmail(event.email)
+                )
+            }
+            is SharedUiEvent.OnUpdatePasswordChange -> {
+                state = state.copy(
+                    updatePassword = event.password,
+                    isUpdatePasswordValid = validatePassword(event.password)
+                )
+            }
+        }
+    }
+
+    private fun updateProfile() {
+        viewModelScope.launch {
+            state = state.copy(
+                isLoading = true
+            )
+            val token = localUserManager.readAccessToken()
+            val updateUser = UserUpdateRequest(
+                address = state.updateAddress,
+                email = state.updateEmail,
+                password = state.updatePassword
+            )
+
+            when (val result = userUseCase.updateUserProfile(token, updateUser)) {
+                is ApiResult.Success -> {
+                    state = state.copy(
+                        user = result.response._data!!
+                    )
+                    Log.d("viewmodel_home", "success: " + result.response._data)
+                }
+
+                is ApiResult.Error -> {
+                    Log.d("viewmodel_home", "error" + result.response._message)
+                }
+
+                is ApiResult.NetworkError -> {
+                    // TODO: handle network error
+                }
+            }
+            state = state.copy(
+                isLoading = false
+            )
         }
     }
 
@@ -59,7 +119,9 @@ class SharedViewModel @Inject constructor(
             when (result) {
                 is ApiResult.Success -> {
                     state = state.copy(
-                        user = result.response._data!!
+                        user = result.response._data!!,
+                        updateAddress = result.response._data.address,
+                        updateEmail = result.response._data.email,
                     )
                 }
 
@@ -74,8 +136,5 @@ class SharedViewModel @Inject constructor(
 
             Log.d("viewmodel_home", result.toString())
         }
-
-
     }
-
 }
