@@ -142,7 +142,7 @@ fun LoginContent(
             .fillMaxSize()
     ) {
 
-    LoginTopSection()
+        LoginTopSection()
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)

@@ -37,6 +37,16 @@ fun NavGraphBuilder.animatedComposable(
                 AnimatedContentTransitionScope.SlideDirection.Left
             )
         },
+        exitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right
+            )
+        },
         popExitTransition = {
             slideOutOfContainer(
                 AnimatedContentTransitionScope.SlideDirection.Right
