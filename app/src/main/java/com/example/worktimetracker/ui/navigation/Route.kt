@@ -26,7 +26,8 @@ sealed class Route(
     data object TermConditionScreen : Route("TermCondition")
     data object PrivacyScreen : Route("Privacy")
     //End Profile
-    data object PayrollScreen : Route("Payroll")
+
+    data object SalaryScreen : Route("Salary")
     data object CheckInScreen : Route("CheckIn")
     data object LogScreen : Route("Log")
     data object WorkTimeScreen : Route("WorkTime")
