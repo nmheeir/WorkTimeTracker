@@ -37,7 +37,11 @@ fun ProfileScreen(
         GreetingSection(
             state = state
         )
-        EditProfileButton()
+        EditProfileButton(
+            onClick = {
+                onNavigateTo(Route.UpdateProfileScreen)
+            }
+        )
         OptionSection(
             onNavigateTo = onNavigateTo
         )
@@ -51,7 +55,7 @@ fun ProfileScreen(
 
 @Composable
 fun EditProfileButton(
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     Button(
         shape = RoundedCornerShape(8.dp),

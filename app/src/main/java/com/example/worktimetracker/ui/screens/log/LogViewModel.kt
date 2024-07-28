@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.data.remote.request.CreateLogRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.domain.manager.LocalUserManager
@@ -12,6 +13,8 @@ import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.log.LogUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,12 +32,30 @@ class LogViewModel @Inject constructor(
 
     fun onEvent(event: LogUiEvent) {
         when (event) {
-            LogUiEvent.CreateLog -> {
+            is LogUiEvent.CreateLog -> {
                 createLog()
             }
 
-            LogUiEvent.GetLogs -> {
+            is LogUiEvent.GetLogs -> {
                 getLogs()
+            }
+
+            is LogUiEvent.OnLogTypeChange -> {
+                state = state.copy(
+                    type = event.value
+                )
+            }
+
+            is LogUiEvent.OnDateChange -> {
+                state = state.copy(
+                    date = event.value
+                )
+            }
+
+            is LogUiEvent.OnTimeChange -> {
+                state = state.copy(
+                    time = event.value
+                )
             }
         }
     }
@@ -67,9 +88,33 @@ class LogViewModel @Inject constructor(
     }
 
     private fun createLog() {
-        // TODO: chưa làm
+        // TODO: đưa phần xử lí qua bên ui để hiện thanh thông báo
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
+            val currentTime: String =
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+
+            val result = logUseCase.createLog(
+                log = CreateLogRequest(
+                    checkTime = state.date + " " + state.time,
+                    type = state.type.ordinal,
+                    createAt = currentTime
+                ),
+                token = token
+            )
+            when (result) {
+                is ApiResult.Success -> {
+                    android.util.Log.d("viewmodel_log", result.toString())
+                }
+
+                is ApiResult.Error -> {
+                    android.util.Log.d("viewmodel_log", "Error " + result.response._message)
+                }
+                is ApiResult.NetworkError -> {
+                    // TODO: Handle network error
+                    android.util.Log.d("viewmodel_log", "Network error " + result.message)
+                }
+            }
         }
     }
 

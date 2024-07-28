@@ -9,7 +9,13 @@ data class Shift(
     val id: Int,
     val start: LocalDateTime,
     val end: LocalDateTime,
-    val shiftType: ShiftType, // Giả sử bạn đã định nghĩa enum ShiftType trong Kotlin
+    val shiftType: ShiftType,
     val userId: Int,
     val user: User?
 ) : Parcelable
+
+enum class ShiftType {
+    Normal,
+    Overtime,
+    NightShift
+}

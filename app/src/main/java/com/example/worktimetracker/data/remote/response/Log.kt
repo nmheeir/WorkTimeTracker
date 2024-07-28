@@ -7,8 +7,6 @@ data class Log(
     @SerializedName("id") val id: Int,
     @SerializedName("userId") val userId: Int,
     @SerializedName("type") val type: Int,
-    @SerializedName("reason") val reason: String,
-    @SerializedName("notes") val notes: String,
     @SerializedName("status") val status: Int,
     @SerializedName("createAt") val createAt: String,
     @SerializedName("checkTime") val checkTime: String,
@@ -75,19 +73,32 @@ enum class LogType {
     CHECK_IN,
     CHECK_OUT;
 
+    companion object {
+        fun namesToList(): List<String> {
+            return entries.map {
+                it.name.lowercase().replace('_', ' ')
+                    .replaceFirstChar {firstChar ->
+                        firstChar.uppercase()
+                    }
+            }
+        }
+    }
+
     fun displayType(): String {
         return this.name.lowercase().replace('_', ' ').replaceFirstChar { it.uppercase() }
     }
 }
 
+val listLogType = LogType.namesToList()
+val listLogStatus = LogStatus.namesToList()
+
+//Cái này là để test
 val exampleLogs = listOf(
     Log(
         checkTime = "2022-01-01 00:00:00",
         createAt = "2022-01-01 00:00:00",
         id = 1,
         status = 0,
-        notes = "notes",
-        reason = "reason",
         type = 1,
         userId = 1
     ),
@@ -96,8 +107,6 @@ val exampleLogs = listOf(
         createAt = "2022-01-01 00:00:00",
         id = 1,
         status = 0,
-        notes = "notes",
-        reason = "reason",
         type = 1,
         userId = 1
     ),
@@ -106,8 +115,6 @@ val exampleLogs = listOf(
         createAt = "2022-01-01 00:00:00",
         id = 1,
         status = 0,
-        notes = "notes",
-        reason = "reason",
         type = 1,
         userId = 1
     ),
@@ -116,8 +123,6 @@ val exampleLogs = listOf(
         createAt = "2022-01-01 00:00:00",
         id = 1,
         status = 0,
-        notes = "notes",
-        reason = "reason",
         type = 1,
         userId = 1
     ),
@@ -125,9 +130,7 @@ val exampleLogs = listOf(
         checkTime = "2022-01-01 00:00:00",
         createAt = "2022-01-01 00:00:00",
         id = 1,
-        status = 0,
-        notes = "notes",
-        reason = "reason",
+        status = 2,
         type = 1,
         userId = 1
     ),
@@ -135,9 +138,7 @@ val exampleLogs = listOf(
         checkTime = "2022-01-01 00:00:00",
         createAt = "2022-01-01 00:00:00",
         id = 1,
-        status = 0,
-        notes = "notes",
-        reason = "reason",
+        status = 1,
         type = 1,
         userId = 1
     ),

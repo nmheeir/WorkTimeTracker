@@ -4,24 +4,33 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.ui.navigation.NavGraph
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
+import com.example.worktimetracker.ui.util.BiometricPromptManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
+    private val promptManager: BiometricPromptManager by lazy {
+        BiometricPromptManager(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -38,11 +47,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-
             WorkTimeTrackerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
+
                     Box(
                         modifier = Modifier
                             .safeDrawingPadding()
@@ -50,7 +59,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavGraph(
                             sDestination = viewModel.startDestination.value,
-                            navController = navController
+                            navController = navController,
+                            promptManager = promptManager
                         )
                     }
                 }

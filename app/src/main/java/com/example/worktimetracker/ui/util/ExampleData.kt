@@ -2,6 +2,7 @@ package com.example.worktimetracker.ui.util
 
 import androidx.annotation.DrawableRes
 import com.example.worktimetracker.R
+import com.example.worktimetracker.data.remote.request.UserUpdateRequest
 import com.example.worktimetracker.data.remote.response.User
 import com.example.worktimetracker.ui.navigation.Route
 
@@ -19,6 +20,12 @@ val exampleUser = User(
     role = 0,
     userFullName = "userFullName",
     userName = "userName"
+)
+
+val exampleUpdateUser = UserUpdateRequest(
+    password = "password",
+    address = "address",
+    email = "email"
 )
 
 data class Leaves(
@@ -145,4 +152,32 @@ val listAttendance = listOf(
         time = "28",
         desc = "Working day"
     )
+)
+
+data class WorkTimeData(
+    val date: String,
+    val workTime: List<Int>
+)
+
+val exampleWorkTime = listOf(
+    WorkTimeData(
+        date = "Apr 10, 2023",
+        workTime = listOf(4, 4)
+    ),
+    WorkTimeData(
+        date = "Apr 11, 2023",
+        workTime = listOf(4, 8)
+    ),
+    WorkTimeData(
+        date = "Apr 12, 2023",
+        workTime = listOf(4)
+    ),
+    WorkTimeData(
+        date = "Apr 13, 2023",
+        workTime = listOf(4, 6)
+    ),
+    WorkTimeData(
+        date = "Apr 14, 2023",
+        workTime = listOf(4, 12)
+    ),
 )

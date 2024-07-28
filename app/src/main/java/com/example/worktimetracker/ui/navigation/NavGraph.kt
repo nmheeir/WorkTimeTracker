@@ -11,6 +11,7 @@ import com.example.worktimetracker.ui.screens.check.CheckScreen
 import com.example.worktimetracker.ui.screens.check.CheckViewModel
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.log.LogScreen
+import com.example.worktimetracker.ui.screens.log.LogUiEvent
 import com.example.worktimetracker.ui.screens.log.LogViewModel
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
@@ -22,12 +23,15 @@ import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPoli
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.worktimetracker.ui.screens.profile.updateProfile.UpdateProfileScreen
+import com.example.worktimetracker.ui.screens.worktime.WorkTimeScreen
+import com.example.worktimetracker.ui.util.BiometricPromptManager
 
 @Composable
 fun NavGraph(
     sDestination: String,
-    navController: NavHostController
+    navController: NavHostController,
+    promptManager: BiometricPromptManager
 ) {
     //shared viewmodel
     val sharedViewModel: SharedViewModel = hiltViewModel()
@@ -63,6 +67,7 @@ fun NavGraph(
         animatedComposable(route = Route.ProfileScreen.route) {
             ProfileScreen(
                 onLogoutClick = {
+                    sharedViewModel.onEvent(SharedUiEvent.Logout)
                     navController.navigateAndClearStack(Route.AuthNavigator.route)
                 },
                 state = sharedViewModel.state,
@@ -86,6 +91,10 @@ fun NavGraph(
             )
         }
 
+        animatedComposable(route = Route.WorkTimeScreen.route) {
+            WorkTimeScreen()
+        }
+
         composable(route = Route.CheckInScreen.route) {
             val viewModel : CheckViewModel = hiltViewModel()
             CheckScreen(
@@ -95,7 +104,8 @@ fun NavGraph(
                 },
                 onNavigateTo = {
                     navController.navigateSingleTopTo(it.route)
-                }
+                },
+                promptManager = promptManager
             )
         }
 
@@ -106,6 +116,16 @@ fun NavGraph(
         animatedComposable(route = Route.MyProfileScreen.route) {
             Log.d("viewmodel_home", "composable my profile")
             MyProfileScreen(
+                state = sharedViewModel.state,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        animatedComposable(route = Route.UpdateProfileScreen.route) {
+            UpdateProfileScreen(
+                event = sharedViewModel::onEvent,
                 state = sharedViewModel.state,
                 onBack = {
                     navController.popBackStack()
