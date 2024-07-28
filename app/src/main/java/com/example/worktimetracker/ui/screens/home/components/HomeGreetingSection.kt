@@ -1,12 +1,10 @@
 package com.example.worktimetracker.ui.screens.home.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -33,12 +31,10 @@ fun HomeGreetingSection(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .background(color = colorResource(id = R.color.blue))
             .padding(24.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
