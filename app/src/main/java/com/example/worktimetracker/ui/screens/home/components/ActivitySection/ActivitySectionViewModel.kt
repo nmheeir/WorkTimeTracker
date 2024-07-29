@@ -1,6 +1,5 @@
-package com.example.worktimetracker.ui.screens.check
+package com.example.worktimetracker.ui.screens.home.components.ActivitySection
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,57 +10,35 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
-import com.example.worktimetracker.helper.Helper
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.Objects
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckViewModel @Inject constructor(
-    private var checkUseCase : CheckUseCase,
+class ActivitySectionViewModel @Inject constructor(
+    private val checkUseCase: CheckUseCase,
     private val localUserManager: LocalUserManager
+
 ) : ViewModel() {
-    private val checkUiEventChannel = Channel<ApiResult<DataResponse<Any>>>()
-    val checkUiEvent = checkUiEventChannel.receiveAsFlow()
-    var state by mutableStateOf(CheckUiState())
+    var state by mutableStateOf(ActivitySectionUiState())
+
 
     init {
-        getTodayCheckList()
+        android.util.Log.d("viewmodel_log", "init")
+        getCheck()
     }
 
-    fun onEvent(event: CheckUiEvent) {
-        when (event) {
-            is CheckUiEvent.CheckIn -> {
-                check(0)
-            }
-            is CheckUiEvent.CheckOut -> {
-                check(1)
-            }
-        }
-    }
-
-    private fun check(checkType : Int) {
+    private fun getCheck() {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
-            val result = checkUseCase.check(checkType, token)
-            checkUiEventChannel.send(result)
-        }
-    }
-
-    private fun getTodayCheckList() {
-        viewModelScope.launch {
+            android.util.Log.d("viewmodel_check", "getCheck")
             val token = localUserManager.readAccessToken()
 
-            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token, Helper.getStartOfDayInMillis())) {
+            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token)) {
                 is ApiResult.Success -> {
                     if (result.response._data != null) {
                         android.util.Log.d("viewmodel_check", result.response._data.toString())
                         state = state.copy(
-                            todayCheckList = result.response._data
+                            activityItems = result.response._data
                         )
                     }
                 }

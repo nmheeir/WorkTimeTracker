@@ -22,7 +22,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.ui.navigation.NavGraph
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import com.example.worktimetracker.ui.util.BiometricPromptManager
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
+import org.osmdroid.config.Configuration
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -45,6 +47,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Configure osmdroid cho openstreetmap
+        Configuration.getInstance().load(this, this.getPreferences(MODE_PRIVATE))
+        // tạo fused lấy vị trí hiện tại
+        var fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
             val navController = rememberNavController()
             WorkTimeTrackerTheme {
@@ -66,5 +72,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 }

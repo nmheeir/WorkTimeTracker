@@ -125,4 +125,7 @@ dependencies {
     //Biometric auth (fingerprint)
     implementation libs.androidx.biometric
 
+    //  openstreet map
+    implementation libs.osmdroid.android
+    implementation libs.play.services.location
 }

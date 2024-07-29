@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 @Parcelize
 data class Shift(
     val id: Int,
-    val start: LocalDateTime,
-    val end: LocalDateTime,
+    val start: Long,
+    val end: Long,
     val shiftType: ShiftType,
     val userId: Int,
     val user: User?

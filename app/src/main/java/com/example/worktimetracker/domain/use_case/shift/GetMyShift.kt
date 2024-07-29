@@ -10,8 +10,8 @@ class GetMyShift (
     private val shiftRepository: ShiftRepository
 ) {
     suspend operator fun invoke(
-        start: LocalDateTime,
-        end: LocalDateTime,
+        start: Long? = null,
+        end: Long? = null,
         token: String
     ) : ApiResult<DataResponse<List<Shift>>> {
         return shiftRepository.getMyShift(start, end, token)

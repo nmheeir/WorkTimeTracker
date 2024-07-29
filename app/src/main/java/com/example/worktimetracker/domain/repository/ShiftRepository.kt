@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 
 interface ShiftRepository {
     suspend fun getMyShift(
-        start: LocalDateTime,
-        end: LocalDateTime,
+        start: Long? = null,
+        end: Long? = null,
         token: String
     ) : ApiResult<DataResponse<List<Shift>>>
 }
