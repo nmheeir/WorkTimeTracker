@@ -18,6 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.Typography
@@ -39,8 +40,10 @@ fun HomeGreetingSection(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            // TODO: Đổi thành asyncImage
-            Avatar(image = R.drawable.avatar, modifier = Modifier.size(32.dp))
+            Avatar(
+                avatarUrl = state.user.avatarURL.toUri(),
+                modifier = Modifier.size(48.dp)
+            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -62,7 +65,8 @@ fun HomeGreetingSection(
             Icon(
                 imageVector = Icons.Filled.Notifications,
                 contentDescription = null,
-                tint = colorResource(id = R.color.white)
+                tint = colorResource(id = R.color.white),
+                modifier = Modifier.size(36.dp)
             )
         }
     }
