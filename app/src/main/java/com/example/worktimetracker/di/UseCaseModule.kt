@@ -30,6 +30,7 @@ import com.example.worktimetracker.domain.use_case.shift.GetMyShift
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
 import com.example.worktimetracker.domain.use_case.user.UpdateUserProfile
+import com.example.worktimetracker.domain.use_case.user.UploadAvatar
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
 import dagger.Module
 import dagger.Provides
@@ -70,7 +71,8 @@ class UseCaseModule {
     fun provideUserUseCase(userRepository: UserRepository): UserUseCase {
         return UserUseCase(
             getUserByUserName = GetUserByUserName(userRepository),
-            updateUserProfile = UpdateUserProfile(userRepository)
+            updateUserProfile = UpdateUserProfile(userRepository),
+            uploadAvatar = UploadAvatar(userRepository)
         )
     }
 

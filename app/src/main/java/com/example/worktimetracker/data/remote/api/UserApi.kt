@@ -22,4 +22,10 @@ interface UserApi {
         @Header("Authorization") token: String,
         @Body updateUser: UserUpdateRequest
     ): Response<DataResponse<User>>
+
+    @PUT("Users/uploadAvatar")
+    suspend fun uploadAvatar(
+        @Header("Authorization") token: String,
+        @Query("avatarURL") avatarUrl: String
+    ): Response<DataResponse<User>>
 }

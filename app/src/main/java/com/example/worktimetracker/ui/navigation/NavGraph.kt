@@ -11,19 +11,18 @@ import com.example.worktimetracker.ui.screens.check.CheckScreen
 import com.example.worktimetracker.ui.screens.check.CheckViewModel
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.log.LogScreen
-import com.example.worktimetracker.ui.screens.log.LogUiEvent
 import com.example.worktimetracker.ui.screens.log.LogViewModel
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
-import com.example.worktimetracker.ui.screens.payroll.PayrollScreen
 import com.example.worktimetracker.ui.screens.profile.ProfileScreen
 import com.example.worktimetracker.ui.screens.profile.my_profile.MyProfileScreen
 import com.example.worktimetracker.ui.screens.profile.setting.SettingScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPolicyScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
+import com.example.worktimetracker.ui.screens.profile.updateProfile.UpdateProfileScreen
+import com.example.worktimetracker.ui.screens.salary.SalaryScreen
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
-import com.example.worktimetracker.ui.screens.profile.updateProfile.UpdateProfileScreen
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeScreen
 import com.example.worktimetracker.ui.util.BiometricPromptManager
 
@@ -112,8 +111,12 @@ fun NavGraph(
             )
         }
 
-        composable(route = Route.PayrollScreen.route) {
-            PayrollScreen()
+        animatedComposable(route = Route.SalaryScreen.route) {
+            SalaryScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         animatedComposable(route = Route.MyProfileScreen.route) {
