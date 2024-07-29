@@ -35,7 +35,8 @@ fun ProfileScreen(
             .padding(12.dp)
     ) {
         GreetingSection(
-            state = state
+            state = state,
+            event = event
         )
         EditProfileButton(
             onClick = {

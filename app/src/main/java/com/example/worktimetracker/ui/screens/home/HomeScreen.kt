@@ -60,11 +60,14 @@ fun HomeScreen(
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             })
-        HomeGreetingSection(modifier = Modifier.constrainAs(greetingSection) {
-            top.linkTo(topSection.top)
-            start.linkTo(topSection.start)
-            end.linkTo(topSection.end)
-        })
+        HomeGreetingSection(
+            state = state,
+            modifier = Modifier.constrainAs(greetingSection) {
+                top.linkTo(topSection.top)
+                start.linkTo(topSection.start)
+                end.linkTo(topSection.end)
+            }
+        )
         NotificationCard(modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 12.dp)
             .constrainAs(notifySection) {

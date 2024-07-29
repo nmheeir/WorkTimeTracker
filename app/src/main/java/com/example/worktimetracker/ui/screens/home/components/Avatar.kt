@@ -1,29 +1,31 @@
 package com.example.worktimetracker.ui.screens.home.components
 
-import androidx.annotation.DrawableRes
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.example.worktimetracker.R
 
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
-    @DrawableRes image: Int
+    avatarUrl: Uri?
 ) {
+    val context = LocalContext.current
+    val imageLoader = context.imageLoader
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -34,16 +36,24 @@ fun Avatar(
                 shape = CircleShape
             )
     ) {
-        Image(
-            painter = painterResource(id = image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-        )
+        if (avatarUrl.toString().isEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_user),
+                contentDescription = "avatar",
+                contentScale = ContentScale.Crop
+            )
+        }
+        else {
+            val imageRequest = ImageRequest.Builder(context)
+                .data(avatarUrl)
+                .crossfade(true)
+                .build()
+            AsyncImage(
+                model = imageRequest,
+                contentDescription = "avatar",
+                placeholder = painterResource(id = R.drawable.ic_user),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
-}
-
-@Preview(showBackground = true, widthDp = 100, heightDp = 100)
-@Composable
-private fun AvatarPreview() {
-    Avatar(image = R.drawable.avatar)
 }

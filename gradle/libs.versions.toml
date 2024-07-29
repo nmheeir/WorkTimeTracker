@@ -26,6 +26,8 @@ materialIconsExtended = "1.6.8"
 navigationCompose = "2.7.7"
 retrofit = "2.9.0"
 runtimeLivedata = "1.6.8"
+googleGmsGoogleServices = "4.4.2"
+firebaseStorage = "21.0.0"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -65,8 +67,10 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 vico-core = { module = "com.patrykandpatrick.vico:core", version.ref = "compose" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
