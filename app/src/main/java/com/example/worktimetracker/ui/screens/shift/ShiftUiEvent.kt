@@ -1,3 +1,5 @@
 package com.example.worktimetracker.ui.screens.shift
 
-data class ShiftUiEvent()
+data class ShiftUiEvent(
+    val getShift : String
+)
