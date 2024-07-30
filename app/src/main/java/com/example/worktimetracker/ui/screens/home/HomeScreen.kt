@@ -23,9 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.home.components.ActivitySection.ActivitySection
@@ -43,17 +42,10 @@ import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 fun HomeScreen(
     state: SharedUiState = SharedUiState(), onNavigateTo: (Route) -> Unit = {}
 ) {
-
-    // khai báo viewModel
-    val activitySectionViewModel : ActivitySectionViewModel = hiltViewModel()
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+    val activitySectionViewModel : ActivitySectionViewModel = hiltViewModel()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -109,7 +101,9 @@ fun HomeScreen(
             .padding(12.dp)
             .constrainAs(activitySection) {
                 top.linkTo(optionSection.bottom, margin = 16.dp)
-            })
+            },
+            viewModel = activitySectionViewModel,
+            state = activitySectionViewModel.state)
     }
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -131,12 +125,5 @@ fun HomeScreen(
                 }
             }
         }
-        ActivitySection(
-            viewModel = activitySectionViewModel,
-            modifier = Modifier.padding(12.dp),
-            state = activitySectionViewModel.state
-        )
-
     }
 }
-
