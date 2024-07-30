@@ -11,8 +11,8 @@ import retrofit2.http.Query
 interface ShiftApi {
     @GET("Shift/getMyShifts")
     suspend fun getMyShift (
-        @Query("start") start: String? = null,
-        @Query("end") end: String? = null,
+        @Query("start") start: Long? = null,
+        @Query("end") end: Long? = null,
         @Header("Authorization") token: String
     ) : Response<DataResponse<List<Shift>>>
 }

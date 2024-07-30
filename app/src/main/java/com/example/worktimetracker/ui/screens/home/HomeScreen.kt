@@ -23,10 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Route
-import com.example.worktimetracker.ui.screens.home.components.ActivitySection
+import com.example.worktimetracker.ui.screens.home.components.ActivitySection.ActivitySection
+import com.example.worktimetracker.ui.screens.home.components.ActivitySection.ActivitySectionViewModel
 import com.example.worktimetracker.ui.screens.home.components.HomeGreetingSection
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItem
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItemData
@@ -40,6 +43,14 @@ import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 fun HomeScreen(
     state: SharedUiState = SharedUiState(), onNavigateTo: (Route) -> Unit = {}
 ) {
+
+    // khai báo viewModel
+    val activitySectionViewModel : ActivitySectionViewModel = hiltViewModel()
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -120,6 +131,12 @@ fun HomeScreen(
                 }
             }
         }
+        ActivitySection(
+            viewModel = activitySectionViewModel,
+            modifier = Modifier.padding(12.dp),
+            state = activitySectionViewModel.state
+        )
+
     }
 }
 

@@ -104,6 +104,9 @@ fun NavGraph(
                 onNavigateTo = {
                     navController.navigateSingleTopTo(it.route)
                 },
+                onBack = {
+                    navController.popBackStack()
+                },
                 promptManager = promptManager
             )
         }

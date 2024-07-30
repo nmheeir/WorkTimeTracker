@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.home.components
+package com.example.worktimetracker.ui.screens.home.components.ActivitySection
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,12 +28,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.data.remote.response.Check
+import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
-@Preview(showBackground = true)
 @Composable
-fun ActivitySection(modifier: Modifier = Modifier) {
+fun ActivitySection(
+    viewModel: ActivitySectionViewModel,
+    modifier: Modifier = Modifier,
+    state: ActivitySectionUiState) {
+
+    var checkList: List<Check> by remember {
+        mutableStateOf(emptyList())
+    }
+
+    LaunchedEffect(state) {
+        checkList = state.activityItems
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -52,8 +70,8 @@ fun ActivitySection(modifier: Modifier = Modifier) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(10) {
-                ActivitySectionItem(number = it)
+            items(checkList.size) {
+                ActivitySectionItem(item = checkList[it])
             }
         }
     }
@@ -61,7 +79,7 @@ fun ActivitySection(modifier: Modifier = Modifier) {
 
 //@Preview(showBackground = true)
 @Composable
-fun ActivitySectionItem(modifier: Modifier = Modifier, number: Int) {
+fun ActivitySectionItem(modifier: Modifier = Modifier, item: Check) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -95,19 +113,19 @@ fun ActivitySectionItem(modifier: Modifier = Modifier, number: Int) {
         ) {
             Column {
                 Text(
-                    text = "Check In $number",
+                    text = item.checkType(),
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "April 17, 2023",
+                    text = item.getDateForCheck(),
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.Light
                 )
             }
             Column {
                 Text(
-                    text = "10:00 am",
+                    text = item.getHour(),
                     fontFamily = poppinsFontFamily,
                     fontWeight = FontWeight.SemiBold
                 )

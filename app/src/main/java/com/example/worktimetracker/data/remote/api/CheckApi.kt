@@ -1,14 +1,12 @@
 package com.example.worktimetracker.data.remote.api
 
-import com.example.worktimetracker.data.remote.request.UserLoginRequest
+import com.example.worktimetracker.data.remote.response.Check
 import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.data.remote.response.Token
 import retrofit2.Response
-import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
-import java.util.Objects
 
 interface CheckApi {
     @POST("Check/check")
@@ -16,4 +14,11 @@ interface CheckApi {
         @Query("checkType") checkType : Int,
         @Header("Authorization") token: String,
     ): Response<DataResponse<Any>>
+
+    @GET("Check/getCheckByMyUserIdWithDate")
+    suspend fun getCheckWithDate(
+        @Header("Authorization") token: String,
+        @Query("start") start : Long? = null,
+        @Query("end") end : Long? = null,
+    ) : Response<DataResponse<List<Check>>>
 }

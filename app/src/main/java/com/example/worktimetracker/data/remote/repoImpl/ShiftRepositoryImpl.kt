@@ -14,13 +14,13 @@ class ShiftRepositoryImpl(
     private val shiftApi: ShiftApi
 ) : ShiftRepository {
     override suspend fun getMyShift(
-        start: LocalDateTime,
-        end: LocalDateTime,
+        start: Long? ,
+        end: Long? ,
         token : String
     ): ApiResult<DataResponse<List<Shift>>> {
         return try {
             val response: Response<DataResponse<List<Shift>>> =
-                shiftApi.getMyShift(start.toString(), end.toString(), token)
+                shiftApi.getMyShift(start, end, token)
 
             when(response.code()) {
                 200 -> {
