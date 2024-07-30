@@ -46,6 +46,7 @@ fun HomeScreen(
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     val activitySectionViewModel : ActivitySectionViewModel = hiltViewModel()
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
