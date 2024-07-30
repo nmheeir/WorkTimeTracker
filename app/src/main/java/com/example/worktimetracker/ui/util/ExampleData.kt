@@ -8,7 +8,7 @@ import com.example.worktimetracker.ui.navigation.Route
 
 val exampleUser = User(
     address = "address",
-    avatarURL = "avatarURL",
+    avatarURL = "https://cdn.pixabay.com/photo/2016/09/07/10/37/kermit-1651325_1280.jpg",
     createdAt = "12-12-2024",
     department = "department",
     designation = "designation",

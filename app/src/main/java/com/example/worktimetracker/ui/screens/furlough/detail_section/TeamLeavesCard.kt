@@ -47,10 +47,6 @@ fun TeamLeavesCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Avatar(
-                image = R.drawable.avatar,
-                modifier = Modifier.size(48.dp)
-            )
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {

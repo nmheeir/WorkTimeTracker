@@ -1,12 +1,10 @@
 package com.example.worktimetracker.ui.screens.home.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -20,6 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.Typography
@@ -33,18 +32,18 @@ fun HomeGreetingSection(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .background(color = colorResource(id = R.color.blue))
             .padding(24.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            // TODO: Đổi thành asyncImage
-            Avatar(image = R.drawable.avatar, modifier = Modifier.size(32.dp))
+            Avatar(
+                avatarUrl = state.user.avatarURL.toUri(),
+                modifier = Modifier.size(48.dp)
+            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -66,7 +65,8 @@ fun HomeGreetingSection(
             Icon(
                 imageVector = Icons.Filled.Notifications,
                 contentDescription = null,
-                tint = colorResource(id = R.color.white)
+                tint = colorResource(id = R.color.white),
+                modifier = Modifier.size(36.dp)
             )
         }
     }

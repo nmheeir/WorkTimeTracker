@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,8 +29,9 @@ import com.example.worktimetracker.ui.theme.Typography
 @Composable
 fun HomeOptionItem(
     modifier: Modifier = Modifier,
-    item: HomeOptionItem = listHomeOption[0],
-    onClick: (Route) -> Unit = {}
+    item: HomeOptionItemData = listHomeOption[0],
+    onClick: ((Route) -> Unit)? = null,
+    onShowDialog: () -> Unit = {}
 ) {
     val iconColor = colorResource(id = item.color)
     val bgColor = colorResource(id = item.color).copy(alpha = 0.2f)
@@ -38,14 +39,15 @@ fun HomeOptionItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp),
         modifier = modifier
-            .wrapContentHeight()
+            .wrapContentSize()
             .clickable {
-                onClick(item.route)
+                onClick?.invoke(item.route!!) ?: onShowDialog()
             }
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .wrapContentSize()
                 .clip(RoundedCornerShape(16.dp))
                 .background(color = bgColor)
         ) {
@@ -59,38 +61,65 @@ fun HomeOptionItem(
             )
         }
         Text(
-            text = item.route.route,
+            text = item.title,
             style = Typography.labelMedium,
             fontWeight = FontWeight.Normal
         )
     }
 }
 
-data class HomeOptionItem(
-    val route: Route,
+data class HomeOptionItemData(
+    val route: Route? = null,
+    val title: String,
     @DrawableRes val icon: Int,
     @ColorRes val color: Int
 )
 
+// TODO: sửa lại list home option
 val listHomeOption = listOf(
-    HomeOptionItem(
+    HomeOptionItemData(
         route = Route.ProfileScreen,
+        title = "Profile",
         icon = R.drawable.ic_user_filled,
         color = R.color.blue
     ),
-    HomeOptionItem(
+    HomeOptionItemData(
         route = Route.CheckInScreen,
+        title = "Check",
         icon = R.drawable.ic_clock_filled,
         color = R.color.teal
     ),
-    HomeOptionItem(
+    HomeOptionItemData(
         route = Route.LogScreen,
+        title = "Logging",
         icon = R.drawable.ic_add_square,
         color = R.color.purple_200
     ),
-    HomeOptionItem(
+    HomeOptionItemData(
         route = Route.WorkTimeScreen,
+        title = "Work Chart",
         icon = R.drawable.ic_chart,
         color = R.color.yellow
     ),
+    HomeOptionItemData(
+        route = Route.SalaryScreen,
+        title = "Salary",
+        icon = R.drawable.ic_dollar_money,
+        color = R.color.green
+    ),
+    HomeOptionItemData(
+        route = Route.SalaryScreen,
+        title = "Salary",
+        icon = R.drawable.ic_dollar_money,
+        color = R.color.green
+    ),
+    HomeOptionItemData(
+        route = Route.ShiftScreen,
+        title = "Shift",
+        icon = R.drawable.ic_calendar,
+        color = R.color.green
+    ),
+
+
+
 )

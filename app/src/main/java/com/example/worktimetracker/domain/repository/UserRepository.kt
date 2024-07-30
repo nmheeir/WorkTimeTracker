@@ -15,4 +15,8 @@ interface UserRepository {
         updateUser: UserUpdateRequest
     ): ApiResult<DataResponse<User>>
 
+    suspend fun uploadAvatar(
+        token: String,
+        avatarUrl: String
+    ): ApiResult<DataResponse<User>>
 }

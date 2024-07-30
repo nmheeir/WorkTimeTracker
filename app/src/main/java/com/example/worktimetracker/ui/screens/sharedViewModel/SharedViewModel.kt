@@ -49,18 +49,53 @@ class SharedViewModel @Inject constructor(
                     updateAddress = event.address
                 )
             }
+
             is SharedUiEvent.OnUpdateEmailChange -> {
                 state = state.copy(
                     updateEmail = event.email,
                     isUpdateEmailValid = validateEmail(event.email)
                 )
             }
+
             is SharedUiEvent.OnUpdatePasswordChange -> {
                 state = state.copy(
                     updatePassword = event.password,
                     isUpdatePasswordValid = validatePassword(event.password)
                 )
             }
+
+            is SharedUiEvent.UploadImage -> {
+                uploadAvatar(event.avatarUrl)
+            }
+        }
+    }
+
+    private fun uploadAvatar(avatarUrl: String) {
+        viewModelScope.launch {
+            state = state.copy(
+                isLoading = true
+            )
+            val token = localUserManager.readAccessToken()
+
+            when (val result = userUseCase.uploadAvatar(token, avatarUrl)) {
+                is ApiResult.Success -> {
+                    state = state.copy(
+                        user = result.response._data!!
+                    )
+                    Log.d("viewmodel_home", "success: " + result.response._data)
+                }
+
+                is ApiResult.Error -> {
+                    Log.d("viewmodel_home", "error" + result.response._message)
+                }
+
+                is ApiResult.NetworkError -> {
+                    // TODO: handle network error
+                }
+            }
+            state = state.copy(
+                isLoading = false
+            )
         }
     }
 
