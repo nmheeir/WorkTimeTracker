@@ -114,9 +114,12 @@ val listHomeOption = listOf(
         color = R.color.green
     ),
     HomeOptionItemData(
-        route = Route.SalaryScreen,
-        title = "Salary",
-        icon = R.drawable.ic_dollar_money,
+        route = Route.ShiftScreen,
+        title = "Shift",
+        icon = R.drawable.ic_calendar,
         color = R.color.green
-    )
+    ),
+
+
+
 )

@@ -263,7 +263,7 @@ fun TodayCheck(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.today_check),
+                text = stringResource(id = R.string.todaycheck),
                 color = Color.White,
                 style = Typography.titleMedium // Adjust the style as needed
             )
