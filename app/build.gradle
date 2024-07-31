@@ -131,4 +131,9 @@ dependencies {
     //  openstreet map
     implementation libs.osmdroid.android
     implementation libs.play.services.location
+
+    implementation "io.github.boguszpawlowski.composecalendar:composecalendar:1.3.0"
+
+    // separate artifact with utilities for working with kotlinx-datetime
+    implementation "io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.3.0"
 }
