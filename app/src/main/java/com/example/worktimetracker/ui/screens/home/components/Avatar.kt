@@ -25,7 +25,6 @@ fun Avatar(
     avatarUrl: Uri?
 ) {
     val context = LocalContext.current
-    val imageLoader = context.imageLoader
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -36,7 +35,7 @@ fun Avatar(
                 shape = CircleShape
             )
     ) {
-        if (avatarUrl.toString().isEmpty()) {
+        if (avatarUrl == null) {
             Image(
                 painter = painterResource(id = R.drawable.ic_user),
                 contentDescription = "avatar",
