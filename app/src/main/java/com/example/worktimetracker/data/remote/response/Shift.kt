@@ -19,5 +19,13 @@ data class Shift(
 enum class ShiftType {
     Normal,
     Overtime,
-    NightShift
+    NightShift;
+
+    companion object {
+        fun namesToList(): List<String> {
+            return ShiftType.entries.map {
+                it.name
+            }
+        }
+    }
 }

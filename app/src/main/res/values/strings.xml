@@ -71,4 +71,6 @@
 <!--    Paycheck-->
     <string name="paycheck">Pay Check</string>
 
+<!--    Work Chart-->
+    <string name="work_chart">Work Chart</string>
 </resources>

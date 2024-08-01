@@ -25,6 +25,7 @@ import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.screens.shift.ShiftScreen
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeScreen
+import com.example.worktimetracker.ui.screens.worktime.WorkTimeViewModel
 import com.example.worktimetracker.ui.util.BiometricPromptManager
 
 @Composable
@@ -92,7 +93,13 @@ fun NavGraph(
         }
 
         animatedComposable(route = Route.WorkTimeScreen.route) {
-            WorkTimeScreen()
+            val workTimeViewModel : WorkTimeViewModel = hiltViewModel()
+            WorkTimeScreen(
+                state = workTimeViewModel.state,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(route = Route.CheckInScreen.route) {
