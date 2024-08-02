@@ -32,10 +32,6 @@ class Helper {
             return calendar.timeInMillis
         }
 
-        fun Long.convertLongToWorkTime(): Int {
-            return (this / 3600000).toInt()
-        }
-
         fun Long.formatMillisToDate(): String {
             // Tạo một đối tượng Date từ mili giây
             val date = Date(this)

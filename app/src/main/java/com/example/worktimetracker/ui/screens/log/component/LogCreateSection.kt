@@ -1,7 +1,6 @@
 package com.example.worktimetracker.ui.screens.log.component
 
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -41,7 +39,7 @@ import kotlinx.coroutines.launch
 fun LogCreateDialog(
     modifier: Modifier = Modifier,
     state: LogUiState,
-    snackBarState : SnackbarHostState,
+    snackBarState: SnackbarHostState,
     event: (LogUiEvent) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -74,15 +72,30 @@ fun LogCreateDialog(
                     event(LogUiEvent.OnLogTypeChange(LogType.CHECK_OUT))
                 })
         }
-        Button(onClick = {
-            showClockDialog = !showClockDialog
-        }) {
-            Text(text = "Choose Time" + state.time)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Button(onClick = {
+                showClockDialog = !showClockDialog
+            }) {
+                Text(text = "Choose Time")
+            }
+            Text(text = state.time)
         }
-        Button(onClick = {
-            showCalendarDialog = !showCalendarDialog
-        }) {
-            Text(text = "Choose Date " + state.date)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(onClick = {
+                showCalendarDialog = !showCalendarDialog
+            }) {
+                Text(text = "Choose Date")
+            }
+            Text(text = state.date)
         }
         Button(
             onClick = {
@@ -91,7 +104,7 @@ fun LogCreateDialog(
                         snackBarState.showSnackbar(
                             message = "Please fill all fields",
                             duration = SnackbarDuration.Short,
-                            actionLabel = "Dismiss"
+                            actionLabel = "Ok"
                         )
                     }
                 } else {

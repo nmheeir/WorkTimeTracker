@@ -28,6 +28,7 @@ sealed class Route(
     //End Profile
 
     data object SalaryScreen : Route("Salary")
+    data object PayCheckDetail : Route("PayCheckDetail")
     data object CheckInScreen : Route("CheckIn")
     data object LogScreen : Route("Log")
     data object WorkTimeScreen : Route("WorkTime")

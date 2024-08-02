@@ -1,7 +1,6 @@
 package com.example.worktimetracker.ui.screens.worktime.component
 
 import android.util.Log
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -16,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.data.remote.response.ShiftType
-import com.example.worktimetracker.helper.Helper.Companion.convertLongToWorkTime
 import com.example.worktimetracker.helper.Helper.Companion.formatMillisToDate
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiState
 import com.example.worktimetracker.ui.util.rememberMarker
@@ -102,21 +100,21 @@ fun WorkTimeChart(
                             List(days.size) { index ->
                                 val dayDate = days[index]
                                 val normalWorkItem = normalWork.find { it.date.formatMillisToDate() == dayDate }
-                                normalWorkItem?.workTime?.convertLongToWorkTime() ?: 0
+                                normalWorkItem?.workTime ?: 0
                             }
                         )
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
                                 val overtimeWorkItem = overtimeWork.find { it.date.formatMillisToDate() == dayDate }
-                                overtimeWorkItem?.workTime?.convertLongToWorkTime() ?: 0
+                                overtimeWorkItem?.workTime ?: 0
                             }
                         )
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
                                 val nightWorkItem = nightWork.find { it.date.formatMillisToDate() == dayDate }
-                                nightWorkItem?.workTime?.convertLongToWorkTime() ?: 0
+                                nightWorkItem?.workTime ?: 0
                             }
                         )
                     }

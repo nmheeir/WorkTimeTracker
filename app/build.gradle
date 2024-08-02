@@ -136,4 +136,7 @@ dependencies {
 
     // separate artifact with utilities for working with kotlinx-datetime
     implementation libs.kotlinx.datetime
+
+    //lottie
+    implementation libs.lottie.compose
 }

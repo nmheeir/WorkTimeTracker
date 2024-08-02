@@ -15,7 +15,6 @@ import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
 import com.maxkeppeler.sheets.clock.models.ClockSelection
-import kotlinx.coroutines.selects.select
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -66,7 +65,12 @@ fun LogClockDialog(
     ClockDialog(
         state = rememberUseCaseState(
             visible = showDialog(),
-            onCloseRequest = { },
+            onDismissRequest = {
+                Log.d("Log CLock Dialog", "onDismissRequest")
+            },
+            onCloseRequest = {
+                Log.d("Log CLock Dialog", "onCloseRequest")
+            },
             onFinishedRequest = {
                 event(LogUiEvent.OnTimeChange(selectedTime.value.toString()))
                 Log.d("Log CLock Dialog", "selectedTime: ${selectedTime.value}")

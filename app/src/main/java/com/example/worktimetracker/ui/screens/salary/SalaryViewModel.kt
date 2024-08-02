@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.worktime
+package com.example.worktimetracker.ui.screens.salary
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -9,48 +9,56 @@ import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
-import com.example.worktimetracker.domain.use_case.work_time.WorkTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WorkTimeViewModel @Inject constructor(
+class SalaryViewModel @Inject constructor(
     private val summaryUseCase: SummaryUseCase,
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
 
-    var state by mutableStateOf(WorkTimeUiState())
+    var state by mutableStateOf(SalaryState())
 
     init {
-        getWorkTime()
+        getMyPayCheck()
     }
 
-    private fun getWorkTime() {
+    private fun getMyPayCheck() {
         viewModelScope.launch {
+            state = state.copy(
+                isLoading = true
+            )
             val token = localUserManager.readAccessToken()
 
-            val result = summaryUseCase.getWorkTimeEachDay(token, state.startTime, state.endTime)
-
-            when (result) {
-                is ApiResult.Success -> {
-                    if (result.response._data != null) {
-                        state = state.copy(
-                            chartData = result.response._data
-                        )
-                    }
-                }
-
+            when (val result = summaryUseCase.getMyPayCheck(token)) {
                 is ApiResult.Error -> {
-                    Log.d("WorkTimeViewModel", "getWorkTimeError: ${result.response._message}")
+                    state = state.copy(
+                        messageError = result.response._message
+                    )
+                    Log.d("SalaryViewModel", "error: ${result.response}")
                 }
 
                 is ApiResult.NetworkError -> {
-                    Log.d("WorkTimeViewModel", "getWorkTimeNetworkError:" + result.message)
+                    state = state.copy(
+                        messageError = result.message
+                    )
+                    Log.d("SalaryViewModel", "networkErr: ${result.message}")
+                }
+
+                is ApiResult.Success -> {
+                    if (result.response._data != null) {
+                        state = state.copy(
+                            listPayCheck = result.response._data
+                        )
+                    }
                 }
             }
+            state = state.copy(
+                isLoading = false
+            )
         }
     }
-
 
 }
