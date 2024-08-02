@@ -13,6 +13,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.ui.navigation.Route
-import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.onboarding.component.OnBoardingPageData
 import com.example.worktimetracker.ui.screens.onboarding.component.PageIndicator
 import com.example.worktimetracker.ui.screens.onboarding.component.pages
@@ -117,8 +117,7 @@ fun OnboardingPage(
                     textAlign = TextAlign.Center
                 )
 
-                LoginButton(
-                    text = buttonState.value,
+                Button(
                     onClick = {
                         if (pagerState.currentPage == pages.size - 1) {
                             event(OnboardingUiEvent.SaveAppEntry)
@@ -129,7 +128,9 @@ fun OnboardingPage(
                             }
                         }
                     }
-                )
+                ) {
+                    Text(text = buttonState.value)
+                }
             }
         }
     }

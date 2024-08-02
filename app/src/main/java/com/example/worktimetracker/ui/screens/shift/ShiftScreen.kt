@@ -19,7 +19,6 @@ import io.github.boguszpawlowski.composecalendar.header.DefaultMonthHeader
 import io.github.boguszpawlowski.composecalendar.header.MonthState
 import io.github.boguszpawlowski.composecalendar.selection.EmptySelectionState
 import java.time.LocalDate
-import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,10 +56,9 @@ fun ShiftScreen(
 }
 
 
-
 @Composable
 fun CalendarView(
-    month : String
+    month: String
 ) {
     StaticCalendar(
         dayContent = { dayState -> MyDay(dayState) },
@@ -77,7 +75,7 @@ fun MyDay(dayState: DayState<EmptySelectionState>) {
             .size(100.dp)
             .border(BorderStroke(1.dp, colorResource(id = R.color.light_gray)))
             .fillMaxSize(),
-        horizontalAlignment  = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = dayState.date.dayOfMonth.toString(),
@@ -96,5 +94,5 @@ fun MonthShift(monthState: MonthState) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-        ShiftScreen(onBack = {})
+    ShiftScreen(onBack = {})
 }

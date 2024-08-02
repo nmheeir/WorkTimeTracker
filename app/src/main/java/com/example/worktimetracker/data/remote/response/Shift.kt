@@ -3,7 +3,6 @@ package com.example.worktimetracker.data.remote.response
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDateTime
 
 @Parcelize
 data class Shift(
@@ -20,5 +19,13 @@ data class Shift(
 enum class ShiftType {
     Normal,
     Overtime,
-    NightShift
+    NightShift;
+
+    companion object {
+        fun namesToList(): List<String> {
+            return ShiftType.entries.map {
+                it.name
+            }
+        }
+    }
 }

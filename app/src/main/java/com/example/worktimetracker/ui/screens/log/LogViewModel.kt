@@ -62,6 +62,9 @@ class LogViewModel @Inject constructor(
 
     private fun getLogs() {
         viewModelScope.launch {
+            state = state.copy(
+                isLoading = false
+            )
             android.util.Log.d("viewmodel_log", "getLogs")
             val token = localUserManager.readAccessToken()
             when (val result: ApiResult<DataResponse<List<Log>>> = logUseCase.getLogs(token)) {
@@ -83,13 +86,18 @@ class LogViewModel @Inject constructor(
                     android.util.Log.d("viewmodel_log", "Network error" + result.message)
                 }
             }
-
+            state = state.copy(
+                isLoading = false
+            )
         }
     }
 
     private fun createLog() {
         // TODO: đưa phần xử lí qua bên ui để hiện thanh thông báo
         viewModelScope.launch {
+            state = state.copy(
+                isLoading = true
+            )
             val token = localUserManager.readAccessToken()
             val currentTime: String =
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
@@ -115,6 +123,9 @@ class LogViewModel @Inject constructor(
                     android.util.Log.d("viewmodel_log", "Network error " + result.message)
                 }
             }
+            state = state.copy(
+                isLoading = false
+            )
         }
     }
 

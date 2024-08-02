@@ -29,20 +29,18 @@ class LoginViewModel @Inject constructor(
     fun onEvent(event: LoginUiEvent) {
         when (event) {
             is LoginUiEvent.UsernameChange -> {
-                val isUsernameEmpty = event.value.isEmpty()
-                val usernameError = if (isUsernameEmpty) "Username can't be empty" else null
+                val usernameEmpty = event.value.isEmpty()
                 state = state.copy(
                     username = event.value,
-                    usernameError = usernameError
+                    isUsernameEmpty = usernameEmpty
                 )
             }
 
             is LoginUiEvent.PasswordChange -> {
-                val isPasswordEmpty = event.value.isEmpty()
-                val passwordError = if (isPasswordEmpty) "Password can't be empty" else null
+                val passwordEmpty = event.value.isEmpty()
                 state = state.copy(
                     password = event.value,
-                    passwordError = passwordError
+                    isPasswordEmpty = passwordEmpty
                 )
             }
 

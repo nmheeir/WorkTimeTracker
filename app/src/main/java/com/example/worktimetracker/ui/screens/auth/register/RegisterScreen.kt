@@ -6,7 +6,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,8 +39,6 @@ import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.auth.components.RegisterPasswordTextField
 import com.example.worktimetracker.ui.screens.auth.components.RegisterTextField
-import com.example.worktimetracker.ui.screens.auth.login.LoginContent
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiEvent
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 import com.example.worktimetracker.ui.util.BASE_LOG
@@ -50,7 +47,7 @@ import com.example.worktimetracker.ui.util.rememberImeState
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel,
-    onRegisterSuccess : (Route) -> Unit,
+    onRegisterSuccess: (Route) -> Unit,
     onNavigateTo: (Route) -> Unit,
     onBack: () -> Unit
 ) {
@@ -58,7 +55,7 @@ fun RegisterScreen(
 
     LaunchedEffect(viewModel, context) {
         viewModel.registerUiEvent.collect {
-            when(it) {
+            when (it) {
                 is ApiResult.Success -> {
                     onRegisterSuccess(Route.LoginScreen)
                 }
@@ -67,6 +64,7 @@ fun RegisterScreen(
                     Log.d("${BASE_LOG}_register_error", it.response._message)
                     Toast.makeText(context, it.response._message, Toast.LENGTH_SHORT).show()
                 }
+
                 is ApiResult.NetworkError -> {
                     //nothing
                 }
@@ -192,9 +190,15 @@ fun RegisterContent(
                 })
         }
 
-        LoginButton(text = stringResource(id = R.string.register), onClick = {
-            onEvent(RegisterUiEvent.Register)
-        })
+        LoginButton(
+            text = stringResource(id = R.string.register),
+            isEnable = {
+                state.usernameError == null && state.emailError == null && state.passwordError == null && state.passwordConfirmError == null
+            },
+            onClick = {
+                onEvent(RegisterUiEvent.Register)
+            }
+        )
     }
 }
 

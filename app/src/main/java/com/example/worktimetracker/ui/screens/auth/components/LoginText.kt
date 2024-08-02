@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -58,13 +59,7 @@ fun LoginTextField(
             ),
             keyboardOptions = keyboardOptions,
             singleLine = true,
-            supportingText = {
-                if (state.usernameError != null) {
-                    Text(text = state.usernameError)
-                }
-            },
             shape = RoundedCornerShape(8.dp),
-            isError = state.usernameError != null,
             modifier = Modifier
                 .fillMaxWidth()
         )
