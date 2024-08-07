@@ -11,4 +11,10 @@ interface ShiftRepository {
         end: Long? = null,
         token: String
     ) : ApiResult<DataResponse<List<Shift>>>
+
+    suspend fun getMyShiftsInMonth(
+        month: Int? = null,
+        year: Int? = null,
+        token: String
+    ) : ApiResult<DataResponse<List<Shift>>>
 }

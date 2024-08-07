@@ -22,6 +22,12 @@ class Helper {
             return dateFormat.format(date)
         }
 
+        fun convertMillisToTimeStamp(millis: Long): String {
+            val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val date = Date(millis)
+            return dateFormat.format(date)
+        }
+
         fun getStartOfDayInMillis(): Long {
             val calendar = Calendar.getInstance()
             // Set the calendar time to the start of the day
