@@ -37,5 +37,16 @@ class Helper {
             calendar.set(Calendar.MILLISECOND, 0)
             return calendar.timeInMillis
         }
+
+        fun Long.formatMillisToDate(): String {
+            // Tạo một đối tượng Date từ mili giây
+            val date = Date(this)
+
+            // Định dạng ngày tháng năm theo định dạng DD-MM-YY
+            val dateFormat = SimpleDateFormat("dd-MM-yy")
+
+            // Trả về chuỗi định dạng của ngày
+            return dateFormat.format(date)
+        }
     }
 }

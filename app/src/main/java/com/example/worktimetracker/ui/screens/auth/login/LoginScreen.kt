@@ -6,8 +6,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +34,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.manager.LocalUserManagerImpl
 import com.example.worktimetracker.domain.result.ApiResult
@@ -62,7 +67,6 @@ fun LoginScreen(
             when (it) {
                 is ApiResult.Success -> {
                     localUserManagerImpl.saveAccessToken(it.response._data!!.token)
-//                    sharedViewModel.onEvent(SharedUiEvent.GetUserInfo)
                     onLoginSuccess(Route.HomeScreen)
                 }
 
@@ -134,64 +138,93 @@ fun LoginContent(
     onEvent: (LoginUiEvent) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(32.dp),
-        modifier = modifier
-            .padding(24.dp)
-            .fillMaxSize()
-    ) {
-
-        LoginTopSection()
-
+    val lottieComposition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.lottie_loading))
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+            modifier = modifier
+                .padding(24.dp)
+                .fillMaxSize()
         ) {
-            LoginTextField(
-                label = stringResource(id = R.string.username),
-                state = state,
-                hint = stringResource(id = R.string.username_hint),
-                onUsernameChange = {
-                    onEvent(LoginUiEvent.UsernameChange(it))
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text,
+            LoginTopSection()
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                LoginTextField(
+                    label = stringResource(id = R.string.username),
+                    state = state,
+                    hint = stringResource(id = R.string.username_hint),
+                    onUsernameChange = {
+                        onEvent(LoginUiEvent.UsernameChange(it))
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                    )
                 )
-            )
 
-            LoginPasswordTextField(label = stringResource(id = R.string.password),
-                state = state,
-                hint = stringResource(id = R.string.password_hint),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password,
-                ),
-                onPasswordChange = {
-                    onEvent(LoginUiEvent.PasswordChange(it))
-                })
+                LoginPasswordTextField(
+                    label = stringResource(id = R.string.password),
+                    state = state,
+                    hint = stringResource(id = R.string.password_hint),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password,
+                    ),
+                    onPasswordChange = {
+                        onEvent(LoginUiEvent.PasswordChange(it))
+                    }
+                )
 
-            Text(text = stringResource(id = R.string.forgot_password).plus(" ?"),
-                style = Typography.titleMedium,
-                color = colorResource(id = R.color.blue),
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .align(Alignment.End)
-                    .clickable {
-                        onNavigateTo(Route.ForgotPasswordScreen)
-                    })
+                Text(
+                    text = stringResource(id = R.string.forgot_password).plus(" ?"),
+                    style = Typography.titleMedium,
+                    color = colorResource(id = R.color.blue),
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .align(Alignment.End)
+                        .clickable {
+                            onNavigateTo(Route.ForgotPasswordScreen)
+                        }
+                )
 
-            LoginButton(text = stringResource(id = R.string.login), onClick = {
-                onEvent(LoginUiEvent.Login)
-            })
-            RegisterButton(text = stringResource(id = R.string.register), onClick = {
-                onNavigateTo(Route.RegisterScreen)
-            })
+                LoginButton(
+                    text = stringResource(id = R.string.login),
+                    isEnable = {
+                        !state.isUsernameEmpty && !state.isPasswordEmpty
+                    },
+                    onClick = {
+                        onEvent(LoginUiEvent.Login)
+                    }
+                )
+                RegisterButton(
+                    text = stringResource(id = R.string.register),
+                    onClick = {
+                        onNavigateTo(Route.RegisterScreen)
+                    }
+                )
+            }
         }
 
-
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        colorResource(id = R.color.black).copy(alpha = 0.3f)
+                    )
+                    .clickable(enabled = false, onClick = {})
+            ) {
+                LottieAnimation(
+                    composition = lottieComposition,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

@@ -20,6 +20,7 @@ import com.example.worktimetracker.ui.theme.Typography
 @Composable
 fun LoginButton(
     modifier: Modifier = Modifier,
+    isEnable: () -> Boolean,
     text: String,
     onClick: () -> Unit
 ) {
@@ -29,6 +30,7 @@ fun LoginButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = colorResource(id = R.color.blue)
         ),
+        enabled = isEnable(),
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -46,13 +48,4 @@ fun LoginButton(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun LoginButtonPreview() {
-    LoginButton(
-        text = "Login",
-        onClick = { }
-    )
 }

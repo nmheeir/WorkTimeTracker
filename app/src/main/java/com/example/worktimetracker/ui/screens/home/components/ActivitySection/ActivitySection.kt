@@ -25,11 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Check
-import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
@@ -37,7 +35,8 @@ import com.example.worktimetracker.ui.theme.poppinsFontFamily
 fun ActivitySection(
     viewModel: ActivitySectionViewModel,
     modifier: Modifier = Modifier,
-    state: ActivitySectionUiState) {
+    state: ActivitySectionUiState
+) {
 
     var checkList: List<Check> by remember {
         mutableStateOf(emptyList())
