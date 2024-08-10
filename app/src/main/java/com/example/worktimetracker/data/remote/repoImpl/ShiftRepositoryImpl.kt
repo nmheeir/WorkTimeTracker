@@ -1,5 +1,6 @@
 package com.example.worktimetracker.data.remote.repoImpl
 
+import android.util.Log
 import com.example.worktimetracker.data.remote.api.ShiftApi
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Shift
@@ -22,6 +23,33 @@ class ShiftRepositoryImpl(
             val response: Response<DataResponse<List<Shift>>> =
                 shiftApi.getMyShift(start, end, token)
 
+            when(response.code()) {
+                200 -> {
+                    ApiResult.Success(response.body()!!)
+                }
+                else -> {
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    val gson = Gson()
+                    val type = object : TypeToken<DataResponse<List<Shift>>>() {}.type
+                    val errorResponse: DataResponse<List<Shift>> = gson.fromJson(errorBody, type)
+                    ApiResult.Error(errorResponse)
+                }
+            }
+        }
+        catch (e :Exception) {
+            return ApiResult.NetworkError(e.message!!)
+        }
+    }
+
+    override suspend fun getMyShiftsInMonth(
+        month: Int?,
+        year: Int?,
+        token: String
+    ): ApiResult<DataResponse<List<Shift>>> {
+        val response: Response<DataResponse<List<Shift>>> =
+            shiftApi.getMyShiftsInMonth(month, year, "Bearer $token")
+
+        return try {
             when(response.code()) {
                 200 -> {
                     ApiResult.Success(response.body()!!)

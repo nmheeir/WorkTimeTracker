@@ -29,6 +29,7 @@ import com.example.worktimetracker.domain.use_case.login.Login
 import com.example.worktimetracker.domain.use_case.login.AuthUseCase
 import com.example.worktimetracker.domain.use_case.login.Register
 import com.example.worktimetracker.domain.use_case.shift.GetMyShift
+import com.example.worktimetracker.domain.use_case.shift.GetMyShiftsInMonth
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.domain.use_case.summary.GetMyPayCheck
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
@@ -95,7 +96,8 @@ class UseCaseModule {
     @Singleton
     fun provideShiftUseCase(shiftRepository: ShiftRepository) : ShiftUseCase {
         return ShiftUseCase(
-            getMyShift = GetMyShift(shiftRepository)
+            getMyShift = GetMyShift(shiftRepository),
+            getMyShiftsInMonth = GetMyShiftsInMonth(shiftRepository)
             )
     }
 

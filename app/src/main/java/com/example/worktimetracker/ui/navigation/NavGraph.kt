@@ -27,6 +27,7 @@ import com.example.worktimetracker.ui.screens.salary.component.PayCheckDetail
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.screens.shift.ShiftScreen
+import com.example.worktimetracker.ui.screens.shift.ShiftViewModel
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeScreen
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeViewModel
 import com.example.worktimetracker.ui.util.BiometricPromptManager
@@ -129,9 +130,19 @@ fun NavGraph(
         }
 
         animatedComposable(route = Route.ShiftScreen.route) {
+<<<<<<< HEAD
+            val viewModel : ShiftViewModel = hiltViewModel()
+            ShiftScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                viewModel = viewModel
+            )
+=======
             ShiftScreen(onBack = {
                 navController.popBackStack()
             })
+>>>>>>> main
         }
 
         animatedComposable(route = Route.MyProfileScreen.route) {

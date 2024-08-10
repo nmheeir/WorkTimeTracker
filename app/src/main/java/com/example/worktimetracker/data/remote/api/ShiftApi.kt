@@ -15,4 +15,11 @@ interface ShiftApi {
         @Query("end") end: Long? = null,
         @Header("Authorization") token: String
     ) : Response<DataResponse<List<Shift>>>
+
+    @GET("Shift/getMyShiftsInMonth")
+    suspend fun getMyShiftsInMonth (
+        @Query("month") month: Int? = null,
+        @Query("year") year: Int? = null,
+        @Header("Authorization") token: String
+    ) : Response<DataResponse<List<Shift>>>
 }
