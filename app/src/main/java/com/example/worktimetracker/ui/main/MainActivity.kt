@@ -2,23 +2,20 @@ package com.example.worktimetracker.ui.main
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.example.worktimetracker.ui.main.component.ConnectivityStatus
 import com.example.worktimetracker.ui.navigation.NavGraph
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import com.example.worktimetracker.ui.util.BiometricPromptManager
@@ -33,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val promptManager: BiometricPromptManager by lazy {
         BiometricPromptManager(this)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -57,21 +55,25 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-
                     Box(
                         modifier = Modifier
                             .safeDrawingPadding()
                             .fillMaxSize()
                     ) {
-                        NavGraph(
-                            sDestination = viewModel.startDestination.value,
-                            navController = navController,
-                            promptManager = promptManager
-                        )
+                        Column (
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            ConnectivityStatus()
+                            NavGraph(
+                                sDestination = viewModel.startDestination.value,
+                                navController = navController,
+                                promptManager = promptManager
+                            )
+                        }
                     }
                 }
             }
         }
-
     }
 }
+
