@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">WorkTimeTracker</string>
+    <string name="disconnected">You are disconnect</string>
+    <string name="connected">You are connected</string>
 
     <!--    Login Screen-->
     <string name="login_title">Welcome back to</string>

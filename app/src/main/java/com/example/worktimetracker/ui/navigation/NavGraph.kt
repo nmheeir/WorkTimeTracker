@@ -130,19 +130,13 @@ fun NavGraph(
         }
 
         animatedComposable(route = Route.ShiftScreen.route) {
-<<<<<<< HEAD
-            val viewModel : ShiftViewModel = hiltViewModel()
+            val shiftViewModel: ShiftViewModel = hiltViewModel()
             ShiftScreen(
+                viewModel = shiftViewModel,
                 onBack = {
                     navController.popBackStack()
-                },
-                viewModel = viewModel
+                }
             )
-=======
-            ShiftScreen(onBack = {
-                navController.popBackStack()
-            })
->>>>>>> main
         }
 
         animatedComposable(route = Route.MyProfileScreen.route) {
