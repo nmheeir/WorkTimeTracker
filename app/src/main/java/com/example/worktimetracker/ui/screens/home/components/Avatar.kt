@@ -3,6 +3,7 @@ package com.example.worktimetracker.ui.screens.home.components
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -22,7 +23,8 @@ import com.example.worktimetracker.R
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
-    avatarUrl: Uri?
+    avatarUrl: Uri?,
+    onClick: () -> Unit
 ) {
     val context = LocalContext.current
     Box(
@@ -51,7 +53,11 @@ fun Avatar(
                 model = imageRequest,
                 contentDescription = "avatar",
                 placeholder = painterResource(id = R.drawable.ic_user),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clickable {
+                        onClick()
+                    }
             )
         }
     }

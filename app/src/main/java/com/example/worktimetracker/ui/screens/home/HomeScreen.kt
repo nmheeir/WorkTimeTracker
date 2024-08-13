@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -33,6 +34,8 @@ import com.example.worktimetracker.ui.screens.home.components.HomeGreetingSectio
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItem
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItemData
 import com.example.worktimetracker.ui.screens.home.components.NotificationCard
+import com.example.worktimetracker.ui.screens.home.components.NotificationPager
+import com.example.worktimetracker.ui.screens.home.components.listHomeNotification
 import com.example.worktimetracker.ui.screens.home.components.listHomeOption
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 
@@ -40,12 +43,13 @@ import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreen(
-    state: SharedUiState = SharedUiState(), onNavigateTo: (Route) -> Unit = {}
+    state: SharedUiState = SharedUiState(),
+    onNavigateTo: (Route) -> Unit = {}
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
-    val activitySectionViewModel : ActivitySectionViewModel = hiltViewModel()
+    val activitySectionViewModel: ActivitySectionViewModel = hiltViewModel()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -69,13 +73,18 @@ fun HomeScreen(
                 top.linkTo(topSection.top)
                 start.linkTo(topSection.start)
                 end.linkTo(topSection.end)
+            },
+            onAvatarClick = {
+                onNavigateTo(Route.ProfileScreen)
             }
         )
-        NotificationCard(modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 12.dp)
-            .constrainAs(notifySection) {
-                top.linkTo(greetingSection.bottom, margin = 8.dp)
-            })
+        NotificationPager(
+            listNotify = listHomeNotification,
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 12.dp)
+                .constrainAs(notifySection) {
+                    top.linkTo(greetingSection.bottom, margin = 8.dp)
+                })
         LazyVerticalGrid(columns = GridCells.Fixed(3),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.SpaceAround,
@@ -97,13 +106,15 @@ fun HomeScreen(
                 })
             }
         }
-        ActivitySection(modifier = Modifier
-            .padding(12.dp)
-            .constrainAs(activitySection) {
-                top.linkTo(optionSection.bottom, margin = 16.dp)
-            },
+        ActivitySection(
+            modifier = Modifier
+                .padding(12.dp)
+                .constrainAs(activitySection) {
+                    top.linkTo(optionSection.bottom, margin = 16.dp)
+                },
             viewModel = activitySectionViewModel,
-            state = activitySectionViewModel.state)
+            state = activitySectionViewModel.state
+        )
     }
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -119,9 +130,12 @@ fun HomeScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 items(listHomeOption.size) { index ->
-                    HomeOptionItem(item = listHomeOption[index], onClick = {
-                        onNavigateTo(it)
-                    })
+                    HomeOptionItem(
+                        item = listHomeOption[index],
+                        onClick = {
+                            onNavigateTo(it)
+                        }
+                    )
                 }
             }
         }

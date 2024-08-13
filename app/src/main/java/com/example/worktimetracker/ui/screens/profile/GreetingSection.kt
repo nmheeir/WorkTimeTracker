@@ -78,7 +78,10 @@ fun GreetingSection(
                 avatarUrl = uri,
                 modifier = Modifier
                     .size(96.dp)
-                    .align(Alignment.Center)
+                    .align(Alignment.Center),
+                onClick = {
+                    //Do nothing
+                }
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_camera),
