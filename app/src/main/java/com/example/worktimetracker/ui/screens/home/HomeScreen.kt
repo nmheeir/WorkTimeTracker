@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -40,7 +41,8 @@ import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreen(
-    state: SharedUiState = SharedUiState(), onNavigateTo: (Route) -> Unit = {}
+    state: SharedUiState = SharedUiState(),
+    onNavigateTo: (Route) -> Unit = {}
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -69,6 +71,9 @@ fun HomeScreen(
                 top.linkTo(topSection.top)
                 start.linkTo(topSection.start)
                 end.linkTo(topSection.end)
+            },
+            onAvatarClick = {
+                onNavigateTo(Route.ProfileScreen)
             }
         )
         NotificationCard(modifier = Modifier
@@ -119,9 +124,12 @@ fun HomeScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 items(listHomeOption.size) { index ->
-                    HomeOptionItem(item = listHomeOption[index], onClick = {
-                        onNavigateTo(it)
-                    })
+                    HomeOptionItem(
+                        item = listHomeOption[index],
+                        onClick = {
+                            onNavigateTo(it)
+                        }
+                    )
                 }
             }
         }

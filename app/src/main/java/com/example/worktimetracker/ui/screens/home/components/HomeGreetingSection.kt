@@ -20,14 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.Typography
 
-@Preview(showBackground = true)
 @Composable
 fun HomeGreetingSection(
     modifier: Modifier = Modifier,
-    state: SharedUiState = SharedUiState()
+    state: SharedUiState = SharedUiState(),
+    onAvatarClick: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -42,7 +43,10 @@ fun HomeGreetingSection(
         ) {
             Avatar(
                 avatarUrl = state.user.avatarURL.toUri(),
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
+                onClick = {
+                    onAvatarClick()
+                }
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
