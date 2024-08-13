@@ -34,6 +34,8 @@ import com.example.worktimetracker.ui.screens.home.components.HomeGreetingSectio
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItem
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItemData
 import com.example.worktimetracker.ui.screens.home.components.NotificationCard
+import com.example.worktimetracker.ui.screens.home.components.NotificationPager
+import com.example.worktimetracker.ui.screens.home.components.listHomeNotification
 import com.example.worktimetracker.ui.screens.home.components.listHomeOption
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 
@@ -47,7 +49,7 @@ fun HomeScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
-    val activitySectionViewModel : ActivitySectionViewModel = hiltViewModel()
+    val activitySectionViewModel: ActivitySectionViewModel = hiltViewModel()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -76,11 +78,13 @@ fun HomeScreen(
                 onNavigateTo(Route.ProfileScreen)
             }
         )
-        NotificationCard(modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 12.dp)
-            .constrainAs(notifySection) {
-                top.linkTo(greetingSection.bottom, margin = 8.dp)
-            })
+        NotificationPager(
+            listNotify = listHomeNotification,
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 12.dp)
+                .constrainAs(notifySection) {
+                    top.linkTo(greetingSection.bottom, margin = 8.dp)
+                })
         LazyVerticalGrid(columns = GridCells.Fixed(3),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.SpaceAround,
@@ -102,13 +106,15 @@ fun HomeScreen(
                 })
             }
         }
-        ActivitySection(modifier = Modifier
-            .padding(12.dp)
-            .constrainAs(activitySection) {
-                top.linkTo(optionSection.bottom, margin = 16.dp)
-            },
+        ActivitySection(
+            modifier = Modifier
+                .padding(12.dp)
+                .constrainAs(activitySection) {
+                    top.linkTo(optionSection.bottom, margin = 16.dp)
+                },
             viewModel = activitySectionViewModel,
-            state = activitySectionViewModel.state)
+            state = activitySectionViewModel.state
+        )
     }
     if (showBottomSheet) {
         ModalBottomSheet(
