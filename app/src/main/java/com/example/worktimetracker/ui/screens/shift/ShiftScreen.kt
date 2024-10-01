@@ -3,33 +3,30 @@ package com.example.worktimetracker.ui.screens.shift
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.R
-import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.helper.Helper
 import io.github.boguszpawlowski.composecalendar.StaticCalendar
 import io.github.boguszpawlowski.composecalendar.day.DayState
 import io.github.boguszpawlowski.composecalendar.header.DefaultMonthHeader
 import io.github.boguszpawlowski.composecalendar.header.MonthState
 import io.github.boguszpawlowski.composecalendar.selection.EmptySelectionState
-import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.format.TextStyle.FULL
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,9 +35,6 @@ fun ShiftScreen(
     viewModel: ShiftViewModel
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val selectedDate = remember { mutableStateOf(LocalDate.now()) }
-    val context = LocalContext.current
-
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
@@ -64,7 +58,10 @@ fun ShiftScreen(
                 .fillMaxSize()
                 .padding(top = paddingValues.calculateTopPadding(), start = 12.dp, end = 12.dp)
         ) {
-            CalendarView("July", viewModel)
+            CalendarView(viewModel)
+            if(viewModel.state.isDialogShow) {
+                ShiftDialog(viewModel)
+            }
         }
     }
 }
@@ -72,7 +69,6 @@ fun ShiftScreen(
 
 @Composable
 fun CalendarView(
-    month : String,
     viewModel: ShiftViewModel,
 ) {
     StaticCalendar(
@@ -89,7 +85,8 @@ fun MyDay(dayState: DayState<EmptySelectionState>, viewModel: ShiftViewModel) {
             .size(100.dp)
             .border(BorderStroke(1.dp, colorResource(id = R.color.light_gray)))
             .fillMaxSize()
-            .padding(2.dp),
+            .padding(2.dp)
+            .clickable { viewModel.onEvent(ShiftUiEvent.DialogToggle(dayState.date.dayOfMonth)) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -129,8 +126,8 @@ fun ShiftShow(viewModel: ShiftViewModel, dayState: DayState<EmptySelectionState>
             }
         }
     }
-
 }
+
 
 @Composable
 fun MonthShift(monthState: MonthState, viewModel: ShiftViewModel) {
@@ -138,6 +135,7 @@ fun MonthShift(monthState: MonthState, viewModel: ShiftViewModel) {
 
     LaunchedEffect(monthState.currentMonth) {
         viewModel.onEvent(ShiftUiEvent.GetMyShiftsInMonth(monthState.currentMonth.monthValue, monthState.currentMonth.year))
+        viewModel.onEvent(ShiftUiEvent.GetMyChecksInMonth(monthState.currentMonth.monthValue, monthState.currentMonth.year))
     }
 
 // Theo dõi sự thay đổi của isLoading
@@ -149,8 +147,3 @@ fun MonthShift(monthState: MonthState, viewModel: ShiftViewModel) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-//    ShiftScreen(onBack = {})
-}

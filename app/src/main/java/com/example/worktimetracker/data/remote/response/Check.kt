@@ -31,6 +31,12 @@ data class Check(
         val date = Date(checkTime)
         return dateFormat.format(date)
     }
+
+    fun getDate(): Int {
+        val dateFormat = SimpleDateFormat("d", Locale.getDefault()) // Format to get day of the month
+        val date = Date(checkTime)
+        return dateFormat.format(date).toInt()
+    }
 }
 
 enum class CheckType {

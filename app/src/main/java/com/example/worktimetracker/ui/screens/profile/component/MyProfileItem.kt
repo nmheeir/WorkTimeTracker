@@ -31,7 +31,7 @@ fun MyProfileItem(
         Text(
             text = item.title,
             style = Typography.bodySmall,
-            color = colorResource(id = R.color.black).copy(alpha = 0.6f)
+            color = colorResource(id = R.color.text).copy(alpha = 0.6f)
         )
         Text(
             text = item.desc,
@@ -53,7 +53,7 @@ fun MyProfileListItem(
             MyProfileItem(item = list[index])
             Divider(
                 thickness = 1.dp,
-                color = colorResource(id = R.color.black).copy(alpha = 0.1f)
+                color = colorResource(id = R.color.text).copy(alpha = 0.1f)
             )
         }
     }

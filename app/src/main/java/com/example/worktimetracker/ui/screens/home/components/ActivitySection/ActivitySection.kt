@@ -86,7 +86,7 @@ fun ActivitySectionItem(modifier: Modifier = Modifier, item: Check) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .border(1.dp, colorResource(id = R.color.light_gray), RoundedCornerShape(16.dp))
-            .background(colorResource(id = R.color.white))
+            .background(colorResource(id = R.color.check_item_bg))
             .padding(16.dp)
     ) {
 

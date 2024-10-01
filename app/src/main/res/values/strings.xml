@@ -87,4 +87,8 @@
 
 <!--    Work Chart-->
     <string name="work_chart">Work Chart</string>
+
+<!--    Shfit-->
+    <string name="your_shift">Your shifts on</string>
+    <string name="your_check">Your checks on</string>
 </resources>

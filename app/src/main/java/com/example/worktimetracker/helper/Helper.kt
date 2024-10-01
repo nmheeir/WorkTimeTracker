@@ -38,6 +38,28 @@ class Helper {
             return calendar.timeInMillis
         }
 
+        fun getStartOfMonthInMillis(): Long {
+            val calendar = Calendar.getInstance()
+            // Set the calendar time to the start of the month
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            return calendar.timeInMillis
+        }
+
+        fun getEndOfMonthInMillis(): Long {
+            val calendar = Calendar.getInstance()
+            // Set the calendar time to the end of the month
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+            calendar.set(Calendar.HOUR_OF_DAY, 23)
+            calendar.set(Calendar.MINUTE, 59)
+            calendar.set(Calendar.SECOND, 59)
+            calendar.set(Calendar.MILLISECOND, 999)
+            return calendar.timeInMillis
+        }
+
         fun Long.formatMillisToDate(): String {
             // Tạo một đối tượng Date từ mili giây
             val date = Date(this)

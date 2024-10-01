@@ -14,9 +14,11 @@ import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.helper.Helper
 import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import java.util.Objects
 import javax.inject.Inject
 
@@ -56,7 +58,7 @@ class CheckViewModel @Inject constructor(
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
 
-            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token, Helper.getStartOfDayInMillis(), Helper.getStartOfDayInMillis() + 86400000)) {
+            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token, LocalDate.now().year, LocalDate.now().monthNumber, LocalDate.now().dayOfMonth)) {
                 is ApiResult.Success -> {
                     if (result.response._data != null) {
                         android.util.Log.d("viewmodel_check", result.response._data.toString())

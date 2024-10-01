@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text">#FFFFFF</color>
+    <color name="check_item_bg">#3A3A3A</color>
+    <color name="profile_icon">#282828</color>
+    <color name="topbar_bg">#151515</color>
 </resources>

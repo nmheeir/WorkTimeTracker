@@ -8,8 +8,15 @@
     <color name="purple_200">#8C1AFF</color>
     <color name="light_gray">#F6F5F2</color>
     <color name="blue">#3085FE</color>
-    <color name="green">#597445</color>
+    <color name="green">#00FF00</color>
+    <color name="green_bg">#2100FF00</color>
+    <color name="orange">#FF6F00</color>
+    <color name="orange_bg">#12F8BF9E</color>
     <color name="teal">#37B7C3</color>
     <color name="red">#EE4E4E</color>
     <color name="yellow">#FFFF80</color>
+    <color name="text">#151515</color>
+    <color name="check_item_bg">#FFFF</color>
+    <color name="profile_icon">#F6F5F2</color>
+    <color name="topbar_bg">#FFFFFF</color>
 </resources>

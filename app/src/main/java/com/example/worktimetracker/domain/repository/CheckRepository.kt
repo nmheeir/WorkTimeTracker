@@ -9,9 +9,15 @@ interface CheckRepository {
         checkType : Int,
         token: String
     ) : ApiResult<DataResponse<Any>>;
-    suspend fun getCheckWithDate (
+    suspend fun getCheckWithTime(
         token: String,
-        start : Long?,
-        end : Long ?
+        start: Long?,
+        end: Long ?
+    ) : ApiResult<DataResponse<List<Check>>>
+    suspend fun getCheckWithDate(
+        token: String,
+        year: Int?,
+        month: Int?,
+        day: Int?,
     ) : ApiResult<DataResponse<List<Check>>>
 }

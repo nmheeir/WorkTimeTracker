@@ -15,10 +15,17 @@ interface CheckApi {
         @Header("Authorization") token: String,
     ): Response<DataResponse<Any>>
 
-    @GET("Check/getCheckByMyUserIdWithDate")
-    suspend fun getCheckWithDate(
+    @GET("Check/getCheckByMyUserIdWithEpochUnix")
+    suspend fun getCheckWithUnixEpoch(
         @Header("Authorization") token: String,
         @Query("start") start : Long? = null,
         @Query("end") end : Long? = null,
+    ) : Response<DataResponse<List<Check>>>
+    @GET("Check/getCheckByMyUserIdWithDate")
+    suspend fun getCheckWithDate(
+        @Header("Authorization") token: String,
+        @Query("year") year : Int?,
+        @Query("month") month : Int?,
+        @Query("day") day : Int?
     ) : Response<DataResponse<List<Check>>>
 }

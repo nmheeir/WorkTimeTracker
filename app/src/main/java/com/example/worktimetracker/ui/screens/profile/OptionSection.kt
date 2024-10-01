@@ -55,7 +55,7 @@ fun OptionSectionItem(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(color = colorResource(id = R.color.white))
+            .background(color = colorResource(id = R.color.check_item_bg))
             .padding(8.dp)
             .clickable {
                 onNavigateTo(
@@ -68,7 +68,7 @@ fun OptionSectionItem(
             contentDescription = profileOption.title,
             modifier = Modifier
                 .clip(CircleShape)
-                .background(color = colorResource(id = R.color.light_gray))
+                .background(color = colorResource(id = R.color.profile_icon))
                 .padding(8.dp)
         )
         Text(

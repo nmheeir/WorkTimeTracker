@@ -30,10 +30,12 @@ fun OptionTopBar(
             }
         },
         title = {
-            Text(text = stringResource(id = title), style = Typography.titleLarge)
+            Text(text = stringResource(id = title), style = Typography.titleLarge.copy(
+                color = colorResource(R.color.text)
+            ))
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource(id = R.color.white),
+            containerColor = colorResource(id = R.color.topbar_bg),
             titleContentColor = colorResource(id = R.color.black),
         ),
     )

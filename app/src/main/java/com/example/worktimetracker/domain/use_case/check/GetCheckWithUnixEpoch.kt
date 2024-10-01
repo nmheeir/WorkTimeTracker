@@ -5,15 +5,14 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.domain.repository.CheckRepository
 import com.example.worktimetracker.domain.result.ApiResult
 
-class GetCheckWithDate (
+class GetCheckWithUnixEpoch(
     private val checkRepository: CheckRepository
 ) {
     suspend operator fun invoke(
-        token: String,
-        year: Int? = null,
-        month: Int? = null,
-        day: Int? = null
-    ) : ApiResult<DataResponse<List<Check>>> {
-        return checkRepository.getCheckWithDate(token, year, month, day)
+        token : String,
+        start : Long? = null,
+        end : Long? = null,
+    ): ApiResult<DataResponse<List<Check>>> {
+        return checkRepository.getCheckWithTime(token, start, end)
     }
 }

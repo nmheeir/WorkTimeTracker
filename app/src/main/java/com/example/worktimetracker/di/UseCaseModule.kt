@@ -20,6 +20,7 @@ import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
 import com.example.worktimetracker.domain.use_case.check.Check
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.check.GetCheckWithDate
+import com.example.worktimetracker.domain.use_case.check.GetCheckWithUnixEpoch
 
 import com.example.worktimetracker.domain.use_case.log.CreateLog
 import com.example.worktimetracker.domain.use_case.log.GetLogs
@@ -88,6 +89,7 @@ class UseCaseModule {
     fun provideCheckUseCase(checkRepository: CheckRepository) : CheckUseCase {
         return CheckUseCase(
             check = Check(checkRepository),
+            getCheckWithUnixEpoch = GetCheckWithUnixEpoch(checkRepository),
             getCheckWithDate = GetCheckWithDate(checkRepository)
         )
     }

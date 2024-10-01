@@ -6,7 +6,6 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.domain.repository.CheckRepository
 import com.example.worktimetracker.domain.result.ApiResult
 import retrofit2.Response
-import java.util.Objects
 
 class CheckRepositoryImpl (
     private var checkApi : CheckApi
@@ -33,14 +32,35 @@ class CheckRepositoryImpl (
 
     }
 
-    override suspend fun getCheckWithDate(
+    override suspend fun getCheckWithTime(
         token: String,
         start: Long?,
         end: Long?
     ): ApiResult<DataResponse<List<Check>>> {
         return try {
             val response: Response<DataResponse<List<Check>>> =
-                checkApi.getCheckWithDate("Bearer $token", start, end)
+                checkApi.getCheckWithUnixEpoch("Bearer $token", start, end)
+            when(response.code()) {
+                200 -> {
+                    ApiResult.Success(response.body()!!)
+                }
+                else -> {
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    val errorResponse = DataResponse<List<Check>>(null, errorBody, false)
+                    ApiResult.Error(errorResponse)
+                }
+            }
+        }
+        catch (e :Exception) {
+            return ApiResult.NetworkError(e.message!!)
+        }
+    }
+
+    override suspend fun getCheckWithDate(token: String, year: Int?, month: Int?, day: Int?) : ApiResult<DataResponse<List<Check>>>
+    {
+        return try {
+            val response: Response<DataResponse<List<Check>>> =
+                checkApi.getCheckWithDate("Bearer $token", year, month, day)
             when(response.code()) {
                 200 -> {
                     ApiResult.Success(response.body()!!)
