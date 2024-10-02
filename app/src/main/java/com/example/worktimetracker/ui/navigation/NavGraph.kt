@@ -74,7 +74,6 @@ fun NavGraph(
                 onBack = {
                     navController.popBackStack()
                 },
-                activityUiEvent = activityViewModel.activityUiEvent,
                 event = activityViewModel::onEvent
             )
         }

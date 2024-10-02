@@ -35,17 +35,10 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.worktimetracker.R
-import com.example.worktimetracker.data.remote.response.Check
-import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.domain.result.ApiResult
-import com.example.worktimetracker.ui.screens.activity.component.ActivityCalendarDialog
-import com.example.worktimetracker.ui.screens.activity.component.DateChose
+import com.example.worktimetracker.ui.component.dateTimePicker.CalendarDialog
+import com.example.worktimetracker.ui.component.dateTimePicker.DateChose
 import com.example.worktimetracker.ui.screens.home.components.ActivitySection.ActivitySectionItem
-import com.example.worktimetracker.ui.screens.log.component.LogCalendarDialog
 import com.example.worktimetracker.ui.theme.Typography
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
-import java.time.LocalDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +47,6 @@ fun ActivityScreen(
     state: ActivityUiState,
     onBack: () -> Unit,
     event: (ActivityUiEvent) -> Unit,
-    activityUiEvent: Flow<ApiResult<DataResponse<Check>>>
 ) {
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -110,7 +102,7 @@ fun ActivityScreen(
             }
 
             if (showCalendarDialogFromDate) {
-                ActivityCalendarDialog(
+                CalendarDialog(
                     event = { selectedDate ->
                         selectedDate?.let {
                             event(ActivityUiEvent.OnFromDateChange(it))
@@ -125,7 +117,7 @@ fun ActivityScreen(
             }
 
             if (showCalendarDialogToDate) {
-                ActivityCalendarDialog(
+                CalendarDialog(
                     event = { selectedDate ->
                         selectedDate?.let {
                             event(ActivityUiEvent.OnToDateChange(it))
@@ -162,5 +154,5 @@ fun ActivityScreen(
 @Preview(showBackground = true)
 @Composable
 private fun ActivityScreenPreview() {
-    ActivityScreen(state = ActivityUiState(), onBack = {}, event = {}, activityUiEvent = emptyFlow())
+    ActivityScreen(state = ActivityUiState(), onBack = {}, event = {})
 }

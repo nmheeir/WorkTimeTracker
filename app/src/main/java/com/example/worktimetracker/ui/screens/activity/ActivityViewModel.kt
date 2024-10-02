@@ -25,8 +25,6 @@ class ActivityViewModel @Inject constructor(
     private var checkUseCase : CheckUseCase,
     private val localUserManager: LocalUserManager
 ) : ViewModel(){
-    private val activityUiEventChannel = Channel<ApiResult<DataResponse<Check>>>()
-    val activityUiEvent = activityUiEventChannel.receiveAsFlow()
     var state by mutableStateOf(ActivityUiState())
     init {
         getThisMonthChecks()
