@@ -1,6 +1,10 @@
 package com.example.worktimetracker.helper
 
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -28,37 +32,16 @@ class Helper {
             return dateFormat.format(date)
         }
 
-        fun getStartOfDayInMillis(): Long {
-            val calendar = Calendar.getInstance()
-            // Set the calendar time to the start of the day
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return calendar.timeInMillis
+        fun localDateToEpochMillisStart(localDate: LocalDate?): Long? {
+            return localDate?.atStartOfDay()?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
         }
 
-        fun getStartOfMonthInMillis(): Long {
-            val calendar = Calendar.getInstance()
-            // Set the calendar time to the start of the month
-            calendar.set(Calendar.DAY_OF_MONTH, 1)
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return calendar.timeInMillis
+        fun localDateToEpochMillisEnd(localDate: LocalDate?): Long? {
+            return localDate?.let {
+                LocalDateTime.of(it, LocalTime.MAX).toInstant(ZoneOffset.UTC).toEpochMilli()
+            }
         }
 
-        fun getEndOfMonthInMillis(): Long {
-            val calendar = Calendar.getInstance()
-            // Set the calendar time to the end of the month
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-            calendar.set(Calendar.HOUR_OF_DAY, 23)
-            calendar.set(Calendar.MINUTE, 59)
-            calendar.set(Calendar.SECOND, 59)
-            calendar.set(Calendar.MILLISECOND, 999)
-            return calendar.timeInMillis
-        }
 
         fun Long.formatMillisToDate(): String {
             // Tạo một đối tượng Date từ mili giây

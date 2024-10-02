@@ -113,7 +113,8 @@ fun HomeScreen(
                     top.linkTo(optionSection.bottom, margin = 16.dp)
                 },
             viewModel = activitySectionViewModel,
-            state = activitySectionViewModel.state
+            state = activitySectionViewModel.state,
+            onNavigateTo = onNavigateTo
         )
     }
     if (showBottomSheet) {

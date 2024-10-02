@@ -41,7 +41,7 @@ fun LogCalendarDialog(
         ),
         config = CalendarConfig(
             yearSelection = true,
-            style = CalendarStyle.WEEK,
+            style = CalendarStyle.MONTH,
         ),
         selection = CalendarSelection.Date(
             selectedDate = selectedDate.value

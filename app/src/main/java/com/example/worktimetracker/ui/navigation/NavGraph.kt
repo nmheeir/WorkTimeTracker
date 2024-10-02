@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.worktimetracker.data.remote.response.PayCheck
 import com.example.worktimetracker.ui.navigation.navigator.authNavigator
+import com.example.worktimetracker.ui.screens.activity.ActivityScreen
+import com.example.worktimetracker.ui.screens.activity.ActivityViewModel
 import com.example.worktimetracker.ui.screens.check.CheckScreen
 import com.example.worktimetracker.ui.screens.check.CheckViewModel
 import com.example.worktimetracker.ui.screens.home.HomeScreen
@@ -63,6 +65,20 @@ fun NavGraph(
             })
         }
 
+        animatedComposable(
+            route = Route.ActivitySrceen.route
+        ){
+            val activityViewModel : ActivityViewModel = hiltViewModel()
+            ActivityScreen(
+                state = activityViewModel.state,
+                onBack = {
+                    navController.popBackStack()
+                },
+                activityUiEvent = activityViewModel.activityUiEvent,
+                event = activityViewModel::onEvent
+            )
+        }
+
         animatedComposable(route = Route.ProfileScreen.route) {
             ProfileScreen(onLogoutClick = {
                 sharedViewModel.onEvent(SharedUiEvent.Logout)
@@ -79,7 +95,8 @@ fun NavGraph(
             LogScreen(
                 state = logViewModel.state, onBack = {
                     navController.popBackStack()
-                }, event = logViewModel::onEvent
+                }, event = logViewModel::onEvent,
+                logUiEvent = logViewModel.logUiEvent
             )
         }
 

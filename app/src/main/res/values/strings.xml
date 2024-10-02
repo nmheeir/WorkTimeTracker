@@ -91,4 +91,8 @@
 <!--    Shfit-->
     <string name="your_shift">Your shifts on</string>
     <string name="your_check">Your checks on</string>
+
+<!--    Activity-->
+    <string name="from_day">From Day</string>
+    <string name="to_day">To Day</string>
 </resources>

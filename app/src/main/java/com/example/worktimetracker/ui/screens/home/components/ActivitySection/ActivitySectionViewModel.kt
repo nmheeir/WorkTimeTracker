@@ -22,7 +22,6 @@ class ActivitySectionViewModel @Inject constructor(
 ) : ViewModel() {
     var state by mutableStateOf(ActivitySectionUiState())
 
-
     init {
         android.util.Log.d("viewmodel_log", "init")
         getCheck()

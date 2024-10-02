@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlin.math.log
 
 @HiltViewModel
 class LogViewModel @Inject constructor(
@@ -24,7 +27,8 @@ class LogViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(LogUiState())
-
+    private val logUiEventChannel = Channel<ApiResult<DataResponse<Log>>>()
+    val logUiEvent = logUiEventChannel.receiveAsFlow()
     init {
         android.util.Log.d("viewmodel_log", "init")
         getLogs()
@@ -113,6 +117,7 @@ class LogViewModel @Inject constructor(
             when (result) {
                 is ApiResult.Success -> {
                     android.util.Log.d("viewmodel_log", result.toString())
+                    logUiEventChannel.send(result as ApiResult<DataResponse<Log>>)
                 }
 
                 is ApiResult.Error -> {

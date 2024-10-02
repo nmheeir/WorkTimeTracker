@@ -3,6 +3,7 @@ package com.example.worktimetracker.ui.screens.home.components.ActivitySection
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Check
+import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 
@@ -35,7 +37,8 @@ import com.example.worktimetracker.ui.theme.poppinsFontFamily
 fun ActivitySection(
     viewModel: ActivitySectionViewModel,
     modifier: Modifier = Modifier,
-    state: ActivitySectionUiState
+    state: ActivitySectionUiState,
+    onNavigateTo: (Route) -> Unit = {}
 ) {
 
     var checkList: List<Check> by remember {
@@ -63,7 +66,8 @@ fun ActivitySection(
             Text(
                 text = "View All",
                 style = Typography.labelLarge,
-                color = colorResource(id = R.color.blue)
+                color = colorResource(id = R.color.blue),
+                modifier = Modifier.clickable { onNavigateTo(Route.ActivitySrceen) }
             )
         }
         LazyColumn(

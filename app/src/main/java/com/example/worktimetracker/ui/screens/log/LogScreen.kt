@@ -19,7 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,16 +26,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.data.remote.response.DataResponse
+import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.ui.screens.log.component.LogCountSection
 import com.example.worktimetracker.ui.screens.log.component.LogCreateDialog
 import com.example.worktimetracker.ui.screens.log.component.LogDetailSection
 import com.example.worktimetracker.ui.theme.Typography
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogScreen(
-    state: LogUiState, onBack: () -> Unit, event: (LogUiEvent) -> Unit
+    state: LogUiState, onBack: () -> Unit, event: (LogUiEvent) -> Unit, logUiEvent: Flow<ApiResult<DataResponse<com.example.worktimetracker.data.remote.response.Log>>>
 ) {
     Log.d("screen_log", state.toString())
     val snackBarHostState = remember {
@@ -91,13 +93,19 @@ fun LogScreen(
             LogDetailSection(state = state)
         }
     }
-
+    LaunchedEffect(Unit) {
+        logUiEvent.collect { result ->
+            if (result is ApiResult.Success) {
+                event(LogUiEvent.GetLogs)
+            }
+        }
+    }
 
 }
-
+//
 @Preview(showBackground = true)
 @Composable
 private fun LogScreenPreview() {
-    LogScreen(state = LogUiState(), onBack = {}, event = {})
+    LogScreen(state = LogUiState(), onBack = {}, event = {}, logUiEvent = emptyFlow())
 }
 
