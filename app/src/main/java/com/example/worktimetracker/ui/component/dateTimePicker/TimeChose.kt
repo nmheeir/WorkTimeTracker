@@ -1,5 +1,6 @@
-package com.example.worktimetracker.ui.screens.activity.component
+package com.example.worktimetracker.ui.component.dateTimePicker
 
+import java.time.LocalTime
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,26 +17,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.theme.Typography
-import java.time.LocalDate
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateChose(
+fun TimeChose(
     text: String,
-    time: LocalDate?,
+    time: LocalTime?,
     event: () -> Unit
 ) {
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val formattedTime = time?.format(timeFormatter) ?: "No Time"
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clickable(onClick = { event() })
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_calendar),
+            painter = painterResource(id = R.drawable.ic_clock_filled),
             contentDescription = null,
             tint = colorResource(R.color.blue),
             modifier = Modifier.
-                padding(4.dp)
+            padding(4.dp)
         )
         Column {
             Text(
@@ -45,9 +48,9 @@ fun DateChose(
             )
 
             Text(
-                text = time?.toString() ?: "No Date",  // Xử lý null cho time
+                text = formattedTime,  // Xử lý null cho time
                 color = colorResource(id = R.color.colorTitle),
-                style = Typography.labelSmall
+                style = Typography.labelSmall,
             )
         }
     }
@@ -55,6 +58,6 @@ fun DateChose(
 
 @Preview
 @Composable
-fun DateChosePreview() {
-    DateChose("From Day", LocalDate.now()) { Unit }
+fun TimeChosePreview() {
+    TimeChose("From Day", LocalTime.now()) { Unit }
 }

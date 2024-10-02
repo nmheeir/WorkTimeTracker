@@ -108,7 +108,7 @@ class LogViewModel @Inject constructor(
 
             val result = logUseCase.createLog(
                 log = CreateLogRequest(
-                    checkTime = state.date + " " + state.time,
+                    checkTime = state.date.toString() + " " + state.time,
                     type = state.type.ordinal,
                     createAt = currentTime
                 ),
