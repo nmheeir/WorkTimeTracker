@@ -17,7 +17,7 @@ sealed class Route(
     }
     data object LeavesScreen : Route("Leaves")
      data object AttendanceScreen : Route("Attendance")
-
+    data object ActivitySrceen : Route("Activity")
     //Profile
     data object UpdateProfileScreen: Route("UpdateProfile")
      data object ProfileScreen : Route("Profile")

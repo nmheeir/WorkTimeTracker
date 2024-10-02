@@ -1,6 +1,6 @@
 package com.example.worktimetracker.ui.screens.check
 
-import android.util.Log
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,15 +11,12 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
-import com.example.worktimetracker.helper.Helper
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import java.util.Objects
 import javax.inject.Inject
 
 @HiltViewModel

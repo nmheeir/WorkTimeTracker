@@ -19,4 +19,5 @@
     <color name="check_item_bg">#FFFF</color>
     <color name="profile_icon">#F6F5F2</color>
     <color name="topbar_bg">#FFFFFF</color>
+    <color name="colorTitle">#3085FE</color>
 </resources>
