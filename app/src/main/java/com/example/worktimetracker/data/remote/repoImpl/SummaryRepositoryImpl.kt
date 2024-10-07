@@ -59,4 +59,31 @@ class SummaryRepositoryImpl(
             ApiResult.NetworkError(e.message!!)
         }
     }
+
+    override suspend fun getMyTotalWorkTime(
+        token: String,
+        start: Long,
+        end: Long
+    ): ApiResult<DataResponse<Long>> {
+        return try {
+            val response = summaryApi.getMyTotalWorkTime("Bearer $token", start, end)
+
+            when (response.code()) {
+                200 -> {
+                    ApiResult.Success(response.body()!!)
+                }
+
+                else -> {
+                    val errorResponse = DataResponse<Long>(
+                        _data = null,
+                        _message = response.message(),
+                        _success = false
+                    )
+                    ApiResult.Error(errorResponse)
+                }
+            }
+        } catch (e: Exception) {
+            ApiResult.NetworkError(e.message!!)
+        }
+    }
 }

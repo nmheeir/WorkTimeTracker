@@ -33,6 +33,7 @@ import com.example.worktimetracker.domain.use_case.shift.GetMyShift
 import com.example.worktimetracker.domain.use_case.shift.GetMyShiftsInMonth
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.domain.use_case.summary.GetMyPayCheck
+import com.example.worktimetracker.domain.use_case.summary.GetTotalWorkTime
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
 import com.example.worktimetracker.domain.use_case.user.UpdateUserProfile
 import com.example.worktimetracker.domain.use_case.user.UploadAvatar
@@ -119,7 +120,8 @@ class UseCaseModule {
     ) : SummaryUseCase {
         return SummaryUseCase(
             getWorkTimeEachDay = GetWorkTimeEachDay(summaryRepository),
-            getMyPayCheck = GetMyPayCheck(summaryRepository)
+            getMyPayCheck = GetMyPayCheck(summaryRepository),
+            getTotalWorkTime = GetTotalWorkTime(summaryRepository)
         )
     }
 
