@@ -15,4 +15,10 @@ interface SummaryRepository {
     suspend fun getMyPayCheck(
         token: String
     ) : ApiResult<DataResponse<List<PayCheck>>>
+
+    suspend fun getMyTotalWorkTime(
+        token: String,
+        start: Long,
+        end: Long
+    ) : ApiResult<DataResponse<Long>>
 }

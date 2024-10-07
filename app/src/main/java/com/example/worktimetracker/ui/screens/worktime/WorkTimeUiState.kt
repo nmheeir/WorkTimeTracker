@@ -5,6 +5,7 @@ import com.example.worktimetracker.helper.Helper
 
 data class WorkTimeUiState(
     val chartData: List<DayWorkTime> = emptyList(),
-    val startTime: Long = 1722474000000,
-    val endTime: Long = 1722790800000
+    val totalWorkTime: Long = 0,
+    val startTime: Long = 1725127200000,
+    val endTime: Long = 1727632800000
 )

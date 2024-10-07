@@ -34,11 +34,15 @@ import com.patrykandpatrick.vico.compose.common.rememberLegendItem
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.core.cartesian.CartesianDrawContext
 import com.patrykandpatrick.vico.core.cartesian.CartesianMeasureContext
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.common.Dimensions
+import com.patrykandpatrick.vico.core.common.shape.Corner
+import com.patrykandpatrick.vico.core.common.shape.CorneredShape
+import com.patrykandpatrick.vico.core.common.shape.RoundedCornerTreatment
 import com.patrykandpatrick.vico.core.common.shape.Shape
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -142,18 +146,20 @@ fun ExampleChart(
             rememberColumnCartesianLayer(
                 columnProvider =
                 ColumnCartesianLayer.ColumnProvider.series(
-                    rememberLineComponent(
-                        color = chartColors[0],
-                        thickness = COLUMN_THICKNESS.dp
-                    ),
-                    rememberLineComponent(
-                        color = chartColors[1],
-                        thickness = COLUMN_THICKNESS.dp
-                    ),
-                    rememberLineComponent(
-                        color = chartColors[2],
-                        thickness = COLUMN_THICKNESS.dp
-                    )
+                    chartColors.map { color ->
+                        rememberLineComponent(
+                            color = color,
+                            thickness = 8.dp,
+                            shape =
+                            CorneredShape(
+                                bottomLeft = Corner.Absolute(2F, RoundedCornerTreatment),
+                                bottomRight = Corner.Absolute(2F, RoundedCornerTreatment),
+                                topRight = Corner.Absolute(2F, RoundedCornerTreatment),
+                                topLeft = Corner.Absolute(2F, RoundedCornerTreatment),
+                            ),
+                        )
+                    },
+
                 ),
                 mergeMode = { ColumnCartesianLayer.MergeMode.Stacked }
             ),
@@ -214,9 +220,15 @@ private fun rememberHorizontalLine() =
         )
     )
 
-private const val COLUMN_THICKNESS = 16
+private const val COLUMN_ROUNDNESS_PERCENT: Int = 40
+private const val COLUMN_THICKNESS_DP: Int = 10
+private const val AXIS_LABEL_ROTATION_DEGREES = 45f
+
 private val chartColors = listOf(
     Color(0xffb983ff),
     Color(0xff91b1fd),
     Color(0xff8fdaff)
 )
+
+
+private val startAxisItemPlacer = VerticalAxis.ItemPlacer.count({ 3 })

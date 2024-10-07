@@ -16,6 +16,7 @@
     <color name="red">#EE4E4E</color>
     <color name="yellow">#FFFF80</color>
     <color name="text">#151515</color>
+    <color name="gray_text">#828181</color>
     <color name="check_item_bg">#FFFF</color>
     <color name="profile_icon">#F6F5F2</color>
     <color name="topbar_bg">#FFFFFF</color>

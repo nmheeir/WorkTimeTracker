@@ -76,7 +76,7 @@ class ShiftViewModel @Inject constructor(
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
 
-            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token, month = LocalDate.now().monthNumber)) {
+            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token, month= month, year = year)) {
                 is ApiResult.Success -> {
                     if (result.response._data != null) {
                         android.util.Log.d("viewmodel_check", result.response._data.toString())

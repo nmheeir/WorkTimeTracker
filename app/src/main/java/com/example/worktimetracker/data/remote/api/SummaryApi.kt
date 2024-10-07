@@ -17,6 +17,13 @@ interface SummaryApi {
         @Query("end") end: Long
     ) : Response<DataResponse<List<DayWorkTime>>>
 
+    @GET("Sumary/GetMyTotalWorkTime")
+    suspend fun getMyTotalWorkTime(
+        @Header("Authorization") token: String,
+        @Query("start") start: Long,
+        @Query("end") end: Long
+    ) : Response<DataResponse<Long>>
+
     @GET("Sumary/GetMyPayCheck")
     suspend fun getMyPayCheck(
         @Header("Authorization") token: String

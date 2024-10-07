@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
@@ -24,6 +25,7 @@ class WorkTimeViewModel @Inject constructor(
 
     init {
         getWorkTime()
+
     }
 
     private fun getWorkTime() {
@@ -37,6 +39,32 @@ class WorkTimeViewModel @Inject constructor(
                     if (result.response._data != null) {
                         state = state.copy(
                             chartData = result.response._data
+                        )
+                    }
+                }
+
+                is ApiResult.Error -> {
+                    Log.d("WorkTimeViewModel", "getWorkTimeError: ${result.response._message}")
+                }
+
+                is ApiResult.NetworkError -> {
+                    Log.d("WorkTimeViewModel", "getWorkTimeNetworkError:" + result.message)
+                }
+            }
+        }
+    }
+
+    private fun getTotalWorkTime() {
+        viewModelScope.launch {
+            val token = localUserManager.readAccessToken()
+
+            val result = summaryUseCase.getTotalWorkTime(token, state.startTime, state.endTime)
+
+            when (result) {
+                is ApiResult.Success -> {
+                    if (result.response._data != null) {
+                        state = state.copy(
+                            totalWorkTime = result.response._data
                         )
                     }
                 }
