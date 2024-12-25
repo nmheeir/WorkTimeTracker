@@ -7,6 +7,7 @@ import android.location.Location
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import com.example.worktimetracker.R
+import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Check
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.ui.navigation.Route
@@ -63,33 +65,32 @@ import com.example.worktimetracker.ui.screens.home.components.ActivitySection.Ac
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.util.BiometricPromptManager
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun CheckScreen(
-    viewModel: CheckViewModel,
+    state: CheckUiState,
+    channel: Flow<CheckUiEvent>,
+    action: (CheckUiAction) -> Unit,
     onCheckSuccess: (Route) -> Unit,
     onNavigateTo: (Route) -> Unit,
     promptManager: BiometricPromptManager,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    LaunchedEffect(viewModel, context) {
-        viewModel.checkUiEvent.collect {
-            when (it) {
-                is ApiResult.Success -> {
-                    onCheckSuccess(Route.HomeScreen)
-                }
 
-                is ApiResult.Error -> {
-                    Log.d("CheckScreen", "Lỗi api")
-                }
+    ObserveAsEvents(channel) {
+        when (it) {
+            is CheckUiEvent.Failure -> {
+                Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
 
-                is ApiResult.NetworkError -> {
-                    //nothing
-                }
+            CheckUiEvent.Success -> {
+                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -145,10 +146,10 @@ fun CheckScreen(
     }
 
     CheckContent(
-        onEvent = viewModel::onEvent,
+        action = action,
         onNavigateTo = { onNavigateTo(it) },
         onBack = { onBack() },
-        state = viewModel.state,
+        state = state,
         promptManager = promptManager
     )
 }
@@ -156,7 +157,7 @@ fun CheckScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckContent(
-    onEvent: (CheckUiEvent) -> Unit,
+    action: (CheckUiAction) -> Unit,
     onNavigateTo: (Route) -> Unit,
     state: CheckUiState,
     onBack: () -> Unit,
@@ -203,7 +204,7 @@ fun CheckContent(
                             title = "Sample prompt",
                             desc = "Sample prompt description"
                         ) {
-                            onEvent(CheckUiEvent.CheckIn)
+                            action(CheckUiAction.CheckIn)
                         }
                     },
                     modifier = Modifier
@@ -223,7 +224,7 @@ fun CheckContent(
                             title = "Sample prompt",
                             desc = "Sample prompt description"
                         ) {
-                            onEvent(CheckUiEvent.CheckOut)
+                            action(CheckUiAction.CheckOut)
                         }
                     },
                     modifier = Modifier
@@ -330,13 +331,13 @@ fun MapContent(
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             currentLocation = location
-            state.isCurrentStateLoaded = true
+            state.isMapLoading = true
         }
     }
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val boxHeight = screenHeight * 0.3f
-    if (!state.isCurrentStateLoaded) {
+    if (!state.isMapLoading) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -387,10 +388,10 @@ fun CheckContentPreView(
 
 ) {
     CheckContent(
-        onEvent = {},
+        action = {},
         onNavigateTo = {},
         onBack = { Unit },
-        state = CheckUiState(isCurrentStateLoaded = false),
+        state = CheckUiState(isMapLoading = false),
         promptManager = BiometricPromptManager(activity = AppCompatActivity())
     )
 }

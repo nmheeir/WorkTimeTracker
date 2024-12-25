@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
@@ -43,7 +44,8 @@ fun LoginTextField(
     ) {
         Text(
             text = label,
-            style = Typography.labelLarge
+            style = Typography.labelLarge,
+            color = AppTheme.colors.onBackground
         )
         OutlinedTextField(
             value = state.username,
@@ -51,11 +53,15 @@ fun LoginTextField(
                 onUsernameChange(newUsername)
             },
             placeholder = {
-                Text(text = hint)
+                Text(text = hint, color = AppTheme.colors.blurredText)
             },
+
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorResource(id = R.color.blue),
-                unfocusedPlaceholderColor = colorResource(id = R.color.light_gray)
+                focusedBorderColor = AppTheme.colors.focusedBorderTextField,
+                unfocusedBorderColor = AppTheme.colors.unfocusedBorderTextField,
+                unfocusedPlaceholderColor = AppTheme.colors.onBackground,
+                focusedTextColor = AppTheme.colors.onBackground,
+                unfocusedTextColor = AppTheme.colors.onBackground
             ),
             keyboardOptions = keyboardOptions,
             singleLine = true,
@@ -83,7 +89,7 @@ fun LoginPasswordTextField(
         Text(
             text = label,
             style = Typography.labelLarge,
-
+            color = AppTheme.colors.onBackground
             )
         OutlinedTextField(
             value = state.password,
@@ -94,9 +100,12 @@ fun LoginPasswordTextField(
                 Text(text = hint)
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorResource(id = R.color.blue),
-                focusedPlaceholderColor = Color.LightGray,
-                unfocusedPlaceholderColor = colorResource(id = R.color.light_gray)
+                focusedBorderColor = AppTheme.colors.focusedBorderTextField,
+                unfocusedBorderColor = AppTheme.colors.unfocusedBorderTextField,
+                focusedPlaceholderColor = AppTheme.colors.blurredText,
+                unfocusedPlaceholderColor = AppTheme.colors.blurredText,
+                focusedTextColor = AppTheme.colors.onBackground,
+                unfocusedTextColor = AppTheme.colors.onBackground
             ),
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = keyboardOptions,

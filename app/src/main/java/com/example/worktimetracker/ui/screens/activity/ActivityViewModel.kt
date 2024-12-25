@@ -11,6 +11,7 @@ import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.helper.Helper
+import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
 import kotlinx.coroutines.channels.Channel
@@ -39,14 +40,12 @@ class ActivityViewModel @Inject constructor(
             is ActivityUiEvent.OnFromDateChange -> {
                 state = state.copy(
                     fromDate = event.value,
-                    isLoaded = false
                 )
                 getChecks()
             }
             is ActivityUiEvent.OnToDateChange -> {
                 state = state.copy(
                     toDate = event.value,
-                    isLoaded = false
                 )
                 getChecks()
             }
@@ -56,6 +55,17 @@ class ActivityViewModel @Inject constructor(
     private fun getThisMonthChecks() {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
+
+
+
+            checkUseCase.getCheckWithDate(
+                token,
+                year = LocalDate.now().year,
+                month = LocalDate.now().monthNumber
+            )
+                .suspendOnSuccess {
+
+                }
 
             when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token,
                 month = LocalDate.now().monthNumber,

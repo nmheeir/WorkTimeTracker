@@ -15,22 +15,18 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.component.GlowingButton
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun LoginButton(
     modifier: Modifier = Modifier,
-    isEnable: () -> Boolean,
     text: String,
     onClick: () -> Unit
 ) {
-    Button(
+    GlowingButton(
         onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(id = R.color.blue)
-        ),
-        enabled = isEnable(),
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -39,7 +35,6 @@ fun LoginButton(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
         ) {
             Text(
                 text = text,

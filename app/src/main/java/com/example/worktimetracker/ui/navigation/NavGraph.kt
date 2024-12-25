@@ -1,8 +1,11 @@
 package com.example.worktimetracker.ui.navigation
 
+import OnboardingScreen
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,7 +18,6 @@ import com.example.worktimetracker.ui.screens.check.CheckViewModel
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.log.LogScreen
 import com.example.worktimetracker.ui.screens.log.LogViewModel
-import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingViewModel
 import com.example.worktimetracker.ui.screens.profile.ProfileScreen
 import com.example.worktimetracker.ui.screens.profile.my_profile.MyProfileScreen
@@ -108,13 +110,22 @@ fun NavGraph(
 
         composable(route = Route.CheckInScreen.route) {
             val viewModel: CheckViewModel = hiltViewModel()
-            CheckScreen(viewModel, onCheckSuccess = {
-                navController.popBackStack(it.route, false)
-            }, onNavigateTo = {
-                navController.navigateSingleTopTo(it.route)
-            }, onBack = {
-                navController.popBackStack()
-            }, promptManager = promptManager
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
+            CheckScreen(
+                state = state,
+                channel = viewModel.channel,
+                action = viewModel::onAction,
+                onCheckSuccess = {
+                    navController.popBackStack(it.route, false)
+                },
+                onNavigateTo = {
+                    navController.navigateSingleTopTo(it.route)
+                },
+                onBack = {
+                    navController.popBackStack()
+                },
+                promptManager = promptManager
             )
         }
 

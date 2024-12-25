@@ -8,6 +8,7 @@ import com.example.worktimetracker.domain.repository.ShiftRepository
 import com.example.worktimetracker.domain.result.ApiResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.skydoves.sandwich.ApiResponse
 import retrofit2.Response
 import java.time.LocalDateTime
 
@@ -18,54 +19,16 @@ class ShiftRepositoryImpl(
         start: Long? ,
         end: Long? ,
         token : String
-    ): ApiResult<DataResponse<List<Shift>>> {
-        return try {
-            val response: Response<DataResponse<List<Shift>>> =
-                shiftApi.getMyShift(start, end, token)
-
-            when(response.code()) {
-                200 -> {
-                    ApiResult.Success(response.body()!!)
-                }
-                else -> {
-                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
-                    val gson = Gson()
-                    val type = object : TypeToken<DataResponse<List<Shift>>>() {}.type
-                    val errorResponse: DataResponse<List<Shift>> = gson.fromJson(errorBody, type)
-                    ApiResult.Error(errorResponse)
-                }
-            }
-        }
-        catch (e :Exception) {
-            return ApiResult.NetworkError(e.message!!)
-        }
+    ): ApiResponse<DataResponse<List<Shift>>> {
+        return shiftApi.getMyShift(start, end, token)
     }
 
     override suspend fun getMyShiftsInMonth(
         month: Int?,
         year: Int?,
         token: String
-    ): ApiResult<DataResponse<List<Shift>>> {
-        val response: Response<DataResponse<List<Shift>>> =
-            shiftApi.getMyShiftsInMonth(month, year, "Bearer $token")
-
-        return try {
-            when(response.code()) {
-                200 -> {
-                    ApiResult.Success(response.body()!!)
-                }
-                else -> {
-                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
-                    val gson = Gson()
-                    val type = object : TypeToken<DataResponse<List<Shift>>>() {}.type
-                    val errorResponse: DataResponse<List<Shift>> = gson.fromJson(errorBody, type)
-                    ApiResult.Error(errorResponse)
-                }
-            }
-        }
-        catch (e :Exception) {
-            return ApiResult.NetworkError(e.message!!)
-        }
+    ): ApiResponse<DataResponse<List<Shift>>> {
+        return shiftApi.getMyShiftsInMonth(month, year, token)
     }
 
 }

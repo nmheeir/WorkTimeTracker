@@ -13,14 +13,12 @@ import com.example.worktimetracker.data.remote.repoImpl.LogRepositoryImpl
 import com.example.worktimetracker.data.remote.repoImpl.ShiftRepositoryImpl
 import com.example.worktimetracker.data.remote.repoImpl.SummaryRepositoryImpl
 import com.example.worktimetracker.data.remote.repoImpl.UserRepositoryImpl
-import com.example.worktimetracker.data.remote.repoImpl.WorkTimeRepositoryImpl
 import com.example.worktimetracker.domain.repository.AuthRepository
 import com.example.worktimetracker.domain.repository.CheckRepository
 import com.example.worktimetracker.domain.repository.LogRepository
 import com.example.worktimetracker.domain.repository.ShiftRepository
 import com.example.worktimetracker.domain.repository.SummaryRepository
 import com.example.worktimetracker.domain.repository.UserRepository
-import com.example.worktimetracker.domain.repository.WorkTimeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -116,14 +114,6 @@ object AppModule {
         remoteDataSource: RemoteDataSource
     ): SummaryApi {
         return remoteDataSource.buildApi(SummaryApi::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideWorkTimeRepo(
-        summaryApi: SummaryApi
-    ): WorkTimeRepository {
-        return WorkTimeRepositoryImpl(summaryApi)
     }
 
     @Provides

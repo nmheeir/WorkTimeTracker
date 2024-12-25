@@ -2,6 +2,7 @@ package com.example.worktimetracker.data.remote.api
 
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Shift
+import com.skydoves.sandwich.ApiResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,12 +15,12 @@ interface ShiftApi {
         @Query("start") start: Long? = null,
         @Query("end") end: Long? = null,
         @Header("Authorization") token: String
-    ) : Response<DataResponse<List<Shift>>>
+    ) : ApiResponse<DataResponse<List<Shift>>>
 
     @GET("Shift/getMyShiftsInMonth")
     suspend fun getMyShiftsInMonth (
         @Query("month") month: Int? = null,
         @Query("year") year: Int? = null,
         @Header("Authorization") token: String
-    ) : Response<DataResponse<List<Shift>>>
+    ) : ApiResponse<DataResponse<List<Shift>>>
 }

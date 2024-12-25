@@ -5,6 +5,7 @@ import com.example.worktimetracker.data.remote.response.Token
 import com.example.worktimetracker.domain.repository.AuthRepository
 import com.example.worktimetracker.domain.repository.CheckRepository
 import com.example.worktimetracker.domain.result.ApiResult
+import com.skydoves.sandwich.ApiResponse
 import java.util.Objects
 
 class Check(
@@ -13,7 +14,7 @@ class Check(
     suspend operator fun invoke(
         checkType: Int,
         token: String
-    ): ApiResult<DataResponse<Any>> {
+    ): ApiResponse<DataResponse<Any>> {
         return checkRepository.check(checkType, token)
     }
 }

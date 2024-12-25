@@ -6,6 +6,8 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.domain.repository.LogRepository
 import com.example.worktimetracker.domain.result.ApiResult
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.mappers.ApiResponseMapper
 import retrofit2.Response
 
 class LogRepositoryImpl(
@@ -14,51 +16,13 @@ class LogRepositoryImpl(
     override suspend fun createLog(
         log: CreateLogRequest,
         token: String
-    ): ApiResult<DataResponse<Log>> {
-        return try {
-            val bearerToken = "Bearer $token"
-            val response = logApi.createLog(log, bearerToken)
-
-            when (response.code()) {
-                200 -> {
-                    ApiResult.Success(response.body()!!)
-                }
-
-                else -> {
-                    val errorResponse = DataResponse<Log>(
-                        _data = null,
-                        _message = response.message(),
-                        _success = false
-                    )
-                    ApiResult.Error(errorResponse)
-                }
-            }
-        } catch (e: Exception) {
-            ApiResult.NetworkError(e.message!!)
-        }
+    ): ApiResponse<DataResponse<Log>> {
+        return logApi.createLog(log, token)
     }
 
-    override suspend fun getLogs(token: String): ApiResult<DataResponse<List<Log>>> {
-        return try {
-            val bearerToken = "Bearer $token"
-            val response: Response<DataResponse<List<Log>>> = logApi.getLogs(bearerToken)
-
-            when (response.code()) {
-                200 -> {
-                    ApiResult.Success(response.body()!!)
-                }
-
-                else -> {
-                    val errorResponse = DataResponse<List<Log>>(
-                        _data = null,
-                        _message = response.message(),
-                        _success = false
-                    )
-                    return ApiResult.Error(errorResponse)
-                }
-            }
-        } catch (e: Exception) {
-            ApiResult.NetworkError(e.message!!)
-        }
+    override suspend fun getLogs(
+        token: String
+    ): ApiResponse<DataResponse<List<Log>>> {
+        return logApi.getLogs(token)
     }
 }

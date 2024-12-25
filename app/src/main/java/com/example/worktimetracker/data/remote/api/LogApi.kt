@@ -3,6 +3,7 @@ package com.example.worktimetracker.data.remote.api
 import com.example.worktimetracker.data.remote.request.CreateLogRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Log
+import com.skydoves.sandwich.ApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,10 +15,10 @@ interface LogApi {
     suspend fun createLog(
         @Body log: CreateLogRequest,
         @Header("Authorization") token: String
-    ): Response<DataResponse<Log>>
+    ): ApiResponse<DataResponse<Log>>
 
     @GET("Log/getLogs")
     suspend fun getLogs(
         @Header("Authorization") token: String
-    ): Response<DataResponse<List<Log>>>
+    ): ApiResponse<DataResponse<List<Log>>>
 }

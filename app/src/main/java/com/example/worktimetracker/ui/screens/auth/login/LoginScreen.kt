@@ -38,23 +38,22 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.worktimetracker.R
-import com.example.worktimetracker.data.manager.LocalUserManagerImpl
+import com.example.worktimetracker.data.local.LocalUserManagerImpl
 import com.example.worktimetracker.domain.result.ApiResult
+import com.example.worktimetracker.ui.component.LinearBackground
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
 import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
-import com.example.worktimetracker.ui.screens.auth.components.RegisterButton
-import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
+import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
-import com.example.worktimetracker.ui.util.BASE_LOG
 import com.example.worktimetracker.ui.util.rememberImeState
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    sharedViewModel: SharedViewModel,
     onLoginSuccess: (Route) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
@@ -66,12 +65,12 @@ fun LoginScreen(
         viewModel.loginUiEvent.collect {
             when (it) {
                 is ApiResult.Success -> {
-                    localUserManagerImpl.saveAccessToken(it.response._data!!.token)
-                    onLoginSuccess(Route.HomeScreen)
+                    Log.d("TestLogin", it.toString())
+//                    localUserManagerImpl.saveAccessToken(it.response._data!!.token)
+//                    onLoginSuccess(Route.HomeScreen)
                 }
 
                 is ApiResult.Error -> {
-                    Log.d("${BASE_LOG}_login_error", it.response._message)
                     Toast.makeText(context, it.response._message, Toast.LENGTH_SHORT).show()
                 }
 
@@ -81,23 +80,25 @@ fun LoginScreen(
             }
         }
     }
-
-    LoginContent(
-        state = viewModel.state,
-        onEvent = viewModel::onEvent,
-        onNavigateTo = {
-            onNavigateTo(it)
-        }
-    )
+    LinearBackground {
+        LoginContent(
+            state = viewModel.state,
+            onEvent = viewModel::onEvent,
+            onNavigateTo = {
+                onNavigateTo(it)
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LoginTopSection(modifier: Modifier = Modifier) {
     val title = buildAnnotatedString {
+        pushStyle(SpanStyle(color = AppTheme.colors.onBackground))
         append(stringResource(id = R.string.login_title))
         append(" ")
-        pushStyle(SpanStyle(color = colorResource(id = R.color.blue)))
+        pushStyle(SpanStyle(color = AppTheme.colors.onBackgroundBlue))
         append(stringResource(id = R.string.app_name))
     }
 
@@ -126,7 +127,8 @@ fun LoginTopSection(modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.login_desc),
             fontFamily = poppinsFontFamily,
             fontWeight = FontWeight.Normal,
-            style = Typography.titleMedium
+            style = Typography.titleMedium,
+            color = AppTheme.colors.onBackground
         )
     }
 }
@@ -180,7 +182,7 @@ fun LoginContent(
                 Text(
                     text = stringResource(id = R.string.forgot_password).plus(" ?"),
                     style = Typography.titleMedium,
-                    color = colorResource(id = R.color.blue),
+                    color = AppTheme.colors.onBackground,
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .align(Alignment.End)
@@ -189,19 +191,12 @@ fun LoginContent(
                         }
                 )
 
+
+
                 LoginButton(
                     text = stringResource(id = R.string.login),
-                    isEnable = {
-                        !state.isUsernameEmpty && !state.isPasswordEmpty
-                    },
                     onClick = {
                         onEvent(LoginUiEvent.Login)
-                    }
-                )
-                RegisterButton(
-                    text = stringResource(id = R.string.register),
-                    onClick = {
-                        onNavigateTo(Route.RegisterScreen)
                     }
                 )
             }
@@ -229,7 +224,11 @@ fun LoginContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoginContentPreview() {
-    LoginContent(state = LoginUiState(
-        username = "test", password = "test"
-    ), onEvent = {}, onNavigateTo = {})
+    WorkTimeTrackerTheme {
+        LinearBackground {
+            LoginContent(state = LoginUiState(
+                username = "test", password = "test"
+            ), onEvent = {}, onNavigateTo = {})
+        }
+    }
 }

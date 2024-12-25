@@ -1,20 +1,23 @@
 package com.example.worktimetracker.ui.screens.check
 
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.worktimetracker.data.remote.response.Check
-import com.example.worktimetracker.data.remote.response.DataResponse
+import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import javax.inject.Inject
@@ -24,20 +27,24 @@ class CheckViewModel @Inject constructor(
     private var checkUseCase : CheckUseCase,
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
-    private val checkUiEventChannel = Channel<ApiResult<DataResponse<Any>>>()
-    val checkUiEvent = checkUiEventChannel.receiveAsFlow()
-    var state by mutableStateOf(CheckUiState())
+
+    private val _state = MutableStateFlow(CheckUiState())
+    val state = _state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CheckUiState())
+
+    private val _channel = Channel<CheckUiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     init {
         getTodayCheckList()
     }
 
-    fun onEvent(event: CheckUiEvent) {
-        when (event) {
-            is CheckUiEvent.CheckIn -> {
+    fun onAction(action: CheckUiAction) {
+        when (action) {
+            is CheckUiAction.CheckIn -> {
                 check(0)
             }
-            is CheckUiEvent.CheckOut -> {
+            is CheckUiAction.CheckOut -> {
                 check(1)
             }
         }
@@ -46,8 +53,28 @@ class CheckViewModel @Inject constructor(
     private fun check(checkType : Int) {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
-            val result = checkUseCase.check(checkType, token)
-            checkUiEventChannel.send(result)
+            _state.update {
+                it.copy(
+                    isChecking = true
+                )
+            }
+            checkUseCase.check(checkType, token)
+                .suspendOnSuccess {
+                    _state.update {
+                        it.copy(
+                            isChecking = false
+                        )
+                    }
+
+                    _channel.send(CheckUiEvent.Success)
+                }
+
+                .suspendOnError {
+                    _channel.send(CheckUiEvent.Failure(this.message()))
+                }
+                .suspendOnException {
+                    _channel.send(CheckUiEvent.Failure(handleException(this.throwable).showMessage()))
+                }
         }
     }
 
@@ -55,25 +82,29 @@ class CheckViewModel @Inject constructor(
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
 
-            when (val result: ApiResult<DataResponse<List<Check>>> = checkUseCase.getCheckWithDate(token, LocalDate.now().year, LocalDate.now().monthNumber, LocalDate.now().dayOfMonth)) {
-                is ApiResult.Success -> {
-                    if (result.response._data != null) {
-                        android.util.Log.d("viewmodel_check", result.response._data.toString())
-                        state = state.copy(
-                            todayCheckList = result.response._data
+            _state.update {
+                it.copy(
+                    isTodayCheckListLoading = true
+                )
+            }
+
+            checkUseCase.getCheckWithDate(
+                token, LocalDate.now().year, LocalDate.now().monthNumber, LocalDate.now().dayOfMonth
+            )
+                .suspendOnSuccess {
+                    _state.update {
+                        it.copy(
+                            todayCheckList = this.data.data!!,
+                            isTodayCheckListLoading = false
                         )
                     }
                 }
-
-                is ApiResult.Error -> {
-                    android.util.Log.d("viewmodel_check", "Error " + result.response._message)
+                .suspendOnError {
+                    _channel.send(CheckUiEvent.Failure(this.message()))
                 }
-
-                is ApiResult.NetworkError -> {
-                    // TODO: Handle network error
-                    android.util.Log.d("viewmodel_check", "Network error" + result.message)
+                .suspendOnException {
+                    _channel.send(CheckUiEvent.Failure(handleException(this.throwable).showMessage()))
                 }
             }
         }
     }
-}
