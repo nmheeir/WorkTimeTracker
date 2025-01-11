@@ -9,7 +9,6 @@ sealed class Route(
     //Auth Screen
     data object LoginScreen : Route("Login")
     data object ForgotPasswordScreen : Route("ForgotPassword")
-    data object RegisterScreen : Route("Register")
 
     //Home Screen
     data object HomeScreen : Route("Home") {
@@ -19,7 +18,6 @@ sealed class Route(
      data object AttendanceScreen : Route("Attendance")
     data object ActivitySrceen : Route("Activity")
     //Profile
-    data object UpdateProfileScreen: Route("UpdateProfile")
      data object ProfileScreen : Route("Profile")
     data object MyProfileScreen : Route("MyProfile")
     data object SettingScreen : Route("Setting")
@@ -29,13 +27,16 @@ sealed class Route(
 
     data object SalaryScreen : Route("Salary")
     data object PayCheckDetail : Route("PayCheckDetail")
-    data object CheckInScreen : Route("CheckIn")
     data object LogScreen : Route("Log")
     data object WorkTimeScreen : Route("WorkTime")
     data object ShiftScreen : Route("Shift")
 
+    // CheckScreen
+    data object CheckScreen : Route("Check")
+    data object ShiftCheckScreen : Route("ShiftCheck")
 
     //Navigator
     data object AuthNavigator : Route("AuthNavigator")
+    data object CheckNavigator : Route("CheckNavigator")
 
 }

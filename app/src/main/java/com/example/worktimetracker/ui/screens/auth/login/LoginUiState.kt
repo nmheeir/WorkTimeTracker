@@ -4,8 +4,17 @@ data class LoginUiState(
     val isLoading: Boolean = false,
 
     val username: String = "",
-    val isUsernameEmpty: Boolean = true,
+    val isUsernameEmpty: Boolean = false,
 
     val password: String = "",
-    val isPasswordEmpty: Boolean = true,
+    val isPasswordEmpty: Boolean = false,
+
+    val error: String = "",
+    val isError: Boolean = false,
+
+    val rememberLogin: Boolean = false
 )
+
+
+
+

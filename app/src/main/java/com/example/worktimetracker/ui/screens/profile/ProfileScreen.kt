@@ -13,12 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.component.LinearBackground
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.Typography
+import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 
 @Composable
 fun ProfileScreen(
@@ -27,31 +30,26 @@ fun ProfileScreen(
     event: (SharedUiEvent) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {
-        GreetingSection(
-            state = state,
-            event = event
-        )
-        EditProfileButton(
-            onClick = {
-                onNavigateTo(Route.UpdateProfileScreen)
-            }
-        )
-        OptionSection(
-            onNavigateTo = onNavigateTo
-        )
-        Logout(
-            onClick = {
-                onLogoutClick()
-            }
-        )
-    }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
+            GreetingSection(
+                state = state,
+                event = event
+            )
+            OptionSection(
+                onNavigateTo = onNavigateTo
+            )
+            Logout(
+                onClick = {
+                    onLogoutClick()
+                }
+            )
+        }
 }
 
 @Composable
@@ -73,6 +71,20 @@ fun EditProfileButton(
         Text(
             text = "Edit profile",
             style = Typography.bodyLarge
+        )
+    }
+}
+
+
+@Preview
+@Composable
+fun ProfilePreview() {
+    WorkTimeTrackerTheme {
+        ProfileScreen(
+            onNavigateTo = {},
+            onLogoutClick = {},
+            state = SharedUiState(),
+            event = {}
         )
     }
 }

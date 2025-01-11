@@ -4,6 +4,10 @@
     <string name="connected">You are connected</string>
     <string name="logout">Log out</string>
 
+<!--    Common thing-->
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+
     <!--    Login Screen-->
     <string name="login_title">Welcome back to</string>
     <string name="login_desc">Hello there, login to continue</string>
@@ -68,10 +72,17 @@
                             always free from repetition, injected
                             humour, or non-characteristic words etc.</string>
 
-
-    <string name="todaycheck">Today\'s check</string>
+<!--    Check Screen    -->
+    <string name="check_screen">Check Screen</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
+    <string name="your_shift">Your Shifts</string>
+
+<!--    Shift Detail    -->
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+    <string name="duration">Duration</string>
+    <string name="shift_type">Shift type</string>
 
 <!--    Paycheck-->
     <string name="paycheck">Pay Check</string>
@@ -87,12 +98,19 @@
 
 <!--    Work Chart-->
     <string name="work_chart">Work Chart</string>
+    <string name="monthly_summary">Monthly Summary</string>
+    <string name="attendance_record">Attendance Record</string>
+    <string name="worktime_record">Worktime Record</string>
 
-<!--    Shfit-->
-    <string name="your_shift">Your shifts on</string>
-    <string name="your_check">Your checks on</string>
 
-<!--    Activity-->
-    <string name="from_day">From Day</string>
-    <string name="to_day">To Day</string>
+<!--   LogScreen -->
+    <string name="log_sumary_heaer">Log Summary</string>
+    <string name="total_log">Total Logs</string>
+
+    <string name="register_log">Register New Log</string>
+    <string name="cancel_register_log">Cancel Registration</string>
+
+    <string name="reason">Reason</string>
+
+
 </resources>

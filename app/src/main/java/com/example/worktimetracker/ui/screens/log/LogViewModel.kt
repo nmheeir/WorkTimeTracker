@@ -5,20 +5,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.data.remote.request.CreateLogRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.log.LogUseCase
+import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
+import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlin.math.log
 
 @HiltViewModel
 class LogViewModel @Inject constructor(
@@ -26,111 +37,121 @@ class LogViewModel @Inject constructor(
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
 
-    var state by mutableStateOf(LogUiState())
-    private val logUiEventChannel = Channel<ApiResult<DataResponse<Log>>>()
-    val logUiEvent = logUiEventChannel.receiveAsFlow()
+    private val _state = MutableStateFlow(LogUiState())
+    val state = _state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LogUiState())
+
+
+    private val _channel = Channel<LogUiEvent>()
+    val channel = _channel.receiveAsFlow()
+
     init {
-        android.util.Log.d("viewmodel_log", "init")
-        getLogs()
+        viewModelScope.launch {
+            delay(500)
+            getLogs()
+        }
     }
 
-    fun onEvent(event: LogUiEvent) {
-        when (event) {
-            is LogUiEvent.CreateLog -> {
+    fun onAction(action: LogUiAction) {
+        when (action) {
+            is LogUiAction.CreateLog -> {
                 createLog()
             }
 
-            is LogUiEvent.GetLogs -> {
+            is LogUiAction.GetLogs -> {
                 getLogs()
             }
 
-            is LogUiEvent.OnLogTypeChange -> {
-                state = state.copy(
-                    type = event.value
-                )
+            is LogUiAction.OnLogTypeChange -> {
+                _state.update {
+                    it.copy(
+                        type = action.value
+                    )
+                }
             }
 
-            is LogUiEvent.OnDateChange -> {
-                state = state.copy(
-                    date = event.value
-                )
+            is LogUiAction.OnDateChange -> {
+                _state.update {
+                    it.copy(
+                        date = action.value
+                    )
+                }
             }
 
-            is LogUiEvent.OnTimeChange -> {
-                state = state.copy(
-                    time = event.value
-                )
+            is LogUiAction.OnTimeChange -> {
+                _state.update {
+                    it.copy(
+                        time = action.value
+                    )
+                }
+            }
+
+            is LogUiAction.OnReasonChange -> {
+                _state.update {
+                    it.copy(
+                        reason = action.value
+                    )
+                }
             }
         }
     }
 
     private fun getLogs() {
         viewModelScope.launch {
-            state = state.copy(
-                isLoading = false
-            )
-            android.util.Log.d("viewmodel_log", "getLogs")
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
             val token = localUserManager.readAccessToken()
-            when (val result: ApiResult<DataResponse<List<Log>>> = logUseCase.getLogs(token)) {
-                is ApiResult.Success -> {
-                    if (result.response._data != null) {
-                        android.util.Log.d("viewmodel_log", result.response._data.toString())
-                        state = state.copy(
-                            listLog = result.response._data
+
+            logUseCase.getLogs(token)
+                .suspendOnSuccess {
+                    _state.update {
+                        it.copy(
+                            listLog = this.data.data ?: emptyList()
                         )
                     }
+
+                    _channel.send(LogUiEvent.Success)
+                }
+                .suspendOnError {
+                    _channel.send(LogUiEvent.Failure(this.message()))
+                }
+                .suspendOnException {
+                    _channel.send(LogUiEvent.Failure(handleException(this.throwable).showMessage()))
                 }
 
-                is ApiResult.Error -> {
-                    android.util.Log.d("viewmodel_log", "Error " + result.response._message)
-                }
-
-                is ApiResult.NetworkError -> {
-                    // TODO: Handle network error
-                    android.util.Log.d("viewmodel_log", "Network error" + result.message)
-                }
+            _state.update {
+                it.copy(
+                    isLoading = false
+                )
             }
-            state = state.copy(
-                isLoading = false
-            )
         }
     }
 
     private fun createLog() {
         // TODO: đưa phần xử lí qua bên ui để hiện thanh thông báo
         viewModelScope.launch {
-            state = state.copy(
-                isLoading = true
-            )
             val token = localUserManager.readAccessToken()
-            val currentTime: String =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
 
-            val result = logUseCase.createLog(
+            logUseCase.createLog(
                 log = CreateLogRequest(
-                    checkTime = state.date.toString() + " " + state.time,
-                    type = state.type.ordinal,
-                    createAt = currentTime
+                    checkTime = _state.value.date.toString() + " " + _state.value.time,
+                    type = _state.value.type.ordinal,
+                    reason = _state.value.reason
                 ),
                 token = token
             )
-            when (result) {
-                is ApiResult.Success -> {
-                    android.util.Log.d("viewmodel_log", result.toString())
-                    logUiEventChannel.send(result as ApiResult<DataResponse<Log>>)
+                .suspendOnSuccess {
+                    _channel.send(LogUiEvent.Success)
                 }
-
-                is ApiResult.Error -> {
-                    android.util.Log.d("viewmodel_log", "Error " + result.response._message)
+                .suspendOnError {
+                    _channel.send(LogUiEvent.Failure(this.message()))
                 }
-                is ApiResult.NetworkError -> {
-                    // TODO: Handle network error
-                    android.util.Log.d("viewmodel_log", "Network error " + result.message)
+                .suspendOnException {
+                    _channel.send(LogUiEvent.Failure(handleException(this.throwable).showMessage()))
                 }
-            }
-            state = state.copy(
-                isLoading = false
-            )
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.core.net.toUri
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
@@ -56,20 +57,20 @@ fun HomeGreetingSection(
                     text = "Hi, " + state.user.userFullName,
                     style = Typography.titleSmall,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.white)
+                    color = AppTheme.colors.onSecondarySurface
                 )
                 Text(
                     text = "Vi tri " + state.user.department,
                     style = Typography.titleSmall,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.white),
+                    color = AppTheme.colors.onSecondarySurface,
                     modifier = Modifier
                 )
             }
             Icon(
                 imageVector = Icons.Filled.Notifications,
                 contentDescription = null,
-                tint = colorResource(id = R.color.white),
+                tint = AppTheme.colors.onSecondarySurface,
                 modifier = Modifier.size(36.dp)
             )
         }

@@ -1,7 +1,9 @@
-package com.example.worktimetracker.ui.screens.onboarding
+import com.example.worktimetracker.ui.screens.onboarding.OnboardingUiEvent
+
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +16,9 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -31,6 +35,7 @@ import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.onboarding.component.OnBoardingPageData
 import com.example.worktimetracker.ui.screens.onboarding.component.PageIndicator
 import com.example.worktimetracker.ui.screens.onboarding.component.pages
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 import kotlinx.coroutines.launch
 
@@ -90,7 +95,7 @@ fun OnboardingPage(
             shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
             modifier = Modifier
                 .fillMaxHeight(0.4f)
-                .align(Alignment.BottomCenter)
+                .align(Alignment.BottomCenter),
         ) {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -127,7 +132,12 @@ fun OnboardingPage(
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         }
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AppTheme.colors.actionSurface, // Màu nền của Button
+                        contentColor = AppTheme.colors.onActionSurface  // Màu chữ/icon trên Button
+                    )
+
                 ) {
                     Text(text = buttonState.value)
                 }

@@ -1,77 +1,137 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.data.remote.response.Token
-import com.example.worktimetracker.domain.result.ApiResult
+import com.example.worktimetracker.core.data.network.handleException
+import com.example.worktimetracker.data.local.db.dao.UserSessionDao
+import com.example.worktimetracker.data.local.db.entity.UserSession
+import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.login.AuthUseCase
+import com.skydoves.sandwich.StatusCode
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.retrofit.errorBody
+import com.skydoves.sandwich.retrofit.statusCode
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authUseCase: AuthUseCase
+    private val authUseCase: AuthUseCase,
+    private val userSessionDao: UserSessionDao,
+    private val localUserManager: LocalUserManager
 ) : ViewModel() {
+    private val _state = MutableStateFlow(LoginUiState())
+    val state = _state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LoginUiState())
 
-    var state by mutableStateOf(LoginUiState())
+    private val _channel = Channel<LoginUiEvent>()
+    val channel = _channel.receiveAsFlow()
 
-    private val loginUiEventChannel = Channel<ApiResult<DataResponse<Token>>>()
-    val loginUiEvent = loginUiEventChannel.receiveAsFlow()
-
-    fun onEvent(event: LoginUiEvent) {
-        when (event) {
-            is LoginUiEvent.UsernameChange -> {
-                val usernameEmpty = event.value.isEmpty()
-                state = state.copy(
-                    username = event.value,
-                    isUsernameEmpty = usernameEmpty
-                )
+    fun onAction(action: LoginUiAction) {
+        when (action) {
+            is LoginUiAction.Login -> {
+               login()
             }
 
-            is LoginUiEvent.PasswordChange -> {
-                val passwordEmpty = event.value.isEmpty()
-                state = state.copy(
-                    password = event.value,
-                    isPasswordEmpty = passwordEmpty
-                )
+            is LoginUiAction.OnPasswordChange -> {
+                _state.update {
+                    it.copy(
+                        password = action.password
+                    )
+                }
             }
 
-            is LoginUiEvent.Login -> {
-                login()
+            is LoginUiAction.OnUsernameChange -> {
+                _state.update {
+                    it.copy(
+                        username = action.username
+                    )
+                }
             }
-            else -> {
-                //do nothing
+            is LoginUiAction.UpdateError -> {
+                _state.update {
+                    it.copy(
+                        error = action.error,
+                        isError = true
+                    )
+                }
+            }
+
+            is LoginUiAction.OnRememberLogin -> {
+                _state.update {
+                    it.copy(
+                        rememberLogin = action.isRemember
+                    )
+                }
+                Log.d("Login", "onAction: OnRememberLogin" + _state.value.rememberLogin)
             }
 
         }
     }
 
     private fun login() {
-        viewModelScope.launch {
-            state = state.copy(
-                isLoading = true
-            )
+       viewModelScope.launch {
+           val deviceToken = localUserManager.readDeviceToken()
 
-            Log.d("login", "chạy logn")
+           authUseCase
+               .login(_state.value.username, _state.value.password, deviceToken)
+               .suspendOnSuccess {
+                   val token = this.data.data?.token
+                   if(token != null) {
+                       localUserManager.saveAccessToken(token)
 
-            val result = authUseCase.login(
-                username = state.username,
-                password = state.password
-            )
-            loginUiEventChannel.send(result)
-            Log.d("login_viewmodel", result.toString())
+                       if (_state.value.rememberLogin) {
+                           userSessionDao.insertUserSession(
+                               UserSession(
+                                   username = _state.value.username,
+                                   password = _state.value.password,
+                                   avatarUrl = ""
+                               )
+                           )
+                       }
 
-            state = state.copy(
-                isLoading = false
-            )
-        }
+                       _channel.send(LoginUiEvent.Success)
+                   }
+               }
+               .suspendOnError {
+                   when (this.statusCode) {
+                       StatusCode.BadRequest -> {
+                           val error = this.errorBody?.string()
+                           error.let {
+                               Log.d("Login", "LoginScreen BadRequest: $it")
+                           }
+                           _channel.send(LoginUiEvent.WrongPassword("Wrong password"))
+                       }
+
+                       StatusCode.NotFound -> {
+                           _channel.send(LoginUiEvent.UserNotFound("User not found"))
+                       }
+
+                       else -> {
+                           Log.d("Login", "Login error else: " + this.statusCode + this.message())
+//                            channel.send(LoginUiEvent.UserNotFound("User not found"))
+                       }
+                   }
+               }
+               .suspendOnException {
+                   Log.d("Login", "loginexception: " + this.message)
+
+                   Log.d("Login", "loginexception: " + this.throwable.toString())
+                   _channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
+               }
+
+
+       }
     }
 }

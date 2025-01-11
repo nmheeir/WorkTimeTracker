@@ -40,9 +40,9 @@ class MainViewModel @Inject constructor(
             } else {
                 _startDestination.value = Route.OnboardingScreen.route
             }
-            Log.d("viewmodel_main", _startDestination.value)
             delay(500)
             _splashCondition.value = false
+            localUserManager.saveDeviceToken()
         }.launchIn(viewModelScope)
     }
 

@@ -13,7 +13,7 @@ val pages = listOf(
     OnBoardingPageData(
         title = "Easy way to confirm you attendance",
         desc = "It a long established face that a reader will be distracted by the readable content.",
-        image = R.drawable.avatar
+        image = R.drawable.onboarding1
     ),
     OnBoardingPageData(
         title = "Disciplinary in your hand",

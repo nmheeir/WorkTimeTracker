@@ -12,6 +12,6 @@ data class LogUiState(
     val type: LogType = LogType.CHECK_IN,
     val time: LocalTime = LocalTime.now(),
     val date: LocalDate = LocalDate.now(),
-    val createAt : String = "",
+    val reason : String = "",
     val listLog: List<Log> = emptyList(),
 )
