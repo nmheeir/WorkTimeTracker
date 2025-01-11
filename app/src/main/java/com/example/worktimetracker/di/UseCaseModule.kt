@@ -26,8 +26,9 @@ import com.example.worktimetracker.domain.use_case.log.LogUseCase
 import com.example.worktimetracker.domain.use_case.login.Login
 import com.example.worktimetracker.domain.use_case.login.AuthUseCase
 import com.example.worktimetracker.domain.use_case.shift.GetMyShift
-import com.example.worktimetracker.domain.use_case.shift.GetMyShiftsInMonth
+import com.example.worktimetracker.domain.use_case.shift.GetMyShiftsByDate
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
+import com.example.worktimetracker.domain.use_case.summary.GetAttendanceRecord
 import com.example.worktimetracker.domain.use_case.summary.GetMyPayCheck
 import com.example.worktimetracker.domain.use_case.summary.GetTotalWorkTime
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
@@ -90,7 +91,7 @@ class UseCaseModule {
     fun provideShiftUseCase(shiftRepository: ShiftRepository) : ShiftUseCase {
         return ShiftUseCase(
             getMyShift = GetMyShift(shiftRepository),
-            getMyShiftsInMonth = GetMyShiftsInMonth(shiftRepository)
+            getShiftsByDate = GetMyShiftsByDate(shiftRepository)
             )
     }
 
@@ -111,7 +112,8 @@ class UseCaseModule {
         return SummaryUseCase(
             getWorkTimeEachDay = GetWorkTimeEachDay(summaryRepository),
             getMyPayCheck = GetMyPayCheck(summaryRepository),
-            getTotalWorkTime = GetTotalWorkTime(summaryRepository)
+            getTotalWorkTime = GetTotalWorkTime(summaryRepository),
+            getAttendanceRecord = GetAttendanceRecord(summaryRepository)
         )
     }
 

@@ -37,6 +37,7 @@ import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.screens.home.components.Avatar
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.util.StorageUtil.Companion.uploadAvatarToStorage
 import kotlinx.coroutines.launch
@@ -86,12 +87,12 @@ fun GreetingSection(
             Icon(
                 painter = painterResource(id = R.drawable.ic_camera),
                 contentDescription = null,
-                tint = colorResource(id = R.color.white),
+                tint = AppTheme.colors.onBackground,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .clip(RoundedCornerShape(16.dp))
                     .border(
-                        color = colorResource(id = R.color.white),
+                        color = AppTheme.colors.onBackground,
                         width = 1.dp,
                         shape = RoundedCornerShape(16.dp)
                     )
@@ -106,12 +107,14 @@ fun GreetingSection(
         }
         Text(
             text = state.user.userName,
-            style = Typography.titleLarge
+            style = Typography.titleLarge,
+            color = AppTheme.colors.onBackground
         )
         Text(
             text = state.user.department,
             style = Typography.titleMedium,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Normal,
+            color = AppTheme.colors.onBackground
         )
     }
 }

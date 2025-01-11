@@ -3,6 +3,7 @@ package com.example.worktimetracker.data.remote.repoImpl
 import android.util.Log
 import com.example.worktimetracker.data.remote.api.ShiftApi
 import com.example.worktimetracker.data.remote.response.DataResponse
+import com.example.worktimetracker.data.remote.response.PagedDataResponse
 import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.domain.repository.ShiftRepository
 import com.example.worktimetracker.domain.result.ApiResult
@@ -16,19 +17,21 @@ class ShiftRepositoryImpl(
     private val shiftApi: ShiftApi
 ) : ShiftRepository {
     override suspend fun getMyShift(
-        start: Long? ,
-        end: Long? ,
+        start: String? ,
+        end: String? ,
         token : String
-    ): ApiResponse<DataResponse<List<Shift>>> {
+    ): ApiResponse<PagedDataResponse<List<Shift>>> {
         return shiftApi.getMyShift(start, end, token)
     }
 
-    override suspend fun getMyShiftsInMonth(
+    override suspend fun getMyShiftsByDate(
+        day: Int?,
         month: Int?,
         year: Int?,
-        token: String
-    ): ApiResponse<DataResponse<List<Shift>>> {
-        return shiftApi.getMyShiftsInMonth(month, year, token)
+        token: String,
+        includeCheckRecord: Boolean
+    ): ApiResponse<PagedDataResponse<List<Shift>>> {
+        return shiftApi.getMyShiftsByDate(day, month, year, includeCheckRecord, "Bearer $token")
     }
 
 }

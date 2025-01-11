@@ -20,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.theme.AppColors
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.util.ProfileOption
 import com.example.worktimetracker.ui.util.lOptionProfile
@@ -55,7 +57,6 @@ fun OptionSectionItem(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(color = colorResource(id = R.color.check_item_bg))
             .padding(8.dp)
             .clickable {
                 onNavigateTo(
@@ -68,17 +69,19 @@ fun OptionSectionItem(
             contentDescription = profileOption.title,
             modifier = Modifier
                 .clip(CircleShape)
-                .background(color = colorResource(id = R.color.profile_icon))
+                .background(AppTheme.colors.secondarySurface)
                 .padding(8.dp)
         )
         Text(
             text = profileOption.title,
             style = Typography.labelLarge,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            color = AppTheme.colors.onRegularSurface
         )
         Icon(
             painter = painterResource(id = R.drawable.ic_arrow_right),
             contentDescription = null,
+            tint = AppTheme.colors.onRegularSurface
         )
 
     }

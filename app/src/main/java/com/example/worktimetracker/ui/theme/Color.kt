@@ -10,8 +10,8 @@ data class AppColors (
     val backgroundStart: Color,
     val backgroundEnd: Color,
     val onBackground: Color,
-    val surface : Color,
-    val onSurface : Color,
+    val darkerSurface : Color,
+    val onDarkerSurface : Color,
     val secondarySurface: Color,
     val onSecondarySurface: Color,
     val regularSurface : Color,
@@ -26,14 +26,15 @@ data class AppColors (
     val blurredText: Color,
 
     val onBackgroundBlue: Color
+
 )
 
 val LocalAppColors = staticCompositionLocalOf {
     AppColors(
         backgroundStart = Color.Unspecified,
         backgroundEnd = Color.Unspecified,
-        surface = Color.Unspecified,
-        onSurface = Color.Unspecified,
+        darkerSurface = Color.Unspecified,
+        onDarkerSurface = Color.Unspecified,
         onBackground = Color.White,
         secondarySurface = Color.Unspecified,
         onSecondarySurface = Color.Unspecified,
@@ -53,23 +54,23 @@ val LocalAppColors = staticCompositionLocalOf {
 }
 
 val extendedColors = AppColors(
-    backgroundStart = Color(0xFF1A365D),
-    backgroundEnd = Color(0xFF0EA5E9),
-    surface = Color.White.copy(alpha = 0.5f),
-    onSurface = Color.White,
+    backgroundStart = Color(0xFF5893e3),
+    backgroundEnd = Color(0xFF3e54e6),
+    darkerSurface = Color.Black.copy(alpha = 0.1f),
+    onDarkerSurface = Color.White,
     onBackground = Color.White,
-    secondarySurface = Color.Unspecified,
-    onSecondarySurface = Color.Unspecified,
-    regularSurface = Color.Unspecified,
-    onRegularSurface = Color.Unspecified,
+    secondarySurface = Color.White.copy(alpha = 0.5f),
+    onSecondarySurface = Color.White,
+    regularSurface = Color.White.copy(alpha = 0.15f),
+    onRegularSurface = Color.White,
     actionSurface = Color.Blue,
     onActionSurface = Color.White,
-    hightlightSurface = Color.Unspecified,
-    onHighlightSurface = Color.Unspecified,
+    hightlightSurface = Color(0xFF5080C9),
+    onHighlightSurface = Color.White,
 
     focusedBorderTextField = Color.White,
     unfocusedBorderTextField = Color.White.copy(alpha = 0.5f),
-    blurredText = Color(0xFF8f8c8c),
+    blurredText = Color.White.copy(alpha = 0.7f),
     onBackgroundBlue = Color(0xFF3085FE)
 
 )

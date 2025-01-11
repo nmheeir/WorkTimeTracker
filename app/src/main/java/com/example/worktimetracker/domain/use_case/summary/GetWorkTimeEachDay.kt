@@ -1,5 +1,6 @@
 package com.example.worktimetracker.domain.use_case.summary
 
+import android.util.Log
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.domain.repository.SummaryRepository
@@ -11,9 +12,11 @@ class GetWorkTimeEachDay (
 ) {
     suspend operator fun invoke(
         token: String,
-        start: Long,
-        end: Long
+        start: String,
+        end: String
     ): ApiResponse<DataResponse<List<DayWorkTime>>> {
-        return summaryRepository.getMyWorkTimeEachDay(token, start, end)
+        val apirs = summaryRepository.getMyWorkTimeEachDay(token, start, end)
+        Log.d("ShiftTest", apirs.toString())
+        return apirs
     }
 }

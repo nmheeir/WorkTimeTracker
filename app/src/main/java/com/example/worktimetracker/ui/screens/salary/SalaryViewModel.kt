@@ -6,10 +6,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
+import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
+import com.example.worktimetracker.ui.screens.shift.ShiftUiEvent
+import com.example.worktimetracker.ui.screens.shift.ShiftUiState
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +33,12 @@ class SalaryViewModel @Inject constructor(
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
 
-    var state by mutableStateOf(SalaryState())
+    private val _state = MutableStateFlow(SalaryState())
+    val state = _state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SalaryState())
+
+    private val _channel = Channel<SalaryUiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     init {
         getMyPayCheck()
@@ -27,37 +46,35 @@ class SalaryViewModel @Inject constructor(
 
     private fun getMyPayCheck() {
         viewModelScope.launch {
-            state = state.copy(
-                isLoading = true
-            )
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
             val token = localUserManager.readAccessToken()
 
-            when (val result = summaryUseCase.getMyPayCheck(token)) {
-                is ApiResult.Error -> {
-                    state = state.copy(
-                        messageError = result.response._message
-                    )
-                    Log.d("SalaryViewModel", "error: ${result.response}")
-                }
-
-                is ApiResult.NetworkError -> {
-                    state = state.copy(
-                        messageError = result.message
-                    )
-                    Log.d("SalaryViewModel", "networkErr: ${result.message}")
-                }
-
-                is ApiResult.Success -> {
-                    if (result.response._data != null) {
-                        state = state.copy(
-                            listPayCheck = result.response._data
-                        )
-                    }
-                }
+           summaryUseCase.getMyPayCheck(token)
+            .suspendOnSuccess {
+            _state.update {
+                it.copy(
+                    listPayCheck = this.data.data!!
+                )
             }
-            state = state.copy(
-                isLoading = false
-            )
+
+            _channel.send(SalaryUiEvent.Success)
+        }
+
+            .suspendOnError {
+                _channel.send(SalaryUiEvent.Failure(this.message()))
+            }
+            .suspendOnException {
+                _channel.send(SalaryUiEvent.Failure(handleException(this.throwable).showMessage()))
+            }
+            _state.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
         }
     }
 

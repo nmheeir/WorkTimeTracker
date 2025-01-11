@@ -35,8 +35,8 @@ class LoginViewModel @Inject constructor(
     val state = _state
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LoginUiState())
 
-    private val channel = Channel<LoginUiEvent>()
-    val loginUiEvent = channel.receiveAsFlow()
+    private val _channel = Channel<LoginUiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     fun onAction(action: LoginUiAction) {
         when (action) {
@@ -101,7 +101,7 @@ class LoginViewModel @Inject constructor(
                            )
                        }
 
-                       channel.send(LoginUiEvent.Success)
+                       _channel.send(LoginUiEvent.Success)
                    }
                }
                .suspendOnError {
@@ -111,11 +111,11 @@ class LoginViewModel @Inject constructor(
                            error.let {
                                Log.d("Login", "LoginScreen BadRequest: $it")
                            }
-                           channel.send(LoginUiEvent.WrongPassword("Wrong password"))
+                           _channel.send(LoginUiEvent.WrongPassword("Wrong password"))
                        }
 
                        StatusCode.NotFound -> {
-                           channel.send(LoginUiEvent.UserNotFound("User not found"))
+                           _channel.send(LoginUiEvent.UserNotFound("User not found"))
                        }
 
                        else -> {
@@ -128,7 +128,7 @@ class LoginViewModel @Inject constructor(
                    Log.d("Login", "loginexception: " + this.message)
 
                    Log.d("Login", "loginexception: " + this.throwable.toString())
-                   channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
+                   _channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
                }
 
 

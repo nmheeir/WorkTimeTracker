@@ -1,6 +1,7 @@
 package com.example.worktimetracker.data.remote
 
 import com.example.worktimetracker.ui.util.BASE_URL
+import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,6 +22,7 @@ class RemoteDataSource @Inject constructor() {
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
             .create(api)
     }

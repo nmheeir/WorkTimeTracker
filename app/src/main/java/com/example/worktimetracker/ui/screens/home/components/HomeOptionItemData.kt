@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 @Preview(showBackground = true)
@@ -63,7 +64,8 @@ fun HomeOptionItem(
         Text(
             text = item.title,
             style = Typography.labelMedium,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Normal,
+            color = AppTheme.colors.onHighlightSurface
         )
     }
 }
@@ -84,7 +86,7 @@ val listHomeOption = listOf(
         color = R.color.blue
     ),
     HomeOptionItemData(
-        route = Route.CheckInScreen,
+        route = Route.CheckScreen,
         title = "Check",
         icon = R.drawable.ic_clock_filled,
         color = R.color.teal

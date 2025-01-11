@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.screens.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,9 +34,10 @@ import com.example.worktimetracker.ui.screens.home.components.listHomeNotificati
 import com.example.worktimetracker.ui.screens.home.components.listHomeOption
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.AppTheme
+import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true)
 @Composable
 fun HomeScreen(
     state: SharedUiState = SharedUiState(),
@@ -44,24 +46,10 @@ fun HomeScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
-
-    LinearBackground {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
-            val (topSection, greetingSection, notifySection, optionSection, activitySection) = createRefs()
-            Box(modifier = Modifier
-                .fillMaxHeight(0.25f)
-                .fillMaxWidth()
-                .background(
-                    shape = RoundedCornerShape(bottomEnd = 32.dp, bottomStart = 32.dp),
-                    color = AppTheme.colors.onSurface
-                )
-                .constrainAs(topSection) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                })
+            val (topSection, greetingSection, notifySection, optionSection) = createRefs()
             HomeGreetingSection(
                 state = state,
                 modifier = Modifier.constrainAs(greetingSection) {
@@ -73,6 +61,7 @@ fun HomeScreen(
                     onNavigateTo(Route.ProfileScreen)
                 }
             )
+
             NotificationPager(
                 listNotify = listHomeNotification,
                 modifier = Modifier
@@ -80,6 +69,7 @@ fun HomeScreen(
                     .constrainAs(notifySection) {
                         top.linkTo(greetingSection.bottom, margin = 8.dp)
                     })
+
             LazyVerticalGrid(columns = GridCells.Fixed(3),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
@@ -101,23 +91,15 @@ fun HomeScreen(
                     })
                 }
             }
-//        ActivitySection(
-//            modifier = Modifier
-//                .padding(12.dp)
-//                .constrainAs(activitySection) {
-//                    top.linkTo(optionSection.bottom, margin = 16.dp)
-//                },
-//            viewModel = activitySectionViewModel,
-//            state = activitySectionViewModel.state,
-//            onNavigateTo = onNavigateTo
-//        )
         }
+
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = {
                     showBottomSheet = false
                 },
-                sheetState = sheetState
+                sheetState = sheetState,
+                containerColor = AppTheme.colors.backgroundStart
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
@@ -136,5 +118,14 @@ fun HomeScreen(
                 }
             }
         }
+
+}
+
+@Preview
+@Composable
+fun HomePreview() {
+    WorkTimeTrackerTheme {
+        HomeScreen()
     }
 }
+

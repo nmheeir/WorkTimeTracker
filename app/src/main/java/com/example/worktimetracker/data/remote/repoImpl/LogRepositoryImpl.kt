@@ -17,12 +17,12 @@ class LogRepositoryImpl(
         log: CreateLogRequest,
         token: String
     ): ApiResponse<DataResponse<Log>> {
-        return logApi.createLog(log, token)
+        return logApi.createLog(log, "Bearer $token")
     }
 
     override suspend fun getLogs(
         token: String
     ): ApiResponse<DataResponse<List<Log>>> {
-        return logApi.getLogs(token)
+        return logApi.getLogs("Bearer $token")
     }
 }

@@ -38,6 +38,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.worktimetracker.R
+import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.local.LocalUserManagerImpl
 import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.ui.component.LinearBackground
@@ -50,40 +51,41 @@ import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 import com.example.worktimetracker.ui.util.rememberImeState
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
-    onLoginSuccess: (Route) -> Unit,
-    onNavigateTo: (Route) -> Unit
+    channel: Flow<LoginUiEvent>,
+    state: LoginUiState,
+    action: (LoginUiAction) -> Unit,
+    onNavigateTo: (Route) -> Unit,
+    onLoginSuccess: () -> Unit
 ) {
     val context = LocalContext.current
-    val localUserManagerImpl = LocalUserManagerImpl(context)
 
+    ObserveAsEvents(channel) {
+        when(it) {
+            LoginUiEvent.Success -> {
+                onLoginSuccess()
+            }
+            is LoginUiEvent.UserNotFound -> {
+                action(LoginUiAction.UpdateError("User not found"))
+            }
 
-    LaunchedEffect(viewModel, context) {
-        viewModel.loginUiEvent.collect {
-            when (it) {
-                is ApiResult.Success -> {
-                    Log.d("TestLogin", it.toString())
-//                    localUserManagerImpl.saveAccessToken(it.response._data!!.token)
-//                    onLoginSuccess(Route.HomeScreen)
-                }
+            is LoginUiEvent.WrongPassword -> {
+                action(LoginUiAction.UpdateError("Wrong password"))
+            }
 
-                is ApiResult.Error -> {
-                    Toast.makeText(context, it.response._message, Toast.LENGTH_SHORT).show()
-                }
-
-                is ApiResult.NetworkError -> {
-                    //nothing
-                }
+            is LoginUiEvent.Failure -> {
+                Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     LinearBackground {
         LoginContent(
-            state = viewModel.state,
-            onEvent = viewModel::onEvent,
+            state = state,
+            action = action,
             onNavigateTo = {
                 onNavigateTo(it)
             }
@@ -137,7 +139,7 @@ fun LoginTopSection(modifier: Modifier = Modifier) {
 fun LoginContent(
     modifier: Modifier = Modifier,
     state: LoginUiState,
-    onEvent: (LoginUiEvent) -> Unit,
+    action: (LoginUiAction) -> Unit,
     onNavigateTo: (Route) -> Unit
 ) {
     val lottieComposition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.lottie_loading))
@@ -158,7 +160,7 @@ fun LoginContent(
                     state = state,
                     hint = stringResource(id = R.string.username_hint),
                     onUsernameChange = {
-                        onEvent(LoginUiEvent.UsernameChange(it))
+                        action(LoginUiAction.OnUsernameChange(it))
                     },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
@@ -175,9 +177,11 @@ fun LoginContent(
                         keyboardType = KeyboardType.Password,
                     ),
                     onPasswordChange = {
-                        onEvent(LoginUiEvent.PasswordChange(it))
+                        action(LoginUiAction.OnPasswordChange(it))
                     }
                 )
+
+
 
                 Text(
                     text = stringResource(id = R.string.forgot_password).plus(" ?"),
@@ -196,7 +200,7 @@ fun LoginContent(
                 LoginButton(
                     text = stringResource(id = R.string.login),
                     onClick = {
-                        onEvent(LoginUiEvent.Login)
+                        action(LoginUiAction.Login)
                     }
                 )
             }
@@ -228,7 +232,7 @@ private fun LoginContentPreview() {
         LinearBackground {
             LoginContent(state = LoginUiState(
                 username = "test", password = "test"
-            ), onEvent = {}, onNavigateTo = {})
+            ), action = {}, onNavigateTo = {})
         }
     }
 }

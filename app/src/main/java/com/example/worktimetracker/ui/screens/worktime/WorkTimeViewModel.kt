@@ -1,18 +1,27 @@
 package com.example.worktimetracker.ui.screens.worktime
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.util.copy
+import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
-import com.example.worktimetracker.domain.use_case.work_time.WorkTimeUseCase
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,65 +29,129 @@ class WorkTimeViewModel @Inject constructor(
     private val summaryUseCase: SummaryUseCase,
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
+    private val _state = MutableStateFlow(WorkTimeUiState())
+    var state = _state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), WorkTimeUiState())
 
-    var state by mutableStateOf(WorkTimeUiState())
+    private val _channel = Channel<WorkTimeUiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     init {
-        getWorkTime()
+        viewModelScope.launch {
+            delay(500)
+            getWorkTime()
+            getTotalWorkTime()
+            getAttendanceRecord()
+        }
 
+    }
+
+    fun onAction(action: WorkTimeUiAction) {
+        when(action) {
+            is WorkTimeUiAction.OnMonthChange -> {
+                _state.update {
+                    it.copy(
+                        month = _state.value.month.plusMonths(if (action.value == 1) 1L else -1L)
+                    )
+                }
+                _state.update {
+                    it.copy(
+                        startTime = _state.value.month.withDayOfMonth(1).atStartOfDay().toString(),
+                        endTime = _state.value.month.with(TemporalAdjusters.lastDayOfMonth()).atTime(23,59,59).toString()
+                    )
+                }
+                viewModelScope.launch {
+                    getWorkTime()
+                    getTotalWorkTime()
+                    getAttendanceRecord()
+                }
+            }
+        }
     }
 
     private fun getWorkTime() {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
 
-            val result = summaryUseCase.getWorkTimeEachDay(token, state.startTime, state.endTime)
+           summaryUseCase.getWorkTimeEachDay(token, _state.value.startTime, _state.value.endTime)
+               .suspendOnSuccess {
+                   _state.update {
+                       it.copy(
+                           chartData = this.data.data!!
+                       )
+                   }
+                   Log.d("ShiftTest", this.data.data.toString())
+                   _channel.send(WorkTimeUiEvent.Success)
+               }
+               .suspendOnError {
+                   _channel.send(WorkTimeUiEvent.Failure(this.message()))
+                   Log.d("ShiftTest", this.message())
+               }
+               .suspendOnException {
+                   _channel.send(WorkTimeUiEvent.Failure(handleException(this.throwable).showMessage()))
+                   Log.d("ShiftTest", handleException(this.throwable).showMessage())
 
-            when (result) {
-                is ApiResult.Success -> {
-                    if (result.response._data != null) {
-                        state = state.copy(
-                            chartData = result.response._data
-                        )
-                    }
-                }
-
-                is ApiResult.Error -> {
-                    Log.d("WorkTimeViewModel", "getWorkTimeError: ${result.response._message}")
-                }
-
-                is ApiResult.NetworkError -> {
-                    Log.d("WorkTimeViewModel", "getWorkTimeNetworkError:" + result.message)
-                }
-            }
+               }
         }
     }
 
     private fun getTotalWorkTime() {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
-
-            val result = summaryUseCase.getTotalWorkTime(token, state.startTime, state.endTime)
-
-            when (result) {
-                is ApiResult.Success -> {
-                    if (result.response._data != null) {
-                        state = state.copy(
-                            totalWorkTime = result.response._data
+            _state.update {
+                it.copy(
+                    isChartDataLoading = true
+                )
+            }
+            summaryUseCase.getTotalWorkTime(token, _state.value.startTime, _state.value.endTime)
+                .suspendOnSuccess {
+                    _state.update {
+                        it.copy(
+                            totalWorkTime = this.data.data!!
                         )
                     }
-                }
+                    Log.d("ShiftTest", this.data.data.toString())
+                    _channel.send(WorkTimeUiEvent.Success)
 
-                is ApiResult.Error -> {
-                    Log.d("WorkTimeViewModel", "getWorkTimeError: ${result.response._message}")
                 }
+                .suspendOnError {
+                    _channel.send(WorkTimeUiEvent.Failure(this.message()))
+                    Log.d("ShiftTest", this.message())
+                }
+                .suspendOnException {
+                    _channel.send(WorkTimeUiEvent.Failure(handleException(this.throwable).showMessage()))
+                    Log.d("ShiftTest", handleException(this.throwable).showMessage())
 
-                is ApiResult.NetworkError -> {
-                    Log.d("WorkTimeViewModel", "getWorkTimeNetworkError:" + result.message)
                 }
+            _state.update {
+                it.copy(
+                    isChartDataLoading = false
+                )
             }
         }
     }
+    private fun getAttendanceRecord () {
+        viewModelScope.launch {
+            val token = localUserManager.readAccessToken()
 
-
+            summaryUseCase.getAttendanceRecord(token, _state.value.startTime, _state.value.endTime)
+                .suspendOnSuccess {
+                    _state.update {
+                        it.copy(
+                            attendanceRecord = this.data.data!!
+                        )
+                    }
+                    Log.d("ShiftTest", this.data.data.toString())
+                    _channel.send(WorkTimeUiEvent.Success)
+                }
+                .suspendOnError {
+                    _channel.send(WorkTimeUiEvent.Failure(this.message()))
+                    Log.d("ShiftTest", this.message())
+                }
+                .suspendOnException {
+                    _channel.send(WorkTimeUiEvent.Failure(handleException(this.throwable).showMessage()))
+                    Log.d("ShiftTest", handleException(this.throwable).showMessage())
+                }
+        }
+    }
 }

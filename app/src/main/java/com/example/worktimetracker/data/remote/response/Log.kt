@@ -4,13 +4,13 @@ import com.example.worktimetracker.R
 import com.google.gson.annotations.SerializedName
 
 data class Log(
-    @SerializedName("id") val id: Int,
-    @SerializedName("userId") val userId: Int,
-    @SerializedName("type") val type: Int,
-    @SerializedName("status") val status: Int,
-    @SerializedName("createAt") val createAt: String,
-    @SerializedName("checkTime") val checkTime: String,
-    @SerializedName("user") val user: User? = null
+    val id: Int,
+    val userId: Int,
+    val type: Int,
+    val status: Int,
+    val createAt: String,
+    val checkTime: String,
+    val user: User? = null
 ) {
     fun statusName(): String {
         return when (status) {

@@ -27,9 +27,6 @@ import org.osmdroid.config.Configuration
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
-    private val promptManager: BiometricPromptManager by lazy {
-        BiometricPromptManager(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         // Configure osmdroid cho openstreetmap
         Configuration.getInstance().load(this, this.getPreferences(MODE_PRIVATE))
-        // tạo fused lấy vị trí hiện tại
-        var fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
             val navController = rememberNavController()
             WorkTimeTrackerTheme {
@@ -67,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                             NavGraph(
                                 sDestination = viewModel.startDestination.value,
                                 navController = navController,
-                                promptManager = promptManager
                             )
                         }
                     }

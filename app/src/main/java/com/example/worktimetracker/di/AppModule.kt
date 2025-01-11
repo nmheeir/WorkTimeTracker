@@ -1,5 +1,7 @@
 package com.example.worktimetracker.di
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import com.example.worktimetracker.data.remote.RemoteDataSource
 import com.example.worktimetracker.data.remote.api.AuthApi
 import com.example.worktimetracker.data.remote.api.CheckApi
@@ -19,9 +21,12 @@ import com.example.worktimetracker.domain.repository.LogRepository
 import com.example.worktimetracker.domain.repository.ShiftRepository
 import com.example.worktimetracker.domain.repository.SummaryRepository
 import com.example.worktimetracker.domain.repository.UserRepository
+import com.example.worktimetracker.ui.util.BiometricPromptManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 

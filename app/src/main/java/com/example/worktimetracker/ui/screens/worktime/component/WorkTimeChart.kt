@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.data.remote.response.ShiftType
-import com.example.worktimetracker.helper.Helper.Companion.formatMillisToDate
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiState
 import com.example.worktimetracker.ui.util.rememberMarker
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -44,31 +43,33 @@ import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.patrykandpatrick.vico.core.common.shape.RoundedCornerTreatment
 import com.patrykandpatrick.vico.core.common.shape.Shape
+import io.github.boguszpawlowski.composecalendar.day.Day
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 @Composable
 fun WorkTimeChart(
     modifier: Modifier = Modifier,
-    state: WorkTimeUiState = WorkTimeUiState()
+    chartDataState: List<DayWorkTime> = emptyList()
 ) {
     val modelProducer = remember {
         CartesianChartModelProducer()
     }
     var chartData by remember { mutableStateOf(emptyList<DayWorkTime>()) }
 
-    val days: List<String> by remember {
+    val days: List<Int> by remember {
         derivedStateOf {
             chartData
                 .map {
-                    it.date.formatMillisToDate()
+                    it.dateTime.dayOfMonth
                 }
                 .distinct()
         }
     }
 
     val bottomAxisValue = CartesianValueFormatter { x, _, _ ->
-        days[x.toInt()]
+        days[x.toInt()].toString()
     }
 
     val normalWork by remember {
@@ -87,8 +88,8 @@ fun WorkTimeChart(
         }
     }
 
-    LaunchedEffect(state.chartData) {
-        chartData = state.chartData
+    LaunchedEffect(chartDataState) {
+        chartData = chartDataState
 
         Log.d("worktimeChart", chartData.toString())
         Log.d("worktimeChart", "normalWork: $normalWork")
@@ -103,21 +104,21 @@ fun WorkTimeChart(
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
-                                val normalWorkItem = normalWork.find { it.date.formatMillisToDate() == dayDate }
+                                val normalWorkItem = normalWork.find { it.dateTime.dayOfMonth == dayDate }
                                 normalWorkItem?.workTime ?: 0
                             }
                         )
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
-                                val overtimeWorkItem = overtimeWork.find { it.date.formatMillisToDate() == dayDate }
+                                val overtimeWorkItem = overtimeWork.find {  it.dateTime.dayOfMonth == dayDate }
                                 overtimeWorkItem?.workTime ?: 0
                             }
                         )
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
-                                val nightWorkItem = nightWork.find { it.date.formatMillisToDate() == dayDate }
+                                val nightWorkItem = nightWork.find {  it.dateTime.dayOfMonth == dayDate }
                                 nightWorkItem?.workTime ?: 0
                             }
                         )
