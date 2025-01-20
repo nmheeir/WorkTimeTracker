@@ -7,9 +7,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
@@ -20,9 +22,9 @@ fun MyProfileOptionButton(
     onClick: () -> Unit = {}
 ) {
     val containerColor =
-        if (isClick) colorResource(id = R.color.blue) else colorResource(id = R.color.white)
+        if (isClick) AppTheme.colors.actionSurface else Color.Transparent
     val contentColor =
-        if (isClick) colorResource(id = R.color.white) else colorResource(id = R.color.blue)
+        if (isClick) AppTheme.colors.onBackground else AppTheme.colors.blurredText
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(2.dp),

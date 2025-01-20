@@ -3,7 +3,6 @@ package com.example.worktimetracker.ui.navigation.navigator
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,7 +14,6 @@ import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginViewModel
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
-import kotlin.math.log
 
 fun NavGraphBuilder.authNavigator(
     navController: NavHostController,

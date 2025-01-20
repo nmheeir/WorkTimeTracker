@@ -1,7 +1,6 @@
 package com.example.worktimetracker.ui.screens.worktime
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,14 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.AttendanceRecord
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.data.remote.response.TotalWorkTime
 import com.example.worktimetracker.helper.ISOFormater
-import com.example.worktimetracker.ui.component.NoDataWarning
+import com.example.worktimetracker.ui.component.common.NoDataWarning
 import com.example.worktimetracker.ui.screens.worktime.component.WorkTimeChart
 import com.example.worktimetracker.ui.theme.AppTheme
 import kotlinx.coroutines.flow.Flow

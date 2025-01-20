@@ -12,7 +12,6 @@ import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.check.checkPage.CheckScreen
 import com.example.worktimetracker.ui.screens.check.checkPage.CheckViewModel
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
-import com.example.worktimetracker.ui.util.BiometricPromptManager
 
 fun NavGraphBuilder.checkNavigator(
     navController: NavHostController,

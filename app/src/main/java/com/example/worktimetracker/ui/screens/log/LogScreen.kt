@@ -8,7 +8,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.with
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,6 +36,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -41,7 +45,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -49,22 +52,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.data.remote.response.LogStatus
 import com.example.worktimetracker.data.remote.response.LogType
 import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.component.dateTimePicker.CalendarDialog
 import com.example.worktimetracker.ui.component.dateTimePicker.TimePickerDialog
+import com.example.worktimetracker.ui.component.dialog.SuccessDialog
+import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
 import com.example.worktimetracker.ui.theme.AppTheme
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -80,9 +86,38 @@ fun LogScreen(
     action: (LogUiAction) -> Unit,
     channel: Flow<LogUiEvent>
 ) {
+    val context = LocalContext.current
 
+    // form state
     var showRegistrationForm by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf(LogStatus.PENDING) }
+
+    // Dialog
+    var dialogContent by remember  { mutableStateOf("") }
+    var isSuccess by remember  { mutableStateOf(true) }
+    var isVisible by remember  { mutableStateOf(false) }
+    ObserveAsEvents(channel) {
+        when(it) {
+            LogUiEvent.CreateLogSuccess -> {
+                dialogContent = context.getString(R.string.create_log_success)
+                isVisible = true
+            }
+
+            is LogUiEvent.Failure -> {
+                dialogContent = it.message
+                isSuccess = false
+                isVisible = true
+            }
+
+            LogUiEvent.Success -> {
+
+            }
+        }
+    }
+
+    if(isVisible) {
+        SuccessDialog(isSuccess, dialogContent, { isVisible = false })
+    }
 
 
     LazyColumn(
@@ -144,7 +179,17 @@ fun LogScreen(
         }
     }
 
-
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)) // Lớp phủ mờ
+                .clickable(enabled = false, onClick = {}), // Vô hiệu hóa click xuyên qua
+            contentAlignment = Alignment.Center // Căn giữa vòng xoay
+        ) {
+            CircularProgressIndicator(color = AppTheme.colors.blurredText)
+        }
+    }
 }
 
 @Composable
@@ -348,7 +393,8 @@ fun LogRegistrationForm(
                 onClick = { action(LogUiAction.CreateLog) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AppTheme.colors.onSecondarySurface
+                    containerColor = AppTheme.colors.actionSurface,
+                    contentColor = AppTheme.colors.onActionSurface
                 )
             ) {
                 Text("Submit Log")
@@ -425,7 +471,7 @@ fun LogTabs(
 @Composable
 fun LogList(type: LogStatus, logList: List<Log>) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().heightIn(max = 80.dp * 4),
+        modifier = Modifier.fillMaxWidth().heightIn(max = 80.dp * 7),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {

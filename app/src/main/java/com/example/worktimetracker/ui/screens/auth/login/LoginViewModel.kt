@@ -1,8 +1,10 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
 import android.util.Log
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.R
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.data.local.db.dao.UserSessionDao
 import com.example.worktimetracker.data.local.db.entity.UserSession
@@ -59,14 +61,6 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
-            is LoginUiAction.UpdateError -> {
-                _state.update {
-                    it.copy(
-                        error = action.error,
-                        isError = true
-                    )
-                }
-            }
 
             is LoginUiAction.OnRememberLogin -> {
                 _state.update {
@@ -74,7 +68,6 @@ class LoginViewModel @Inject constructor(
                         rememberLogin = action.isRemember
                     )
                 }
-                Log.d("Login", "onAction: OnRememberLogin" + _state.value.rememberLogin)
             }
 
         }
@@ -105,29 +98,41 @@ class LoginViewModel @Inject constructor(
                    }
                }
                .suspendOnError {
+                   _state.update {
+                       it.copy(
+                           isError = true
+                       )
+                   }
                    when (this.statusCode) {
                        StatusCode.BadRequest -> {
-                           val error = this.errorBody?.string()
-                           error.let {
-                               Log.d("Login", "LoginScreen BadRequest: $it")
+                           _state.update {
+                               it.copy(
+                                   error = R.string.password_wrong
+                               )
                            }
                            _channel.send(LoginUiEvent.WrongPassword("Wrong password"))
                        }
 
                        StatusCode.NotFound -> {
+                           _state.update {
+                               it.copy(
+                                   error = R.string.username_not_found
+                               )
+                           }
                            _channel.send(LoginUiEvent.UserNotFound("User not found"))
                        }
 
                        else -> {
-                           Log.d("Login", "Login error else: " + this.statusCode + this.message())
-//                            channel.send(LoginUiEvent.UserNotFound("User not found"))
+                           _state.update {
+                               it.copy(
+                                   error = R.string.username_not_found
+                               )
+                           }
+                           _channel.send(LoginUiEvent.UserNotFound("User not found"))
                        }
                    }
                }
                .suspendOnException {
-                   Log.d("Login", "loginexception: " + this.message)
-
-                   Log.d("Login", "loginexception: " + this.throwable.toString())
                    _channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
                }
 

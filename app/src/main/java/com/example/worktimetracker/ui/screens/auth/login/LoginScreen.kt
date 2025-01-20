@@ -1,6 +1,5 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -18,10 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -39,9 +38,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
-import com.example.worktimetracker.data.local.LocalUserManagerImpl
-import com.example.worktimetracker.domain.result.ApiResult
-import com.example.worktimetracker.ui.component.LinearBackground
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
@@ -69,11 +66,9 @@ fun LoginScreen(
                 onLoginSuccess()
             }
             is LoginUiEvent.UserNotFound -> {
-                action(LoginUiAction.UpdateError("User not found"))
             }
 
             is LoginUiEvent.WrongPassword -> {
-                action(LoginUiAction.UpdateError("Wrong password"))
             }
 
             is LoginUiEvent.Failure -> {
@@ -181,6 +176,12 @@ fun LoginContent(
                     }
                 )
 
+                if(state.isError) {
+                    Text(
+                        text = "*" + stringResource(state.error),
+                        color = Color.Red
+                    )
+                }
 
 
                 Text(

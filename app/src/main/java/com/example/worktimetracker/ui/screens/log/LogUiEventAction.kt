@@ -16,4 +16,5 @@ sealed interface LogUiAction {
 sealed interface LogUiEvent {
     data object Success : LogUiEvent
     data class Failure(val message: String) : LogUiEvent
+    data object CreateLogSuccess: LogUiEvent
 }

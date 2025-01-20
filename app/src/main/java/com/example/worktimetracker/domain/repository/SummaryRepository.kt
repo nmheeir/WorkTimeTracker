@@ -1,12 +1,10 @@
 package com.example.worktimetracker.domain.repository
 
-import androidx.datastore.preferences.protobuf.Api
 import com.example.worktimetracker.data.remote.response.AttendanceRecord
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.data.remote.response.PayCheck
 import com.example.worktimetracker.data.remote.response.TotalWorkTime
-import com.example.worktimetracker.domain.result.ApiResult
 import com.skydoves.sandwich.ApiResponse
 
 interface SummaryRepository {

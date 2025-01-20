@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.domain.repository.SummaryRepository
-import com.example.worktimetracker.domain.result.ApiResult
 import com.skydoves.sandwich.ApiResponse
 
 class GetWorkTimeEachDay (

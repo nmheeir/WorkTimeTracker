@@ -4,13 +4,11 @@ package com.example.worktimetracker.ui.screens.check.checkPage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.data.remote.request.CheckRequest
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
-import com.example.worktimetracker.ui.util.BiometricPromptManager
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
@@ -134,7 +132,7 @@ class CheckViewModel @Inject constructor(
                         )
                     }
 
-                    _channel.send(CheckUiEvent.Success)
+                    _channel.send(CheckUiEvent.CheckSuccess)
                 }
 
                 .suspendOnError {

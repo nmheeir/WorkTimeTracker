@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.component
+package com.example.worktimetracker.ui.component.background
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

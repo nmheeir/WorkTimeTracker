@@ -7,6 +7,7 @@
 <!--    Common thing-->
     <string name="date">Date</string>
     <string name="time">Time</string>
+    <string name="no_data">No data to show</string>
 
     <!--    Login Screen-->
     <string name="login_title">Welcome back to</string>
@@ -19,10 +20,12 @@
     <string name="username">Username</string>
     <string name="username_hint">Enter your username</string>
     <string name="username_err_empty">Username is empty</string>
+    <string name="username_not_found">Username is not found</string>
     <string name="password">Password</string>
     <string name="password_hint">Enter your password</string>
     <string name="password_err_empty">Password is empty</string>
     <string name="password_confirm">Confirm Password</string>
+    <string name="password_wrong">Wrong Password</string>
     <string name="email">Email</string>
     <string name="email_hint">Enter your email</string>
     <string name="login_google">Login with google</string>
@@ -77,12 +80,14 @@
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
     <string name="your_shift">Your Shifts</string>
+    <string name="check_success">Check Success</string>
 
 <!--    Shift Detail    -->
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
     <string name="duration">Duration</string>
     <string name="shift_type">Shift type</string>
+    <string name="no_shift">No shift today</string>
 
 <!--    Paycheck-->
     <string name="paycheck">Pay Check</string>
@@ -111,6 +116,7 @@
     <string name="cancel_register_log">Cancel Registration</string>
 
     <string name="reason">Reason</string>
+    <string name="create_log_success">Create log success</string>
 
 
 </resources>

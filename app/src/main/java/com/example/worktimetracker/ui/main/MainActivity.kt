@@ -18,8 +18,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.worktimetracker.ui.main.component.ConnectivityStatus
 import com.example.worktimetracker.ui.navigation.NavGraph
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
-import com.example.worktimetracker.ui.util.BiometricPromptManager
-import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration
 
@@ -30,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(
+        enableEdgeToEdge( 
             statusBarStyle = SystemBarStyle.light(
                 Color.TRANSPARENT, Color.TRANSPARENT
             )

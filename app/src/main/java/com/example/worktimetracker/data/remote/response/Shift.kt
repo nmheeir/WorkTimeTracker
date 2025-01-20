@@ -1,7 +1,5 @@
 package com.example.worktimetracker.data.remote.response
 
-import java.time.LocalDateTime
-
 
 data class Shift(
     val id : Int,

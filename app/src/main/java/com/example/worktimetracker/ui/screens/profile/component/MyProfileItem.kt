@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 
@@ -31,11 +32,12 @@ fun MyProfileItem(
         Text(
             text = item.title,
             style = Typography.bodySmall,
-            color = colorResource(id = R.color.text).copy(alpha = 0.6f)
+            color = AppTheme.colors.blurredText
         )
         Text(
             text = item.desc,
-            style = Typography.bodyMedium
+            style = Typography.bodyMedium,
+            color = AppTheme.colors.onBackground
         )
     }
 }
@@ -53,7 +55,7 @@ fun MyProfileListItem(
             MyProfileItem(item = list[index])
             Divider(
                 thickness = 1.dp,
-                color = colorResource(id = R.color.text).copy(alpha = 0.1f)
+                color = AppTheme.colors.onBackground
             )
         }
     }

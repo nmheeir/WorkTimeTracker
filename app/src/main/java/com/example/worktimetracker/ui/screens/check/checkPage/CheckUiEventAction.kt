@@ -6,6 +6,7 @@ import com.example.worktimetracker.data.remote.response.Shift
 sealed interface CheckUiEvent {
     data object Success : CheckUiEvent
     data class Failure(val message: String) : CheckUiEvent
+    data object CheckSuccess: CheckUiEvent
 }
 
 sealed interface CheckUiAction {

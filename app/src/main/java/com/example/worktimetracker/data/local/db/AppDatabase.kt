@@ -1,6 +1,5 @@
 package com.example.worktimetracker.data.local.db
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.worktimetracker.data.local.db.dao.UserSessionDao

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -24,14 +23,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +46,8 @@ import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Shift
-import com.example.worktimetracker.ui.component.NoDataWarning
+import com.example.worktimetracker.ui.component.common.NoDataWarning
+import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.check.component.DigitalClock
 import com.example.worktimetracker.ui.screens.check.component.MapContent
@@ -51,6 +56,7 @@ import com.example.worktimetracker.ui.screens.check.component.ShiftCheckDetailBo
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.util.BiometricPromptManager
 import kotlinx.coroutines.flow.Flow
+
 @Composable
 fun CheckScreen(
     state: CheckUiState,
@@ -111,6 +117,36 @@ fun CheckScreen(
             }
         }
     }
+
+
+    // Dialog
+    var dialogContent by remember  { mutableStateOf("") }
+    var isSuccess by remember  { mutableStateOf(true) }
+    var isVisible by remember  { mutableStateOf(false) }
+    ObserveAsEvents(channel) {
+        when(it) {
+            CheckUiEvent.CheckSuccess -> {
+                dialogContent = context.getString(R.string.check_success)
+                isVisible = true
+            }
+
+            is CheckUiEvent.Failure -> {
+                dialogContent = it.message
+                isSuccess = false
+                isVisible = true
+            }
+
+            CheckUiEvent.Success -> {
+
+            }
+        }
+    }
+
+    if(isVisible) {
+        SuccessDialog(isSuccess, dialogContent, { isVisible = false })
+    }
+
+    // Content
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -163,21 +199,30 @@ fun CheckScreen(
                             )
                         )
                     ) {
-                        if (state.todayShifts.isEmpty() && !state.isShiftLoading) {
-                            NoDataWarning()
-                        } else {
-                            Column {
-                                state.todayShifts.forEach() { shift ->
-                                    ShiftCard(
-                                        shift,
-                                        onClick = { action(CheckUiAction.ChooseShift(shift)) }
-                                    )
+                        when {
+                            state.isShiftLoading -> {
+                                CircularProgressIndicator(
+                                    color = AppTheme.colors.blurredText,
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                )
+                            }
+                            state.todayShifts.isEmpty() -> {
+                                NoDataWarning()
+                            }
+                            else -> {
+                                Column {
+                                    state.todayShifts.forEach { shift ->
+                                        ShiftCard(
+                                            shift,
+                                            onClick = { action(CheckUiAction.ChooseShift(shift)) }
+                                        )
+                                    }
                                 }
                             }
                         }
+
                     }
-
-
                     AnimatedVisibility(
                         visible = state.choosenShift != null,
                         enter = slideInHorizontally(
@@ -199,11 +244,9 @@ fun CheckScreen(
                         }
                     }
                 }
-
             }
         }
-
-
+        // Bottom controll
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

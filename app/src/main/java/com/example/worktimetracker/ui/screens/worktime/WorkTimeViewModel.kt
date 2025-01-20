@@ -3,7 +3,6 @@ package com.example.worktimetracker.ui.screens.worktime
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 
@@ -77,7 +75,8 @@ class WorkTimeViewModel @Inject constructor(
                .suspendOnSuccess {
                    _state.update {
                        it.copy(
-                           chartData = this.data.data!!
+                           chartData = this.data.data!!,
+                           isChartDataLoading = false
                        )
                    }
                    Log.d("ShiftTest", this.data.data.toString())

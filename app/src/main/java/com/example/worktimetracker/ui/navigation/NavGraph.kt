@@ -6,12 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.worktimetracker.data.remote.response.PayCheck
-import com.example.worktimetracker.ui.component.LinearBackground
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.navigation.navigator.authNavigator
 import com.example.worktimetracker.ui.navigation.navigator.checkNavigator
 import com.example.worktimetracker.ui.screens.home.HomeScreen
