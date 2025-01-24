@@ -1,18 +1,10 @@
 package com.example.worktimetracker.ui.screens.salary
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
-import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
-import com.example.worktimetracker.ui.screens.shift.ShiftUiEvent
-import com.example.worktimetracker.ui.screens.shift.ShiftUiState
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException

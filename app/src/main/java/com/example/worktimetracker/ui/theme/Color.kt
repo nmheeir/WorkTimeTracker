@@ -63,7 +63,7 @@ val extendedColors = AppColors(
     onSecondarySurface = Color.White,
     regularSurface = Color.White.copy(alpha = 0.15f),
     onRegularSurface = Color.White,
-    actionSurface = Color.Blue,
+    actionSurface = Color(0xFF5080C9),
     onActionSurface = Color.White,
     hightlightSurface = Color(0xFF5080C9),
     onHighlightSurface = Color.White,
@@ -72,5 +72,7 @@ val extendedColors = AppColors(
     unfocusedBorderTextField = Color.White.copy(alpha = 0.5f),
     blurredText = Color.White.copy(alpha = 0.7f),
     onBackgroundBlue = Color(0xFF3085FE)
+
+
 
 )

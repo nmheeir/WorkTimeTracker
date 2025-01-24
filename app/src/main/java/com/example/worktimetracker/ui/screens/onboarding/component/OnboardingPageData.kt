@@ -11,18 +11,18 @@ data class OnBoardingPageData(
 
 val pages = listOf(
     OnBoardingPageData(
-        title = "Easy way to confirm you attendance",
-        desc = "It a long established face that a reader will be distracted by the readable content.",
+        title = "Easily track attendance",
+        desc = "Manage work hours efficiently with seamless attendance tracking right in the app.",
         image = R.drawable.onboarding1
     ),
     OnBoardingPageData(
-        title = "Disciplinary in your hand",
-        desc = "It a long established face that a reader will be distracted by the readable content.",
-        image = R.drawable.avatar
+        title = "Streamline disciplinary management",
+        desc = "Monitor and enforce internal policies to ensure transparency and discipline.",
+        image = R.drawable.onboarding2
     ),
     OnBoardingPageData(
-        title = "Lorem Ipsum is simply dummy",
-        desc = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        image = R.drawable.avatar
+        title = "Optimize HR operations",
+        desc = "Leverage integrated HR tools to simplify and enhance your workforce management.",
+        image = R.drawable.onboarding3
     )
 )

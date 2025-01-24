@@ -14,6 +14,4 @@ sealed interface LoginUiAction {
     data class OnPasswordChange(val password: String) : LoginUiAction
     data object Login : LoginUiAction
     data class OnRememberLogin(val isRemember: Boolean) : LoginUiAction
-
-    data class UpdateError(val error: String) : LoginUiAction
 }

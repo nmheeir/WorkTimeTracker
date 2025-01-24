@@ -8,7 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,17 +24,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileItem
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileListItem
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileOptionButton
-import com.example.worktimetracker.ui.screens.profile.component.OptionTopBar
 import com.example.worktimetracker.ui.screens.profile.component.lOptionMyProfile
+import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
+import com.example.worktimetracker.ui.theme.AppTheme
+import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MyProfileScreen(
@@ -62,12 +75,25 @@ fun MyProfileScreen(
         )
         Log.d("MyProfileScreenLaunchedEffect", user.toString())
     }
-
+WorkTimeTrackerTheme {
+    LinearBackground {
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
-            OptionTopBar(
-                title = R.string.my_profile,
-                onBack = onBack
+            TopAppBar(
+                title = { Text(text = stringResource(R.string.my_profile), style = MaterialTheme.typography.titleLarge, color = AppTheme.colors.onBackground) },
+                navigationIcon = {
+                    IconButton(onClick = { onBack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_left),
+                            contentDescription = null,
+                            tint = AppTheme.colors.onBackground
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         },
         modifier = modifier.fillMaxSize()
@@ -117,4 +143,4 @@ fun MyProfileScreen(
             }
         }
     }
-}
+}}}

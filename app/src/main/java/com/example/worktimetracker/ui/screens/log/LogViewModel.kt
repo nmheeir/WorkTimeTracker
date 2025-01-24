@@ -1,25 +1,16 @@
 package com.example.worktimetracker.ui.screens.log
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.data.remote.request.CreateLogRequest
-import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.data.remote.response.Log
 import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.log.LogUseCase
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
-import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @HiltViewModel
 class LogViewModel @Inject constructor(
@@ -144,7 +134,7 @@ class LogViewModel @Inject constructor(
                 token = token
             )
                 .suspendOnSuccess {
-                    _channel.send(LogUiEvent.Success)
+                    _channel.send(LogUiEvent.CreateLogSuccess)
                 }
                 .suspendOnError {
                     _channel.send(LogUiEvent.Failure(this.message()))

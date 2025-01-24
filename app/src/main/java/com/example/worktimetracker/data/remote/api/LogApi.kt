@@ -4,7 +4,6 @@ import com.example.worktimetracker.data.remote.request.CreateLogRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Log
 import com.skydoves.sandwich.ApiResponse
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header

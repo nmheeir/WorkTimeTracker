@@ -1,6 +1,5 @@
 package com.example.worktimetracker.ui.component.Calendar
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +38,6 @@ import io.github.boguszpawlowski.composecalendar.header.MonthState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Year
 import java.time.YearMonth
 import java.time.format.TextStyle.FULL
 import java.time.format.TextStyle.SHORT

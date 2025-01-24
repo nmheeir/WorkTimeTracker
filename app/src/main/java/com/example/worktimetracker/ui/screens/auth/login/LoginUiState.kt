@@ -9,7 +9,7 @@ data class LoginUiState(
     val password: String = "",
     val isPasswordEmpty: Boolean = false,
 
-    val error: String = "",
+    val error: Int = 0,
     val isError: Boolean = false,
 
     val rememberLogin: Boolean = false

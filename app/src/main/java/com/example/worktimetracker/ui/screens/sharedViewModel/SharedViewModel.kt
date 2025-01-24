@@ -1,21 +1,13 @@
 package com.example.worktimetracker.ui.screens.sharedViewModel
 
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.worktimetracker.data.remote.request.UserUpdateRequest
-import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.data.remote.response.User
 import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.result.ApiResult
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
-import com.example.worktimetracker.ui.util.BiometricPromptManager
 import com.example.worktimetracker.ui.util.JwtUtils
 import com.example.worktimetracker.ui.util.validateEmail
 import com.example.worktimetracker.ui.util.validatePassword

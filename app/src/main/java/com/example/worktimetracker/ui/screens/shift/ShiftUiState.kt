@@ -1,6 +1,5 @@
 package com.example.worktimetracker.ui.screens.shift
 
-import com.example.worktimetracker.data.remote.response.Check
 import com.example.worktimetracker.data.remote.response.Shift
 import java.time.LocalDate
 

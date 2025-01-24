@@ -1,8 +1,6 @@
 package com.example.worktimetracker.ui.screens.sharedViewModel
 
-import com.example.worktimetracker.data.remote.request.UserUpdateRequest
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.ui.util.exampleUpdateUser
 import com.example.worktimetracker.ui.util.exampleUser
 
 data class SharedUiState(

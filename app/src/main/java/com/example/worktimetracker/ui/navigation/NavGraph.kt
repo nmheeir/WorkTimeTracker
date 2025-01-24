@@ -6,12 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.worktimetracker.data.remote.response.PayCheck
-import com.example.worktimetracker.ui.component.LinearBackground
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.navigation.navigator.authNavigator
 import com.example.worktimetracker.ui.navigation.navigator.checkNavigator
 import com.example.worktimetracker.ui.screens.home.HomeScreen
@@ -25,7 +24,7 @@ import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPoli
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
 import com.example.worktimetracker.ui.screens.salary.SalaryScreen
 import com.example.worktimetracker.ui.screens.salary.SalaryViewModel
-import com.example.worktimetracker.ui.screens.salary.component.PayCheckDetail
+import com.example.worktimetracker.ui.screens.salary.component.PaycheckDetail
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.screens.shift.ShiftScreen
@@ -119,8 +118,8 @@ fun NavGraph(
             animatedComposable(route = Route.PayCheckDetail.route) {
                 val paycheck =
                     navController.previousBackStackEntry?.savedStateHandle?.get<PayCheck>("paycheck")
-                PayCheckDetail(
-                    paycheck = paycheck!!,
+                PaycheckDetail(
+                    item = paycheck!!,
                     onBack = {
                         navController.popBackStack()
                     }

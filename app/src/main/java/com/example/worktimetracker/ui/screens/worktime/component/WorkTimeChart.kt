@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.data.remote.response.ShiftType
-import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiState
 import com.example.worktimetracker.ui.util.rememberMarker
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
@@ -43,10 +42,8 @@ import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.patrykandpatrick.vico.core.common.shape.RoundedCornerTreatment
 import com.patrykandpatrick.vico.core.common.shape.Shape
-import io.github.boguszpawlowski.composecalendar.day.Day
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 @Composable
 fun WorkTimeChart(

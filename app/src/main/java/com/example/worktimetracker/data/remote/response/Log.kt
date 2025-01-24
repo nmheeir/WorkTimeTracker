@@ -1,7 +1,6 @@
 package com.example.worktimetracker.data.remote.response
 
 import com.example.worktimetracker.R
-import com.google.gson.annotations.SerializedName
 
 data class Log(
     val id: Int,
