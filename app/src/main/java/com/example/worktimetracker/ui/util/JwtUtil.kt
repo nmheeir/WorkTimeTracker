@@ -9,7 +9,7 @@ import java.util.Date
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
-class JwtUtils {
+object JwtUtils {
 
     private val secretKey: SecretKey
 

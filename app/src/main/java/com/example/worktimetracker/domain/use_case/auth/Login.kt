@@ -1,4 +1,4 @@
-package com.example.worktimetracker.domain.use_case.login
+package com.example.worktimetracker.domain.use_case.auth
 
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token

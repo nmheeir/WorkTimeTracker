@@ -17,4 +17,17 @@ class AuthRepositoryImpl(
     ): ApiResponse<DataResponse<Token>> {
         return authApi.login(UserLoginRequest(username, password, deviceToken))
     }
+
+    override suspend fun requestPasswordReset(
+        email: String
+    ): ApiResponse<DataResponse<Unit>> {
+        return authApi.requestPasswordReset(email)
+    }
+
+    override suspend fun resetPassword(
+        token: String,
+        newPassword: String
+    ): ApiResponse<DataResponse<Unit>> {
+        return authApi.resetPassword(token, newPassword)
+    }
 }

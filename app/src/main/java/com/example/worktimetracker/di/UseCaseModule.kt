@@ -17,8 +17,10 @@ import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.log.CreateLog
 import com.example.worktimetracker.domain.use_case.log.GetLogs
 import com.example.worktimetracker.domain.use_case.log.LogUseCase
-import com.example.worktimetracker.domain.use_case.login.AuthUseCase
-import com.example.worktimetracker.domain.use_case.login.Login
+import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
+import com.example.worktimetracker.domain.use_case.auth.Login
+import com.example.worktimetracker.domain.use_case.auth.RequestPasswordReset
+import com.example.worktimetracker.domain.use_case.auth.ResetPassword
 import com.example.worktimetracker.domain.use_case.shift.GetMyShift
 import com.example.worktimetracker.domain.use_case.shift.GetMyShiftsByDate
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
@@ -60,6 +62,8 @@ class UseCaseModule {
     fun provideLoginUseCase(authRepository: AuthRepository): AuthUseCase {
         return AuthUseCase(
             login = Login(authRepository),
+            resetPassword = ResetPassword(authRepository),
+            requestPasswordReset = RequestPasswordReset(authRepository)
         )
     }
 

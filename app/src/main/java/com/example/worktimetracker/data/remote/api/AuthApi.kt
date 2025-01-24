@@ -5,7 +5,9 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
 import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApi {
 
@@ -13,4 +15,15 @@ interface AuthApi {
     suspend fun login(
         @Body user: UserLoginRequest
     ): ApiResponse<DataResponse<Token>>
+
+    @POST("Auth/requestPasswordReset")
+    suspend fun requestPasswordReset(
+        @Query("email") email: String
+    ): ApiResponse<DataResponse<Unit>>
+
+    @POST("Auth/resetPassword")
+    suspend fun resetPassword(
+        @Header("Authorization") token: String,
+        @Query("newPassword") newPassword: String
+    ): ApiResponse<DataResponse<Unit>>
 }

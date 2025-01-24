@@ -7,7 +7,7 @@ import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.data.local.db.dao.UserSessionDao
 import com.example.worktimetracker.data.local.db.entity.UserSession
 import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.use_case.login.AuthUseCase
+import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.retrofit.statusCode
 import com.skydoves.sandwich.suspendOnError

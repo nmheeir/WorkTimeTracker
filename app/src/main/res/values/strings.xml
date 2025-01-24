@@ -3,7 +3,7 @@
     <string name="disconnected">You are disconnect</string>
     <string name="connected">You are connected</string>
     <string name="logout">Log out</string>
-
+    <string name="unknown_err">Unknown Error</string>
 <!--    Common thing-->
     <string name="date">Date</string>
     <string name="time">Time</string>
@@ -118,5 +118,12 @@
     <string name="reason">Reason</string>
     <string name="create_log_success">Create log success</string>
 
-
+    <!--    Forgot password-->
+    <string name="forgot_pw">Forgot Password</string>
+    <string name="forgot_pw_instruction">Enter the email address associated with your account and we will send you a link to reset your password.</string>
+    <string name="email_address">Email Address</string>
+    <string name="send_request">Send Request</string>
+    <string name="create_new_pw">Create new password</string>
+    <string name="new_pw_instruction">Your new password must contain 6 characters or more.</string>
+    <string name="reset_pw_success_instruction">Your request is success, please check your email</string>
 </resources>
