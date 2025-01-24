@@ -10,6 +10,7 @@ sealed class Route(
     data object LoginScreen : Route("Login")
     data object ForgotPasswordScreen : Route("ForgotPassword")
     data object CreateNewPasswordScreen : Route("Create New Password")
+    data object SessionScreen : Route("Session")
 
 
     //Home Screen

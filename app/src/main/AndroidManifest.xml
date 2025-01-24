@@ -35,7 +35,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="localhost:5260"
+                    android:host="localhost"
+                    android:path="/api/Auth/resetPassword"
+                    android:port="5260"
                     android:scheme="https" />
             </intent-filter>
 

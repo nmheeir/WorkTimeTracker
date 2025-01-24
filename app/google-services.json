@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "427093536817",
-    "project_id": "worktimetracker-d3dc2",
-    "storage_bucket": "worktimetracker-d3dc2.appspot.com"
+    "project_number": "262236171826",
+    "project_id": "worktimetracker-897ef",
+    "storage_bucket": "worktimetracker-897ef.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:427093536817:android:694479f2e0fdf320aa6510",
+        "mobilesdk_app_id": "1:262236171826:android:2d15466cc69c4036d3962b",
         "android_client_info": {
           "package_name": "com.example.worktimetracker"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAv6m1Kntc5YkOcWP63LCzlK9xmbKk1Db8"
+          "current_key": "AIzaSyAIVy8hoHWt1rGuO4mnke-Be8V0T0fvaoI"
         }
       ],
       "services": {

@@ -27,6 +27,11 @@ fun HomeGreetingSection(
     state: SharedUiState = SharedUiState(),
     onAvatarClick: () -> Unit
 ) {
+    val avatarUri = try {
+        state.user.avatarURL.toUri()
+    } catch (e: Exception) {
+        null // Trả về Uri rỗng nếu URL sai
+    }
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -39,7 +44,7 @@ fun HomeGreetingSection(
                 .fillMaxWidth()
         ) {
             Avatar(
-                avatarUrl = state.user.avatarURL.toUri(),
+                avatarUrl = avatarUri,
                 modifier = Modifier.size(48.dp),
                 onClick = {
                     onAvatarClick()

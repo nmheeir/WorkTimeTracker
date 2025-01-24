@@ -34,12 +34,14 @@ import com.example.worktimetracker.ui.screens.worktime.WorkTimeViewModel
 
 @Composable
 fun NavGraph(
-    sDestination: String, navController: NavHostController
+    sDestination: String,
+    navController: NavHostController
 ) {
     //shared viewmodel
     val sharedViewModel: SharedViewModel = hiltViewModel()
+    val startDestination = if (sDestination == Route.HomeScreen.route) Route.HomeScreen.route else Route.AuthNavigator.route
     LinearBackground {
-        NavHost(navController = navController, startDestination = sDestination) {
+        NavHost(navController = navController, startDestination = startDestination) {
             composable(route = Route.OnboardingScreen.route) {
                 val onboardingViewModel: OnboardingViewModel = hiltViewModel()
                 OnboardingScreen(
@@ -49,7 +51,7 @@ fun NavGraph(
                 )
             }
 
-            authNavigator(navController, sharedViewModel)
+            authNavigator(navController, sharedViewModel, sDestination)
             checkNavigator(navController, sharedViewModel)
 
             animatedComposable(

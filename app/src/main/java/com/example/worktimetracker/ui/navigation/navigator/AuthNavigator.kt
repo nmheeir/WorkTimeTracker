@@ -7,7 +7,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.example.worktimetracker.ui.navigation.Route
@@ -20,15 +22,18 @@ import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPass
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.ErrorScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginViewModel
+import com.example.worktimetracker.ui.screens.auth.session.SessionScreen
+import com.example.worktimetracker.ui.screens.auth.session.SessionViewModel
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.util.JwtUtils
 
 fun NavGraphBuilder.authNavigator(
     navController: NavHostController,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    sDestination: String = Route.LoginScreen.route
 ) {
     navigation(
-        startDestination = Route.LoginScreen.route,
+        startDestination = sDestination,
         route = Route.AuthNavigator.route
     ) {
         composable(
@@ -73,6 +78,25 @@ fun NavGraphBuilder.authNavigator(
         }
 
         composable(
+            route = Route.SessionScreen.route
+        ) {
+            val viewModel: SessionViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            SessionScreen(
+                channel = viewModel.channel,
+                state = state,
+                action = viewModel::onAction,
+                onNavigateTo = {
+                    navController.navigateSingleTopTo(it.route)
+                },
+                onLoginSuccess = {
+                    navController.navigateAndClearStack(Route.HomeScreen.route)
+                }
+            )
+        }
+
+
+        composable(
             route = Route.CreateNewPasswordScreen.route,
             deepLinks = listOf(
                 navDeepLink {
@@ -110,10 +134,10 @@ fun NavGraphBuilder.authNavigator(
                     },
                     state = state
                 )
-//                ErrorScreen()
             } else {
                 Log.d(TAG, "token: " + JwtUtils.isTokenExpired(token!!).toString())
                 Log.d(TAG, "token2: " + JwtUtils.isTokenExpired(token2!!).toString())
+                // Hiển thị ErrorScreen nếu token không hợp lệ hoặc hết hạn
                 ErrorScreen()
             }
         }

@@ -23,7 +23,7 @@ import com.example.worktimetracker.R
 fun Avatar(
     modifier: Modifier = Modifier,
     avatarUrl: Uri?,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     Box(
@@ -40,7 +40,11 @@ fun Avatar(
             Image(
                 painter = painterResource(id = R.drawable.ic_user),
                 contentDescription = "avatar",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clickable {
+                        onClick()
+                    }
             )
         }
         else {

@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.main
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                viewModel.splashCondition.value
+                viewModel.splashCondition
             }
         }
 
@@ -57,8 +58,9 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier.fillMaxSize()
                         ) {
                             ConnectivityStatus()
+
                             NavGraph(
-                                sDestination = viewModel.startDestination.value,
+                                sDestination = viewModel.startDestination,
                                 navController = navController,
                             )
                         }

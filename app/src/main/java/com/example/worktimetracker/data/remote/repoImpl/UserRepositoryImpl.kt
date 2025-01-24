@@ -21,6 +21,6 @@ class UserRepositoryImpl(
         token: String,
         avatarUrl: String
     ): ApiResponse<DataResponse<User>> {
-        return userApi.uploadAvatar(token, avatarUrl)
+        return userApi.uploadAvatar("Bearer $token", avatarUrl)
     }
 }

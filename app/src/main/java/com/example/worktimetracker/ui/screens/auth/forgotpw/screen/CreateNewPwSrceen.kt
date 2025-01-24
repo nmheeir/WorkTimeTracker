@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,10 +16,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -42,6 +47,7 @@ import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.navigation.Route
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiAction
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiState
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -84,35 +90,31 @@ fun CreateNewPasswordScreen(
             CreateNewPasswordUiEvent.ResetPasswordSuccess -> {
                 isVisible = true
                 isSuccess = true
-                dialogContent = context.getString(R.string.reset_pw_success_instruction)
+                dialogContent = context.getString(R.string.reset_pw_success)
             }
         }
     }
     if(isVisible) {
-        SuccessDialog(isSuccess, dialogContent, { isVisible = false })
+        SuccessDialog(isSuccess, dialogContent, { isVisible = false }, { onNavigateTo(Route.LoginScreen) })
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Back",
-                        style = Typography.titleLarge.copy(
-                            fontWeight = FontWeight.Normal
-                        )
-                    )
-                },
+                title = { Text(text = "Back", style = MaterialTheme.typography.titleLarge, color = AppTheme.colors.onBackground) },
                 navigationIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_arrow_left),
-                        contentDescription = "Icon Arrow Back",
-                        modifier = Modifier
-                            .clickable {
-
-                            }
-                    )
-                }
+                    IconButton(onClick = { onBack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_left),
+                            contentDescription = null,
+                            tint = AppTheme.colors.onBackground
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         }
     ) { paddingValues ->
@@ -142,10 +144,10 @@ fun CreateNewPasswordScreen(
                         action(ForgotPasswordUiAction.PasswordNotMatch)
                     }
                 },
-//                colors = ButtonDefaults.buttonColors(
-//                    contentColor = ,
-//                    containerColor = colorResource(R.color.primary)
-//                ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AppTheme.colors.regularSurface,
+                    contentColor = AppTheme.colors.onRegularSurface
+                ),
                 shape = RoundedCornerShape(1.dp),
                 enabled = state.isButtonEnabled,
                 modifier = Modifier
@@ -167,11 +169,13 @@ private fun CreateNewPasswordDetail(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = stringResource(R.string.create_new_pw),
-            style = Typography.labelLarge
+            style = Typography.labelLarge,
+            color = AppTheme.colors.onBackground
         )
         Text(
             text = stringResource(R.string.new_pw_instruction),
-            style = Typography.bodyMedium
+            style = Typography.bodyMedium,
+            color = AppTheme.colors.onBackground
         )
     }
 }
@@ -222,7 +226,8 @@ private fun PasswordInputField(
     Column(modifier = modifier) {
         Text(
             text = title,
-            style = Typography.labelLarge
+            style = Typography.labelLarge,
+            color = AppTheme.colors.onBackground
         )
         OutlinedTextField(
             value = value(),
@@ -239,7 +244,7 @@ private fun PasswordInputField(
                     modifier = Modifier
                         .clickable {
                             showPassword = !showPassword
-                        },
+                        }.size(20.dp),
                 )
             },
             keyboardOptions = keyboardOptions,
