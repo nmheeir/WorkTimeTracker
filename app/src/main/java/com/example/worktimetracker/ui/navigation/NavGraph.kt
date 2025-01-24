@@ -24,7 +24,7 @@ import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPoli
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
 import com.example.worktimetracker.ui.screens.salary.SalaryScreen
 import com.example.worktimetracker.ui.screens.salary.SalaryViewModel
-import com.example.worktimetracker.ui.screens.salary.component.PayCheckDetail
+import com.example.worktimetracker.ui.screens.salary.component.PaycheckDetail
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiEvent
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.screens.shift.ShiftScreen
@@ -118,8 +118,8 @@ fun NavGraph(
             animatedComposable(route = Route.PayCheckDetail.route) {
                 val paycheck =
                     navController.previousBackStackEntry?.savedStateHandle?.get<PayCheck>("paycheck")
-                PayCheckDetail(
-                    paycheck = paycheck!!,
+                PaycheckDetail(
+                    item = paycheck!!,
                     onBack = {
                         navController.popBackStack()
                     }

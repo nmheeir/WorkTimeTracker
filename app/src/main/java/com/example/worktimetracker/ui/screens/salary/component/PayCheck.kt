@@ -21,12 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.PayCheck
-import com.example.worktimetracker.helper.Helper
+import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.screens.salary.SalaryState
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
@@ -65,16 +64,11 @@ fun PayCheckItem(
     item: PayCheck,
     onClick: () -> Unit
 ) {
-    val startTime = Helper.convertMillisToDate(item.start)
-    val endTime = Helper.convertMillisToDate(item.end)
     Card(
         colors = CardDefaults.cardColors(
-
+            containerColor = AppTheme.colors.regularSurface
         ),
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
-        ),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
@@ -89,16 +83,17 @@ fun PayCheckItem(
             Text(
                 text = "June 2024 Paycheck",
                 style = Typography.bodyLarge,
-                color = colorResource(id = R.color.blue)
+                color = AppTheme.colors.onBackgroundBlue
             )
             Text(
-                text = "From $startTime to $endTime",
-                style = Typography.bodyMedium
+                text = "From ${ISOFormater.formatDateTimeToDate1(item.start)} to ${ISOFormater.formatDateTimeToDate1(item.end)}",
+                style = Typography.bodyMedium,
+                color = AppTheme.colors.onRegularSurface
             )
             Text(
                 text = "View Detail",
                 style = Typography.bodySmall,
-                color = colorResource(id = R.color.blue),
+                color = AppTheme.colors.onBackgroundBlue,
                 modifier = Modifier
                     .align(Alignment.End)
                     .clickable {

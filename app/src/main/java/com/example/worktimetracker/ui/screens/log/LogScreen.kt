@@ -70,7 +70,6 @@ import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.component.dateTimePicker.CalendarDialog
 import com.example.worktimetracker.ui.component.dateTimePicker.TimePickerDialog
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
-import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
 import com.example.worktimetracker.ui.theme.AppTheme
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

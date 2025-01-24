@@ -1,7 +1,5 @@
 package com.example.worktimetracker.ui.screens.auth.login
 
-import android.util.Log
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.R
@@ -11,8 +9,6 @@ import com.example.worktimetracker.data.local.db.entity.UserSession
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.login.AuthUseCase
 import com.skydoves.sandwich.StatusCode
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.retrofit.errorBody
 import com.skydoves.sandwich.retrofit.statusCode
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException

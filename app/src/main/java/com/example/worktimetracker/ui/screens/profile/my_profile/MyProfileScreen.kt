@@ -35,7 +35,6 @@ import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileItem
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileListItem
 import com.example.worktimetracker.ui.screens.profile.component.MyProfileOptionButton
-import com.example.worktimetracker.ui.screens.profile.component.OptionTopBar
 import com.example.worktimetracker.ui.screens.profile.component.lOptionMyProfile
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.AppTheme
