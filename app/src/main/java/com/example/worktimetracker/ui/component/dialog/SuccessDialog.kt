@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.component.dialog
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -38,11 +39,14 @@ import compose.icons.fontawesomeicons.solid.Check
 import compose.icons.fontawesomeicons.solid.Times
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SuccessDialog(
     isSuccess: Boolean,
     description: String = "",
-    onHide : () -> Unit
+    onHide : () -> Unit,
+    onSubmit: () -> Unit = onHide,
+    buttonText: String = "Ok"
 ) {
     var isCardFlipped by remember { mutableStateOf(false) }
     val animDuration = 1000
@@ -78,7 +82,8 @@ fun SuccessDialog(
                 contentAlignment = Alignment.Center,
             ) {
                 Column (
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(horizontal = 10.dp)
                 ) {
                     Icon(
                         imageVector = imageVector,
@@ -102,7 +107,7 @@ fun SuccessDialog(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Button(
-                        onClick = { onHide() },
+                        onClick = { onSubmit() },
                         colors = ButtonColors(
                             contentColor = AppTheme.colors.onActionSurface,
                             containerColor = AppTheme.colors.actionSurface,
@@ -110,7 +115,7 @@ fun SuccessDialog(
                             disabledContentColor = AppTheme.colors.onActionSurface
                         )
                     ) {
-                        Text("Ok")
+                        Text(buttonText)
                     }
                 }
             }

@@ -20,7 +20,6 @@ class MainViewModel @Inject constructor(
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
 
-    private val jwtUtil = JwtUtils()
 
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
@@ -50,7 +49,7 @@ class MainViewModel @Inject constructor(
         if (token.isEmpty()) {
             return false
         }
-        if (jwtUtil.isTokenExpired(token)) {
+        if (JwtUtils.isTokenExpired(token)) {
             return false
         }
         return true
