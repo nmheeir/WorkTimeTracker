@@ -1,57 +1,43 @@
 package com.example.worktimetracker.ui.main
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.core.presentation.util.AppEntryKey
+import com.example.worktimetracker.core.presentation.util.dataStore
+import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.ui.navigation.Screens
-import com.example.worktimetracker.ui.util.JwtUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val appEntryUseCase: AppEntryUseCase,
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
 
 
-    private val _splashCondition = mutableStateOf(true)
-    val splashCondition: State<Boolean> = _splashCondition
+    val splashCondition = MutableStateFlow(false)
 
-    private val _startDestination = mutableStateOf(Screens.OnboardingScreen.route)
-    val startDestination: State<String> = _startDestination
+    val startDestination = MutableStateFlow<String>(Screens.LoginScreen.route)
 
     init {
-        appEntryUseCase.readAppEntry().onEach { shouldStartFromAuthScreen ->
-            if (shouldStartFromAuthScreen) {
-                if (!checkTokenExpired()) {
-                    _startDestination.value = Screens.AuthNavigator.route
-                } else {
-                    _startDestination.value = Screens.HomeScreen.route
-                }
-            } else {
-                _startDestination.value = Screens.OnboardingScreen.route
+        viewModelScope.launch {
+            val shouldShowOnboarding = context.dataStore.get(AppEntryKey, true)
+            if (shouldShowOnboarding) {
+                startDestination.value = Screens.OnboardingScreen.route
+                Timber.d(startDestination.value)
+                return@launch
             }
-            delay(500)
-            _splashCondition.value = false
-            localUserManager.saveDeviceToken()
-        }.launchIn(viewModelScope)
-    }
-
-    private suspend fun checkTokenExpired(): Boolean {
-        val token = localUserManager.readAccessToken()
-        if (token.isEmpty()) {
-            return false
+            Timber.d(startDestination.value)
+            startDestination.value = Screens.LoginScreen.route
         }
-        if (JwtUtils.isTokenExpired(token)) {
-            return false
-        }
-        return true
     }
 }

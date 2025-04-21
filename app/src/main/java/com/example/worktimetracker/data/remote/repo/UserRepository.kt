@@ -10,6 +10,10 @@ interface UserRepository {
         userName: String
     ): ApiResponse<DataResponse<User>>
 
+    suspend fun profile(
+        token: String
+    ): ApiResponse<DataResponse<User>>
+
     suspend fun uploadAvatar(
         token: String,
         avatarUrl: String

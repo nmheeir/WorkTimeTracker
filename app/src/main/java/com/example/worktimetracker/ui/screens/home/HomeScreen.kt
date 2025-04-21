@@ -1,121 +1,176 @@
 package com.example.worktimetracker.ui.screens.home
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.worktimetracker.R
+import com.example.worktimetracker.core.presentation.padding
+import com.example.worktimetracker.core.presentation.ui.HideOnScrollComponent
+import com.example.worktimetracker.data.remote.response.User
+import com.example.worktimetracker.ui.component.image.CircleImage
 import com.example.worktimetracker.ui.navigation.Screens
-import com.example.worktimetracker.ui.screens.home.components.HomeGreetingSection
-import com.example.worktimetracker.ui.screens.home.components.HomeOptionItem
-import com.example.worktimetracker.ui.screens.home.components.HomeOptionItemData
-import com.example.worktimetracker.ui.screens.home.components.NotificationPager
-import com.example.worktimetracker.ui.screens.home.components.listHomeNotification
-import com.example.worktimetracker.ui.screens.home.components.listHomeOption
-import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
-import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.HomeViewModel
 
-@SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-// TODO: Sửa lại UI và thêm viewModel cho HomeScreen
 fun HomeScreen(
-    state: SharedUiState = SharedUiState(),
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    val lazyListState = rememberLazyListState()
 
-    ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        val (topSection, greetingSection, notifySection, optionSection) = createRefs()
-        HomeGreetingSection(
-            state = state,
-            modifier = Modifier.constrainAs(greetingSection) {
-                top.linkTo(topSection.top)
-                start.linkTo(topSection.start)
-                end.linkTo(topSection.end)
-            },
-            onAvatarClick = {
-                navController.navigate(Screens.ProfileScreen.route)
-            }
-        )
 
-        NotificationPager(
-            listNotify = listHomeNotification,
-            modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 12.dp)
-                .constrainAs(notifySection) {
-                    top.linkTo(greetingSection.bottom, margin = 8.dp)
-                })
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
-                .padding(16.dp)
-                .constrainAs(optionSection) {
-                    top.linkTo(notifySection.bottom)
-                }) {
-            items(5) { index ->
-                HomeOptionItem(item = listHomeOption[index], onClick = {
-                    navController.navigate(it.route)
-                })
-            }
-            item {
-                HomeOptionItem(
-                    item = HomeOptionItemData(
-                        title = "More", icon = R.drawable.ic_more, color = R.color.black
-                    ), onShowDialog = {
-                        showBottomSheet = true
-                    })
+    val user by viewModel.user.collectAsStateWithLifecycle()
+
+    Scaffold(
+        topBar = {
+            if (user != null) {
+                HomeTopBar(
+                    user = user!!,
+                    onNavigate = {
+                        navController.navigate(it.route)
+                    }
+                )
             }
         }
-    }
-
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                showBottomSheet = false
-            },
-            sheetState = sheetState,
-            containerColor = AppTheme.colors.backgroundStart
+    ) { pv ->
+        Box(
+            contentAlignment = Alignment.TopCenter,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(pv)
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.padding(16.dp)
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                items(listHomeOption.size) { index ->
-                    HomeOptionItem(
-                        item = listHomeOption[index],
-                        onClick = {
-                            navController.navigate(it.route)
+                item(
+                    key = "calendar"
+                ) {
+                    Row {
+                        viewModel.currentWeekDates.map {
+                            DateItem(
+                                day = it.key,
+                                weekday = it.value.dayOfWeek.name,
+                                isSelected = false
+                            )
                         }
-                    )
+                    }
+                }
+            }
+
+            HideOnScrollComponent(lazyListState = lazyListState) {
+                Button(
+                    onClick = { navController.navigate(Screens.CheckScreen.route) }
+                ) {
+                    Text(text = "Go to Check")
                 }
             }
         }
     }
+}
 
+@Composable
+fun DateItem(day: String, weekday: String, isSelected: Boolean) {
+    val backgroundColor =
+        if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.Black
+
+    Column(
+        modifier = Modifier
+            .size(48.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(backgroundColor)
+            .padding(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = day,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            color = textColor
+        )
+        Text(
+            text = weekday,
+            style = MaterialTheme.typography.bodyMedium,
+            color = textColor
+        )
+    }
+}
+
+@Composable
+private fun HomeTopBar(
+    user: User,
+    onNavigate: (Screens) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = MaterialTheme.padding.small),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Profile Image
+        CircleImage(imageUrl = user.avatarURL)
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        // Name and Title
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = user.userFullName,
+                style = MaterialTheme.typography.labelLarge,
+            )
+            Text(
+                text = user.designation,
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+
+        // Notification Icon
+        IconButton(
+            onClick = {
+                onNavigate(Screens.MyProfileScreen)
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Notifications,
+                contentDescription = "Notifications",
+                tint = Color.Black
+            )
+        }
+    }
 }

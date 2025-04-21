@@ -1,7 +1,6 @@
 package com.example.worktimetracker.ui.navigation
 
 import androidx.compose.material3.Text
-import androidx.compose.runtime.internal.composableLambda
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -13,7 +12,6 @@ import com.example.worktimetracker.ui.screens.check.checkPage.CheckScreen
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.log.LogScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
-import com.example.worktimetracker.ui.screens.profile.ProfileScreen
 import com.example.worktimetracker.ui.screens.profile.setting.SettingScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPolicyScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen

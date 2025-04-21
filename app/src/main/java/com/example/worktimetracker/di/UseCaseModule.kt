@@ -2,25 +2,25 @@ package com.example.worktimetracker.di
 
 import android.app.Application
 import com.example.worktimetracker.data.local.LocalUserManagerImpl
-import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.data.remote.repo.AuthRepository
 import com.example.worktimetracker.data.remote.repo.CheckRepository
 import com.example.worktimetracker.data.remote.repo.LogRepository
 import com.example.worktimetracker.data.remote.repo.ShiftRepository
 import com.example.worktimetracker.data.remote.repo.SummaryRepository
 import com.example.worktimetracker.data.remote.repo.UserRepository
+import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.domain.use_case.app_entry.ReadAppEntry
 import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
+import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
+import com.example.worktimetracker.domain.use_case.auth.Login
+import com.example.worktimetracker.domain.use_case.auth.RequestPasswordReset
+import com.example.worktimetracker.domain.use_case.auth.ResetPassword
 import com.example.worktimetracker.domain.use_case.check.Check
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.log.CreateLog
 import com.example.worktimetracker.domain.use_case.log.GetLogs
 import com.example.worktimetracker.domain.use_case.log.LogUseCase
-import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
-import com.example.worktimetracker.domain.use_case.auth.Login
-import com.example.worktimetracker.domain.use_case.auth.RequestPasswordReset
-import com.example.worktimetracker.domain.use_case.auth.ResetPassword
 import com.example.worktimetracker.domain.use_case.shift.GetMyShift
 import com.example.worktimetracker.domain.use_case.shift.GetMyShiftsByDate
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
@@ -30,6 +30,7 @@ import com.example.worktimetracker.domain.use_case.summary.GetTotalWorkTime
 import com.example.worktimetracker.domain.use_case.summary.GetWorkTimeEachDay
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
+import com.example.worktimetracker.domain.use_case.user.GetUserProfile
 import com.example.worktimetracker.domain.use_case.user.UploadAvatar
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
 import dagger.Module
@@ -72,13 +73,14 @@ class UseCaseModule {
     fun provideUserUseCase(userRepository: UserRepository): UserUseCase {
         return UserUseCase(
             getUserByUserName = GetUserByUserName(userRepository),
+            getUserProfile = GetUserProfile(userRepository),
             uploadAvatar = UploadAvatar(userRepository)
         )
     }
 
     @Provides
     @Singleton
-    fun provideCheckUseCase(checkRepository: CheckRepository) : CheckUseCase {
+    fun provideCheckUseCase(checkRepository: CheckRepository): CheckUseCase {
         return CheckUseCase(
             check = Check(checkRepository),
         )
@@ -86,11 +88,11 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideShiftUseCase(shiftRepository: ShiftRepository) : ShiftUseCase {
+    fun provideShiftUseCase(shiftRepository: ShiftRepository): ShiftUseCase {
         return ShiftUseCase(
             getMyShift = GetMyShift(shiftRepository),
             getShiftsByDate = GetMyShiftsByDate(shiftRepository)
-            )
+        )
     }
 
     @Provides
@@ -106,7 +108,7 @@ class UseCaseModule {
     @Singleton
     fun provideSummaryUseCase(
         summaryRepository: SummaryRepository
-    ) : SummaryUseCase {
+    ): SummaryUseCase {
         return SummaryUseCase(
             getWorkTimeEachDay = GetWorkTimeEachDay(summaryRepository),
             getMyPayCheck = GetMyPayCheck(summaryRepository),

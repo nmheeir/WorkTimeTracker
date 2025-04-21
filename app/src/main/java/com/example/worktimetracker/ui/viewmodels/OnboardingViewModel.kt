@@ -1,15 +1,20 @@
 package com.example.worktimetracker.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.worktimetracker.core.presentation.util.AppEntryKey
+import com.example.worktimetracker.core.presentation.util.dataStore
+import com.example.worktimetracker.core.presentation.util.set
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val appEntryUseCase: AppEntryUseCase
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     fun onEvent(event: OnboardingUiEvent) {
@@ -22,7 +27,7 @@ class OnboardingViewModel @Inject constructor(
 
     private fun saveAppEntry() {
         viewModelScope.launch {
-            appEntryUseCase.saveAppEntry()
+            context.dataStore.set(AppEntryKey, false)
         }
     }
 }

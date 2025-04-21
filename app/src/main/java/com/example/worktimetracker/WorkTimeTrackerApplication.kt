@@ -1,17 +1,20 @@
 package com.example.worktimetracker
 
 import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
-import coil.util.DebugLogger
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
+import coil3.request.crossfade
+import coil3.util.DebugLogger
+import coil3.util.Logger
 import dagger.hilt.android.HiltAndroidApp
+import okio.Path.Companion.toOkioPath
 import timber.log.Timber
 
 @HiltAndroidApp
-class WorkTimeTrackerApplication : Application(), ImageLoaderFactory {
+class WorkTimeTrackerApplication : Application(), SingletonImageLoader.Factory {
 
     override fun onCreate() {
         super.onCreate()
@@ -21,21 +24,24 @@ class WorkTimeTrackerApplication : Application(), ImageLoaderFactory {
         }
     }
 
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader(this).newBuilder()
-            .memoryCachePolicy(CachePolicy.ENABLED)
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        ImageLoader.Builder(context)
             .memoryCache {
-                MemoryCache.Builder(this)
-                    .maxSizePercent(0.25)
+                MemoryCache.Builder()
+                    .maxSizePercent(context, 0.25)
                     .build()
             }
             .diskCache {
                 DiskCache.Builder()
-                    .directory(this.cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.02)
+                    .directory(filesDir.resolve("image_cache").toOkioPath())
+                    .maxSizeBytes(1024 * 5)
                     .build()
             }
-            .logger(DebugLogger())
+            .crossfade(true)
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    logger(DebugLogger(Logger.Level.Verbose))
+                }
+            }
             .build()
-    }
 }

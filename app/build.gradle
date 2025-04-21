@@ -12,16 +12,19 @@ plugins {
 
     //Room
     id 'androidx.room'
+
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.10"
+    id "org.jetbrains.kotlin.plugin.serialization"
 }
 
 android {
     namespace 'com.example.worktimetracker'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.worktimetracker"
         minSdk 29
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -35,9 +38,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"http://localhost:5260/api/\"")
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+            )
+
+            buildConfigField("String", "BASE_URL", "\"http://localhost:5260/api/\"")
         }
     }
     compileOptions {
@@ -107,6 +118,8 @@ dependencies {
     implementation libs.retrofit
     implementation libs.converter.gson
     implementation libs.gson
+    //Okhttp3 logging
+    implementation libs.okHttp3.logging
 
     //Datastore
     implementation libs.androidx.datastore.preferences
@@ -119,7 +132,8 @@ dependencies {
     implementation libs.androidx.core.splashscreen
 
     //coil
-    implementation(libs.coil.compose)
+    implementation libs.coil.compose
+    implementation(libs.coil.network.okhttp)
 
     //Sheet compose dialog
     implementation libs.core
@@ -169,5 +183,7 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.1")
     //
     implementation(libs.timber)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
 }

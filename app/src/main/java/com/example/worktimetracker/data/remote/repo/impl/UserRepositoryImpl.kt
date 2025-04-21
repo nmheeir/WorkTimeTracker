@@ -15,7 +15,8 @@ class UserRepositoryImpl(
         return userApi.getUserByUsername(userName)
     }
 
-
+    override suspend fun profile(token: String) =
+        userApi.profile(token)
 
     override suspend fun uploadAvatar(
         token: String,

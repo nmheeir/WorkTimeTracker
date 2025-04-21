@@ -17,9 +17,7 @@ import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,9 +28,7 @@ class LoginViewModel @Inject constructor(
     private val userSessionDao: UserSessionDao,
     private val localUserManager: LocalUserManager
 ) : ViewModel() {
-    private val _state = MutableStateFlow(LoginUiState())
-    val state = _state
-        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), LoginUiState())
+    val state = MutableStateFlow(LoginUiState())
 
     private val _channel = Channel<LoginUiEvent>()
     val channel = _channel.receiveAsFlow()
@@ -44,7 +40,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginUiAction.OnPasswordChange -> {
-                _state.update {
+                state.update {
                     it.copy(
                         password = action.password
                     )
@@ -52,7 +48,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginUiAction.OnUsernameChange -> {
-                _state.update {
+                state.update {
                     it.copy(
                         username = action.username
                     )
@@ -60,7 +56,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginUiAction.OnRememberLogin -> {
-                _state.update {
+                state.update {
                     it.copy(
                         rememberLogin = action.isRemember
                     )
@@ -75,17 +71,17 @@ class LoginViewModel @Inject constructor(
            val deviceToken = localUserManager.readDeviceToken()
 
            authUseCase
-               .login(_state.value.username, _state.value.password, deviceToken)
+               .login(state.value.username, state.value.password, deviceToken)
                .suspendOnSuccess {
                    val token = this.data.data?.token
                    if(token != null) {
                        localUserManager.saveAccessToken(token)
 
-                       if (_state.value.rememberLogin) {
+                       if (state.value.rememberLogin) {
                            userSessionDao.insertUserSession(
                                UserSession(
-                                   username = _state.value.username,
-                                   password = _state.value.password,
+                                   username = state.value.username,
+                                   password = state.value.password,
                                    avatarUrl = ""
                                )
                            )
@@ -95,14 +91,14 @@ class LoginViewModel @Inject constructor(
                    }
                }
                .suspendOnError {
-                   _state.update {
+                   state.update {
                        it.copy(
                            isError = true
                        )
                    }
                    when (this.statusCode) {
                        StatusCode.BadRequest -> {
-                           _state.update {
+                           state.update {
                                it.copy(
                                    error = R.string.password_wrong
                                )
@@ -111,7 +107,7 @@ class LoginViewModel @Inject constructor(
                        }
 
                        StatusCode.NotFound -> {
-                           _state.update {
+                           state.update {
                                it.copy(
                                    error = R.string.username_not_found
                                )
@@ -120,7 +116,7 @@ class LoginViewModel @Inject constructor(
                        }
 
                        else -> {
-                           _state.update {
+                           state.update {
                                it.copy(
                                    error = R.string.username_not_found
                                )

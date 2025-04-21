@@ -136,7 +136,7 @@ fun OnboardingPage(
                     onClick = {
                         if (pagerState.currentPage == pages.size - 1) {
                             event(OnboardingUiEvent.SaveAppEntry)
-                            onNavigateTo(Screens.AuthNavigator)
+                            onNavigateTo(Screens.LoginScreen)
                         } else {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
