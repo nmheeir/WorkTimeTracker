@@ -1,10 +1,12 @@
-package com.example.worktimetracker.ui.screens.salary
+package com.example.worktimetracker.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
+import com.example.worktimetracker.ui.screens.salary.SalaryState
+import com.example.worktimetracker.ui.screens.salary.SalaryUiEvent
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
@@ -27,7 +29,7 @@ class SalaryViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(SalaryState())
     val state = _state
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SalaryState())
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), SalaryState())
 
     private val _channel = Channel<SalaryUiEvent>()
     val channel = _channel.receiveAsFlow()

@@ -47,7 +47,7 @@ import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.ui.component.common.NoDataWarning
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.check.component.DigitalClock
 import com.example.worktimetracker.ui.screens.check.component.MapContent
 import com.example.worktimetracker.ui.screens.check.component.ShiftCard
@@ -61,8 +61,8 @@ fun CheckScreen(
     state: CheckUiState,
     channel: Flow<CheckUiEvent>,
     action: (CheckUiAction) -> Unit,
-    onCheckSuccess: (Route) -> Unit,
-    onNavigateTo: (Route) -> Unit,
+    onCheckSuccess: (Screens) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
     onBack: () -> Unit,
 ) {
     val context = LocalContext.current

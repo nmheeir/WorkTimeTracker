@@ -1,5 +1,4 @@
-package com.example.worktimetracker.ui.screens.check.checkPage
-
+package com.example.worktimetracker.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +8,9 @@ import com.example.worktimetracker.data.remote.request.CheckRequest
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
+import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiAction
+import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiEvent
+import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiState
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
@@ -35,7 +37,7 @@ class CheckViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(CheckUiState())
     val state = _state
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CheckUiState())
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), CheckUiState())
 
     private val _channel = Channel<CheckUiEvent>()
     val channel = _channel.receiveAsFlow()
@@ -82,9 +84,9 @@ class CheckViewModel @Inject constructor(
 
             shiftUseCase.getShiftsByDate(
                 token = token,
-                day = LocalDate.now().dayOfMonth,
-                month = LocalDate.now().monthNumber,
-                year = LocalDate.now().year)
+                day = LocalDate.Companion.now().dayOfMonth,
+                month = LocalDate.Companion.now().monthNumber,
+                year = LocalDate.Companion.now().year)
                 .suspendOnSuccess {
                     _state.update {
                         it.copy(

@@ -85,6 +85,9 @@ dependencies {
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest
 
+    //Navigation
+    implementation(libs.navigation)
+
     //Material Extended Icon
     implementation libs.androidx.material.icons.extended
 
@@ -167,4 +170,6 @@ dependencies {
     //icon
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.1")
     //
+    implementation(libs.timber)
+
 }

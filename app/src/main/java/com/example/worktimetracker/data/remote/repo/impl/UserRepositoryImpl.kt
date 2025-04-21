@@ -1,9 +1,9 @@
-package com.example.worktimetracker.data.remote.repoImpl
+package com.example.worktimetracker.data.remote.repo.impl
 
 import com.example.worktimetracker.data.remote.api.UserApi
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.domain.repository.UserRepository
+import com.example.worktimetracker.data.remote.repo.UserRepository
 import com.skydoves.sandwich.ApiResponse
 
 class UserRepositoryImpl(

@@ -2,7 +2,7 @@ package com.example.worktimetracker.domain.use_case.check
 
 import com.example.worktimetracker.data.remote.request.CheckRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.domain.repository.CheckRepository
+import com.example.worktimetracker.data.remote.repo.CheckRepository
 import com.skydoves.sandwich.ApiResponse
 
 class Check(

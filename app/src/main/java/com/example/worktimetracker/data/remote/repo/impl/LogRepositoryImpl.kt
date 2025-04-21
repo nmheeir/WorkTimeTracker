@@ -1,10 +1,10 @@
-package com.example.worktimetracker.data.remote.repoImpl
+package com.example.worktimetracker.data.remote.repo.impl
 
 import com.example.worktimetracker.data.remote.api.LogApi
 import com.example.worktimetracker.data.remote.request.CreateLogRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Log
-import com.example.worktimetracker.domain.repository.LogRepository
+import com.example.worktimetracker.data.remote.repo.LogRepository
 import com.skydoves.sandwich.ApiResponse
 
 class LogRepositoryImpl(

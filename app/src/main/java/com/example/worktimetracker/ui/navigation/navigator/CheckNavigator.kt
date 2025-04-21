@@ -7,10 +7,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.check.checkPage.CheckScreen
-import com.example.worktimetracker.ui.screens.check.checkPage.CheckViewModel
+import com.example.worktimetracker.ui.viewmodels.CheckViewModel
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 
 fun NavGraphBuilder.checkNavigator(
@@ -18,10 +18,10 @@ fun NavGraphBuilder.checkNavigator(
     sharedViewModel: SharedViewModel,
 ) {
     navigation(
-        startDestination = Route.CheckScreen.route,
-        route = Route.CheckNavigator.route
+        startDestination = Screens.CheckScreen.route,
+        route = Screens.CheckNavigator.route
     ) {
-        composable(route = Route.CheckScreen.route) {
+        composable(route = Screens.CheckScreen.route) {
             val viewModel: CheckViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
 

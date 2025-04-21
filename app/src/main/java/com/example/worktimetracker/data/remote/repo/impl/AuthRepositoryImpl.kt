@@ -1,10 +1,10 @@
-package com.example.worktimetracker.data.remote.repoImpl
+package com.example.worktimetracker.data.remote.repo.impl
 
 import com.example.worktimetracker.data.remote.api.AuthApi
 import com.example.worktimetracker.data.remote.request.UserLoginRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
-import com.example.worktimetracker.domain.repository.AuthRepository
+import com.example.worktimetracker.data.remote.repo.AuthRepository
 import com.skydoves.sandwich.ApiResponse
 
 class AuthRepositoryImpl(

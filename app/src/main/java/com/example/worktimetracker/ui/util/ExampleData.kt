@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.request.UserUpdateRequest
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 
 val exampleUser = User(
     address = "address",
@@ -90,29 +90,29 @@ val lLeavesDetail = listOf(
 data class ProfileOption(
     @DrawableRes val icon: Int,
     val title: String,
-    val route: Route? = null
+    val screens: Screens? = null
 )
 
 val lOptionProfile = listOf(
     ProfileOption(
         icon = R.drawable.ic_user,
         title = "My Profile",
-        route = Route.MyProfileScreen
+        screens = Screens.MyProfileScreen
     ),
     ProfileOption(
         icon = R.drawable.ic_setting,
         title = "Settings",
-        route = Route.SettingScreen
+        screens = Screens.SettingScreen
     ),
     ProfileOption(
         icon = R.drawable.ic_file,
         title = "Terms & Conditions",
-        route = Route.TermConditionScreen
+        screens = Screens.TermConditionScreen
     ),
     ProfileOption(
         icon = R.drawable.ic_privacy_policy,
         title = "Privacy Policy",
-        route = Route.PrivacyScreen
+        screens = Screens.PrivacyScreen
     ),
     ProfileOption(
         icon = R.drawable.ic_logout,

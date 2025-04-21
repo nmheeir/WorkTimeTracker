@@ -38,13 +38,13 @@ fun HomeGreetingSection(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Avatar(
-                avatarUrl = state.user.avatarURL.toUri(),
-                modifier = Modifier.size(48.dp),
-                onClick = {
-                    onAvatarClick()
-                }
-            )
+//            Avatar(
+//                avatarUrl = state.user.avatarURL.toUri(),
+//                modifier = Modifier.size(48.dp),
+//                onClick = {
+//                    onAvatarClick()
+//                }
+//            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)

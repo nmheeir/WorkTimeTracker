@@ -10,16 +10,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.navigation.navigateAndClearStack
 import com.example.worktimetracker.ui.navigation.navigateSingleTopTo
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiAction
-import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordViewModel
+import com.example.worktimetracker.ui.viewmodels.ForgotPasswordViewModel
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.ErrorScreen
 import com.example.worktimetracker.ui.screens.auth.login.LoginScreen
-import com.example.worktimetracker.ui.screens.auth.login.LoginViewModel
+import com.example.worktimetracker.ui.viewmodels.LoginViewModel
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedViewModel
 import com.example.worktimetracker.ui.util.JwtUtils
 
@@ -28,11 +28,11 @@ fun NavGraphBuilder.authNavigator(
     sharedViewModel: SharedViewModel
 ) {
     navigation(
-        startDestination = Route.LoginScreen.route,
-        route = Route.AuthNavigator.route
+        startDestination = Screens.LoginScreen.route,
+        route = Screens.AuthNavigator.route
     ) {
         composable(
-            route = Route.LoginScreen.route
+            route = Screens.LoginScreen.route
         ) {
             val loginViewModel: LoginViewModel = hiltViewModel()
             val state by loginViewModel.state.collectAsStateWithLifecycle()
@@ -41,7 +41,7 @@ fun NavGraphBuilder.authNavigator(
                 channel = loginViewModel.channel,
                 action = loginViewModel::onAction,
                 onLoginSuccess = {
-                    navController.navigateAndClearStack(Route.HomeScreen.route)
+                    navController.navigateAndClearStack(Screens.HomeScreen.route)
                 },
                 onNavigateTo = {
                     navController.navigateSingleTopTo(it.route)
@@ -51,7 +51,7 @@ fun NavGraphBuilder.authNavigator(
 
 
         composable(
-            route = Route.ForgotPasswordScreen.route
+            route = Screens.ForgotPasswordScreen.route
         ) {
             val viewModel: ForgotPasswordViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
@@ -73,7 +73,7 @@ fun NavGraphBuilder.authNavigator(
         }
 
         composable(
-            route = Route.CreateNewPasswordScreen.route,
+            route = Screens.CreateNewPasswordScreen.route,
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern =
@@ -102,7 +102,7 @@ fun NavGraphBuilder.authNavigator(
                 CreateNewPasswordScreen(
                     channel = viewModel.channel2,
                     onBack = {
-                        navController.navigateAndClearStack(Route.LoginScreen.route)
+                        navController.navigateAndClearStack(Screens.LoginScreen.route)
                     },
                     action = viewModel::onAction,
                     onNavigateTo = {

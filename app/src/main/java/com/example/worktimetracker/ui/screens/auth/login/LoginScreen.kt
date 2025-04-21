@@ -39,7 +39,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.ui.component.background.LinearBackground
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.auth.components.LoginButton
 import com.example.worktimetracker.ui.screens.auth.components.LoginPasswordTextField
 import com.example.worktimetracker.ui.screens.auth.components.LoginTextField
@@ -55,7 +55,7 @@ fun LoginScreen(
     channel: Flow<LoginUiEvent>,
     state: LoginUiState,
     action: (LoginUiAction) -> Unit,
-    onNavigateTo: (Route) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
     onLoginSuccess: () -> Unit
 ) {
     val context = LocalContext.current
@@ -135,7 +135,7 @@ fun LoginContent(
     modifier: Modifier = Modifier,
     state: LoginUiState,
     action: (LoginUiAction) -> Unit,
-    onNavigateTo: (Route) -> Unit
+    onNavigateTo: (Screens) -> Unit
 ) {
     val lottieComposition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.lottie_loading))
     Box(modifier = Modifier.fillMaxSize()) {
@@ -192,7 +192,7 @@ fun LoginContent(
                         .padding(vertical = 8.dp)
                         .align(Alignment.End)
                         .clickable {
-                            onNavigateTo(Route.ForgotPasswordScreen)
+                            onNavigateTo(Screens.ForgotPasswordScreen)
                         }
                 )
 

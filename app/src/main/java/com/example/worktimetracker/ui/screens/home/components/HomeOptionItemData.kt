@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 
@@ -31,7 +31,7 @@ import com.example.worktimetracker.ui.theme.Typography
 fun HomeOptionItem(
     modifier: Modifier = Modifier,
     item: HomeOptionItemData = listHomeOption[0],
-    onClick: ((Route) -> Unit)? = null,
+    onClick: ((Screens) -> Unit)? = null,
     onShowDialog: () -> Unit = {}
 ) {
     val iconColor = colorResource(id = item.color)
@@ -42,7 +42,7 @@ fun HomeOptionItem(
         modifier = modifier
             .wrapContentSize()
             .clickable {
-                onClick?.invoke(item.route!!) ?: onShowDialog()
+                onClick?.invoke(item.screens!!) ?: onShowDialog()
             }
     ) {
         Box(
@@ -71,7 +71,7 @@ fun HomeOptionItem(
 }
 
 data class HomeOptionItemData(
-    val route: Route? = null,
+    val screens: Screens? = null,
     val title: String,
     @DrawableRes val icon: Int,
     @ColorRes val color: Int
@@ -80,43 +80,43 @@ data class HomeOptionItemData(
 // TODO: sửa lại list home option
 val listHomeOption = listOf(
     HomeOptionItemData(
-        route = Route.ProfileScreen,
+        screens = Screens.ProfileScreen,
         title = "Profile",
         icon = R.drawable.ic_user_filled,
         color = R.color.blue
     ),
     HomeOptionItemData(
-        route = Route.CheckScreen,
+        screens = Screens.CheckScreen,
         title = "Check",
         icon = R.drawable.ic_clock_filled,
         color = R.color.teal
     ),
     HomeOptionItemData(
-        route = Route.LogScreen,
+        screens = Screens.LogScreen,
         title = "Logging",
         icon = R.drawable.ic_add_square,
         color = R.color.purple_200
     ),
     HomeOptionItemData(
-        route = Route.WorkTimeScreen,
+        screens = Screens.WorkTimeScreen,
         title = "Work Chart",
         icon = R.drawable.ic_chart,
         color = R.color.yellow
     ),
     HomeOptionItemData(
-        route = Route.SalaryScreen,
+        screens = Screens.SalaryScreen,
         title = "Salary",
         icon = R.drawable.ic_dollar_money,
         color = R.color.green
     ),
     HomeOptionItemData(
-        route = Route.SalaryScreen,
+        screens = Screens.SalaryScreen,
         title = "Salary",
         icon = R.drawable.ic_dollar_money,
         color = R.color.green
     ),
     HomeOptionItemData(
-        route = Route.ShiftScreen,
+        screens = Screens.ShiftScreen,
         title = "Shift",
         icon = R.drawable.ic_calendar,
         color = R.color.green

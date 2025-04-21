@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.shift
+package com.example.worktimetracker.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,9 @@ import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.helper.ISOFormater
+import com.example.worktimetracker.ui.screens.shift.ShiftUiAction
+import com.example.worktimetracker.ui.screens.shift.ShiftUiEvent
+import com.example.worktimetracker.ui.screens.shift.ShiftUiState
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
@@ -31,7 +34,7 @@ class ShiftViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(ShiftUiState())
     val state = _state
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ShiftUiState())
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), ShiftUiState())
 
     private val _channel = Channel<ShiftUiEvent>()
     val channel = _channel.receiveAsFlow()
@@ -73,7 +76,7 @@ class ShiftViewModel @Inject constructor(
                     val shiftMap : MutableMap<Int, MutableList<Shift>> = HashMap()
                     shiftList.forEach { shift ->
                         // Nếu date đã có trong shiftMap, thêm vào danh sách
-                        val date = ISOFormater.fromISODateTimetoLocalDateTime(shift.start).dayOfMonth
+                        val date = ISOFormater.Companion.fromISODateTimetoLocalDateTime(shift.start).dayOfMonth
                         if (shiftMap.containsKey((date))) {
                             shiftMap[date]?.add(shift)
                         } else {

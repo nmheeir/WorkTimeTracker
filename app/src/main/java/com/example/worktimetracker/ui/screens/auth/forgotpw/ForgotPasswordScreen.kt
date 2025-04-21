@@ -33,14 +33,12 @@ import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.ui.component.common.GlowingButton
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +46,7 @@ fun ForgotPasswordScreen(
     channel: Flow<ForgotPasswordUiEvent>,
     action: (ForgotPasswordUiAction) -> Unit,
     state: ForgotPasswordUiState,
-    onNavigateTo: (Route) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current

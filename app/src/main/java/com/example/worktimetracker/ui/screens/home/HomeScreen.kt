@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.home.components.HomeGreetingSection
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItem
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItemData
@@ -35,7 +35,7 @@ import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 @Composable
 fun HomeScreen(
     state: SharedUiState = SharedUiState(),
-    onNavigateTo: (Route) -> Unit = {}
+    onNavigateTo: (Screens) -> Unit = {}
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -52,7 +52,7 @@ fun HomeScreen(
                     end.linkTo(topSection.end)
                 },
                 onAvatarClick = {
-                    onNavigateTo(Route.ProfileScreen)
+                    onNavigateTo(Screens.ProfileScreen)
                 }
             )
 

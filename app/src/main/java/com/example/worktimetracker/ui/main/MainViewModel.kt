@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.util.JwtUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -24,19 +24,19 @@ class MainViewModel @Inject constructor(
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
 
-    private val _startDestination = mutableStateOf(Route.OnboardingScreen.route)
+    private val _startDestination = mutableStateOf(Screens.OnboardingScreen.route)
     val startDestination: State<String> = _startDestination
 
     init {
         appEntryUseCase.readAppEntry().onEach { shouldStartFromAuthScreen ->
             if (shouldStartFromAuthScreen) {
                 if (!checkTokenExpired()) {
-                    _startDestination.value = Route.AuthNavigator.route
+                    _startDestination.value = Screens.AuthNavigator.route
                 } else {
-                    _startDestination.value = Route.HomeScreen.route
+                    _startDestination.value = Screens.HomeScreen.route
                 }
             } else {
-                _startDestination.value = Route.OnboardingScreen.route
+                _startDestination.value = Screens.OnboardingScreen.route
             }
             delay(500)
             _splashCondition.value = false

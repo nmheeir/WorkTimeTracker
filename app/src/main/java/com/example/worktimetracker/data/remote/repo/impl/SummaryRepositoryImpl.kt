@@ -1,4 +1,4 @@
-package com.example.worktimetracker.data.remote.repoImpl
+package com.example.worktimetracker.data.remote.repo.impl
 
 import com.example.worktimetracker.data.remote.api.SummaryApi
 import com.example.worktimetracker.data.remote.response.AttendanceRecord
@@ -6,7 +6,7 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.DayWorkTime
 import com.example.worktimetracker.data.remote.response.PayCheck
 import com.example.worktimetracker.data.remote.response.TotalWorkTime
-import com.example.worktimetracker.domain.repository.SummaryRepository
+import com.example.worktimetracker.data.remote.repo.SummaryRepository
 import com.skydoves.sandwich.ApiResponse
 
 class SummaryRepositoryImpl(

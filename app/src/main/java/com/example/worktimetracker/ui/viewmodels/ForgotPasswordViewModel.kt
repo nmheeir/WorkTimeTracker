@@ -1,11 +1,14 @@
-package com.example.worktimetracker.ui.screens.auth.forgotpw
+package com.example.worktimetracker.ui.viewmodels
 
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
+import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiAction
+import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiEvent
+import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiState
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPasswordUiEvent
 import com.example.worktimetracker.ui.util.isValidEmail
 import com.skydoves.sandwich.StatusCode
@@ -25,7 +28,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
@@ -34,7 +36,7 @@ class ForgotPasswordViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ForgotPasswordUiState())
     val state = _state
-        .stateIn(viewModelScope, SharingStarted.Lazily, ForgotPasswordUiState())
+        .stateIn(viewModelScope, SharingStarted.Companion.Lazily, ForgotPasswordUiState())
 
     private val _channel = Channel<ForgotPasswordUiEvent>()
     val channel = _channel.receiveAsFlow()
@@ -135,7 +137,7 @@ class ForgotPasswordViewModel @Inject constructor(
                 }
                 .suspendOnException {
                     Log.d(
-                        TAG,
+                        ContentValues.TAG,
                         "resetNewPassword exception: " + handleException(this.throwable).showMessage()
                     )
                 }
@@ -155,14 +157,14 @@ class ForgotPasswordViewModel @Inject constructor(
                         }
 
                         else -> {
-                            Log.d(TAG, "sendRequest: ${this.statusCode} + ${this.errorBody}")
+                            Log.d(ContentValues.TAG, "sendRequest: ${this.statusCode} + ${this.errorBody}")
                             _channel.send(ForgotPasswordUiEvent.UnknownError)
                         }
                     }
                 }
                 .suspendOnException {
                     Log.d(
-                        TAG,
+                        ContentValues.TAG,
                         "sendRequest exception: " + handleException(this.throwable).showMessage()
                     )
                 }

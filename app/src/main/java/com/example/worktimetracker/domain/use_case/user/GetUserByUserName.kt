@@ -2,7 +2,7 @@ package com.example.worktimetracker.domain.use_case.user
 
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.domain.repository.UserRepository
+import com.example.worktimetracker.data.remote.repo.UserRepository
 import com.skydoves.sandwich.ApiResponse
 
 class GetUserByUserName(

@@ -1,4 +1,4 @@
-package com.example.worktimetracker.domain.repository
+package com.example.worktimetracker.data.remote.repo
 
 import com.example.worktimetracker.data.remote.response.PagedDataResponse
 import com.example.worktimetracker.data.remote.response.Shift

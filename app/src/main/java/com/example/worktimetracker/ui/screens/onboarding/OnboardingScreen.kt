@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingUiEvent
 import com.example.worktimetracker.ui.screens.onboarding.component.OnBoardingPageData
 import com.example.worktimetracker.ui.screens.onboarding.component.PageIndicator
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
-    onNavigateTo: (Route) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
     event: (OnboardingUiEvent) -> Unit
 ) {
     val pageState = rememberPagerState(initialPage = 0) {
@@ -62,7 +62,7 @@ fun OnboardingScreen(
 fun OnboardingPage(
     items: List<OnBoardingPageData>,
     pagerState: PagerState,
-    onNavigateTo: (Route) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
     event: (OnboardingUiEvent) -> Unit
 ) {
     val buttonState = remember {
@@ -131,7 +131,7 @@ fun OnboardingPage(
                     onClick = {
                         if (pagerState.currentPage == pages.size - 1) {
                             event(OnboardingUiEvent.SaveAppEntry)
-                            onNavigateTo(Route.AuthNavigator)
+                            onNavigateTo(Screens.AuthNavigator)
                         } else {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)

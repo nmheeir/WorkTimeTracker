@@ -1,8 +1,9 @@
-package com.example.worktimetracker.ui.screens.onboarding
+package com.example.worktimetracker.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
+import com.example.worktimetracker.ui.screens.onboarding.OnboardingUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

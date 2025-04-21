@@ -1,5 +1,6 @@
-package com.example.worktimetracker.ui.screens.auth.login
+package com.example.worktimetracker.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.R
@@ -8,6 +9,9 @@ import com.example.worktimetracker.data.local.db.dao.UserSessionDao
 import com.example.worktimetracker.data.local.db.entity.UserSession
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
+import com.example.worktimetracker.ui.screens.auth.login.LoginUiAction
+import com.example.worktimetracker.ui.screens.auth.login.LoginUiEvent
+import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.retrofit.statusCode
 import com.skydoves.sandwich.suspendOnError
@@ -31,7 +35,7 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginUiState())
     val state = _state
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LoginUiState())
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), LoginUiState())
 
     private val _channel = Channel<LoginUiEvent>()
     val channel = _channel.receiveAsFlow()
@@ -130,6 +134,7 @@ class LoginViewModel @Inject constructor(
                }
                .suspendOnException {
                    _channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
+                   Log.d("LoginViewModel", this.throwable.toString())
                }
 
 

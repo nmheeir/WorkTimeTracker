@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.worktime
+package com.example.worktimetracker.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,6 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
+import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiAction
+import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiEvent
+import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiState
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
@@ -29,7 +32,7 @@ class WorkTimeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(WorkTimeUiState())
     var state = _state
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), WorkTimeUiState())
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), WorkTimeUiState())
 
     private val _channel = Channel<WorkTimeUiEvent>()
     val channel = _channel.receiveAsFlow()
