@@ -15,9 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.home.components.HomeGreetingSection
@@ -28,98 +29,93 @@ import com.example.worktimetracker.ui.screens.home.components.listHomeNotificati
 import com.example.worktimetracker.ui.screens.home.components.listHomeOption
 import com.example.worktimetracker.ui.screens.sharedViewModel.SharedUiState
 import com.example.worktimetracker.ui.theme.AppTheme
-import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
+import com.example.worktimetracker.ui.viewmodels.HomeViewModel
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// TODO: Sửa lại UI và thêm viewModel cho HomeScreen
 fun HomeScreen(
     state: SharedUiState = SharedUiState(),
-    onNavigateTo: (Screens) -> Unit = {}
+    navController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
-        ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val (topSection, greetingSection, notifySection, optionSection) = createRefs()
-            HomeGreetingSection(
-                state = state,
-                modifier = Modifier.constrainAs(greetingSection) {
-                    top.linkTo(topSection.top)
-                    start.linkTo(topSection.start)
-                    end.linkTo(topSection.end)
-                },
-                onAvatarClick = {
-                    onNavigateTo(Screens.ProfileScreen)
-                }
-            )
+    ConstraintLayout(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val (topSection, greetingSection, notifySection, optionSection) = createRefs()
+        HomeGreetingSection(
+            state = state,
+            modifier = Modifier.constrainAs(greetingSection) {
+                top.linkTo(topSection.top)
+                start.linkTo(topSection.start)
+                end.linkTo(topSection.end)
+            },
+            onAvatarClick = {
+                navController.navigate(Screens.ProfileScreen.route)
+            }
+        )
 
-            NotificationPager(
-                listNotify = listHomeNotification,
-                modifier = Modifier
-                    .padding(vertical = 8.dp, horizontal = 12.dp)
-                    .constrainAs(notifySection) {
-                        top.linkTo(greetingSection.bottom, margin = 8.dp)
-                    })
+        NotificationPager(
+            listNotify = listHomeNotification,
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 12.dp)
+                .constrainAs(notifySection) {
+                    top.linkTo(greetingSection.bottom, margin = 8.dp)
+                })
 
-            LazyVerticalGrid(columns = GridCells.Fixed(3),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .constrainAs(optionSection) {
-                        top.linkTo(notifySection.bottom)
-                    }) {
-                items(5) { index ->
-                    HomeOptionItem(item = listHomeOption[index], onClick = {
-                        onNavigateTo(it)
-                    })
-                }
-                item {
-                    HomeOptionItem(item = HomeOptionItemData(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .padding(16.dp)
+                .constrainAs(optionSection) {
+                    top.linkTo(notifySection.bottom)
+                }) {
+            items(5) { index ->
+                HomeOptionItem(item = listHomeOption[index], onClick = {
+                    navController.navigate(it.route)
+                })
+            }
+            item {
+                HomeOptionItem(
+                    item = HomeOptionItemData(
                         title = "More", icon = R.drawable.ic_more, color = R.color.black
                     ), onShowDialog = {
                         showBottomSheet = true
                     })
-                }
             }
         }
-
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showBottomSheet = false
-                },
-                sheetState = sheetState,
-                containerColor = AppTheme.colors.backgroundStart
-            ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    items(listHomeOption.size) { index ->
-                        HomeOptionItem(
-                            item = listHomeOption[index],
-                            onClick = {
-                                onNavigateTo(it)
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-}
-
-@Preview
-@Composable
-fun HomePreview() {
-    WorkTimeTrackerTheme {
-        HomeScreen()
     }
-}
 
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+            sheetState = sheetState,
+            containerColor = AppTheme.colors.backgroundStart
+        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                items(listHomeOption.size) { index ->
+                    HomeOptionItem(
+                        item = listHomeOption[index],
+                        onClick = {
+                            navController.navigate(it.route)
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+}

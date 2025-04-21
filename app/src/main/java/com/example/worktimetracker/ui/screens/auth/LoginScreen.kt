@@ -1,4 +1,4 @@
-package com.example.worktimetracker.ui.screens.auth.login
+package com.example.worktimetracker.ui.screens.auth
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -33,6 +33,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -48,23 +50,25 @@ import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import com.example.worktimetracker.ui.theme.poppinsFontFamily
 import com.example.worktimetracker.ui.util.rememberImeState
-import kotlinx.coroutines.flow.Flow
+import com.example.worktimetracker.ui.viewmodels.LoginUiAction
+import com.example.worktimetracker.ui.viewmodels.LoginUiEvent
+import com.example.worktimetracker.ui.viewmodels.LoginUiState
+import com.example.worktimetracker.ui.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    channel: Flow<LoginUiEvent>,
-    state: LoginUiState,
-    action: (LoginUiAction) -> Unit,
     onNavigateTo: (Screens) -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
-    ObserveAsEvents(channel) {
-        when(it) {
+    ObserveAsEvents(viewModel.channel) {
+        when (it) {
             LoginUiEvent.Success -> {
                 onLoginSuccess()
             }
+
             is LoginUiEvent.UserNotFound -> {
             }
 
@@ -77,10 +81,12 @@ fun LoginScreen(
         }
     }
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     LinearBackground {
         LoginContent(
             state = state,
-            action = action,
+            action = viewModel::onAction,
             onNavigateTo = {
                 onNavigateTo(it)
             }
@@ -176,7 +182,7 @@ fun LoginContent(
                     }
                 )
 
-                if(state.isError) {
+                if (state.isError) {
                     Text(
                         text = "*" + stringResource(state.error),
                         color = Color.Red
@@ -231,9 +237,10 @@ fun LoginContent(
 private fun LoginContentPreview() {
     WorkTimeTrackerTheme {
         LinearBackground {
-            LoginContent(state = LoginUiState(
-                username = "test", password = "test"
-            ), action = {}, onNavigateTo = {})
+            LoginContent(
+                state = LoginUiState(
+                    username = "test", password = "test"
+                ), action = {}, onNavigateTo = {})
         }
     }
 }

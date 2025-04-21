@@ -39,23 +39,25 @@ import com.example.worktimetracker.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
 import android.content.Intent
 import android.widget.Toast
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.worktimetracker.ui.viewmodels.ForgotPasswordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
-    channel: Flow<ForgotPasswordUiEvent>,
-    action: (ForgotPasswordUiAction) -> Unit,
-    state: ForgotPasswordUiState,
     onNavigateTo: (Screens) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: ForgotPasswordViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    var isVisible by remember  { mutableStateOf(false) }
-    var dialogContent by remember  { mutableStateOf("") }
-    var isSuccess by remember  { mutableStateOf(true) }
-    ObserveAsEvents(channel) {
+    var isVisible by remember { mutableStateOf(false) }
+    var dialogContent by remember { mutableStateOf("") }
+    var isSuccess by remember { mutableStateOf(true) }
+    ObserveAsEvents(viewModel.channel) {
         when (it) {
             ForgotPasswordUiEvent.NotFoundUser -> {
                 isVisible = true
@@ -76,7 +78,7 @@ fun ForgotPasswordScreen(
             }
         }
     }
-    if(isVisible) {
+    if (isVisible) {
         SuccessDialog(
             isSuccess,
             dialogContent,
@@ -87,8 +89,7 @@ fun ForgotPasswordScreen(
                         `package` = "com.google.android.gm"
                     }
                     context.startActivity(intent)
-                }
-                catch (ex: Exception){
+                } catch (ex: Exception) {
                     Toast.makeText(context, "Gmail app is not installed", Toast.LENGTH_SHORT).show()
                 }
 
@@ -101,7 +102,13 @@ fun ForgotPasswordScreen(
         containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { Text(text = "Forgot Password", style = MaterialTheme.typography.titleLarge, color = AppTheme.colors.onBackground) },
+                title = {
+                    Text(
+                        text = "Forgot Password",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = AppTheme.colors.onBackground
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         Icon(
@@ -131,11 +138,11 @@ fun ForgotPasswordScreen(
                 modifier = Modifier
                     .padding(horizontal = 24.dp),
                 state = state,
-                action = action
+                action = viewModel::onAction
             )
             GlowingButton(
                 onClick = {
-                    action(ForgotPasswordUiAction.SendRequest)
+                    viewModel.onAction(ForgotPasswordUiAction.SendRequest)
                 },
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
@@ -152,7 +159,6 @@ fun ForgotPasswordScreen(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 private fun ForgotPasswordDetail(modifier: Modifier = Modifier) {
     Column(

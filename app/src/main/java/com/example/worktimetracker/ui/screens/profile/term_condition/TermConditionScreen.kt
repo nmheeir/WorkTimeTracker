@@ -11,20 +11,20 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.ui.screens.profile.component.OptionTopBar
 import com.example.worktimetracker.ui.theme.Typography
 
 @Composable
 fun TermConditionScreen(
-    modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    navController: NavHostController
 ) {
     Scaffold(
         topBar = {
             OptionTopBar(
                 title = R.string.term_condition,
-                onBack = onBack
+                onBack = navController::navigateUp
             )
         }
     ) {
@@ -60,12 +60,14 @@ fun TermConditionScreen(
 }
 
 @Composable
-fun PrivacyPolicyScreen(modifier: Modifier = Modifier, onBack: () -> Unit) {
+fun PrivacyPolicyScreen(
+    navController: NavHostController
+) {
     Scaffold(
         topBar = {
             OptionTopBar(
                 title = R.string.term_condition,
-                onBack = onBack
+                onBack = navController::navigateUp
             )
         }
     ) {

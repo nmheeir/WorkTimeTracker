@@ -3,7 +3,6 @@ package com.example.worktimetracker.ui.screens.check.checkPage
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +41,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Shift
@@ -54,16 +55,15 @@ import com.example.worktimetracker.ui.screens.check.component.ShiftCard
 import com.example.worktimetracker.ui.screens.check.component.ShiftCheckDetailBottom
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.util.BiometricPromptManager
-import kotlinx.coroutines.flow.Flow
+import com.example.worktimetracker.ui.viewmodels.CheckViewModel
+import timber.log.Timber
 
 @Composable
 fun CheckScreen(
-    state: CheckUiState,
-    channel: Flow<CheckUiEvent>,
-    action: (CheckUiAction) -> Unit,
     onCheckSuccess: (Screens) -> Unit,
     onNavigateTo: (Screens) -> Unit,
     onBack: () -> Unit,
+    viewModel: CheckViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val promptManager = BiometricPromptManager(context as AppCompatActivity)
@@ -92,38 +92,40 @@ fun CheckScreen(
     biometricResult?.let { result ->
         when (result) {
             is BiometricPromptManager.BiometricResult.AuthenticationError -> {
-                Log.d("CheckScreen", "Lỗi biometric")
+                Timber.d("Lỗi biometric")
             }
 
             BiometricPromptManager.BiometricResult.AuthenticationFailed -> {
-                Log.d("CheckScreen", "Lỗi AuthenticationFailed")
+                Timber.d("Lỗi AuthenticationFailed")
             }
 
             BiometricPromptManager.BiometricResult.AuthenticationNotSet -> {
-                Log.d("CheckScreen", "Lỗi AuthenticationNotSet")
+                Timber.d("Lỗi AuthenticationNotSet")
             }
 
             is BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
-                Log.d("CheckScreen", "AuthenticationSuccess")
+                Timber.d("AuthenticationSuccess")
             }
 
             BiometricPromptManager.BiometricResult.FeatureUnavailable -> {
-                Log.d("CheckScreen", "Lỗi FeatureUnavailable")
+                Timber.d("Lỗi FeatureUnavailable")
             }
 
             BiometricPromptManager.BiometricResult.HardwareUnavailable -> {
-                Log.d("CheckScreen", "Lỗi HardwareUnavailable")
+                Timber.d("Lỗi HardwareUnavailable")
             }
         }
     }
 
+    //State
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     // Dialog
-    var dialogContent by remember  { mutableStateOf("") }
-    var isSuccess by remember  { mutableStateOf(true) }
-    var isVisible by remember  { mutableStateOf(false) }
-    ObserveAsEvents(channel) {
-        when(it) {
+    var dialogContent by remember { mutableStateOf("") }
+    var isSuccess by remember { mutableStateOf(true) }
+    var isVisible by remember { mutableStateOf(false) }
+    ObserveAsEvents(viewModel.channel) {
+        when (it) {
             CheckUiEvent.CheckSuccess -> {
                 dialogContent = context.getString(R.string.check_success)
                 isVisible = true
@@ -141,7 +143,7 @@ fun CheckScreen(
         }
     }
 
-    if(isVisible) {
+    if (isVisible) {
         SuccessDialog(isSuccess, dialogContent, { isVisible = false })
     }
 
@@ -206,15 +208,23 @@ fun CheckScreen(
                                         .align(Alignment.Center)
                                 )
                             }
+
                             state.todayShifts.isEmpty() -> {
                                 NoDataWarning()
                             }
+
                             else -> {
                                 Column {
                                     state.todayShifts.forEach { shift ->
                                         ShiftCard(
                                             shift,
-                                            onClick = { action(CheckUiAction.ChooseShift(shift)) }
+                                            onClick = {
+                                                viewModel.onAction(
+                                                    CheckUiAction.ChooseShift(
+                                                        shift
+                                                    )
+                                                )
+                                            }
                                         )
                                     }
                                 }
@@ -239,7 +249,7 @@ fun CheckScreen(
                     ) {
                         MapContent(
                         ) { currentLocation ->
-                            action(CheckUiAction.UpdateCurrentLocation(currentLocation))
+                            viewModel.onAction(CheckUiAction.UpdateCurrentLocation(currentLocation))
                         }
                     }
                 }
@@ -273,13 +283,13 @@ fun CheckScreen(
                         .padding(vertical = 40.dp)
                 ) {
                     ShiftCheckDetailBottom(
-                        state.choosenShift?: Shift(0,0, "", "","","",0.0f,0)
+                        state.choosenShift ?: Shift(0, 0, "", "", "", "", 0.0f, 0)
                     ) { checkType ->
                         promptManager.showBiometricPrompt(
                             title = "Sample prompt",
                             desc = "Sample prompt description"
                         ) {
-                            action(CheckUiAction.Check(checkType))
+                            viewModel.onAction(CheckUiAction.Check(checkType))
                         }
                     }
                 }

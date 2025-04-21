@@ -9,9 +9,6 @@ import com.example.worktimetracker.data.local.db.dao.UserSessionDao
 import com.example.worktimetracker.data.local.db.entity.UserSession
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiAction
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiEvent
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.retrofit.statusCode
 import com.skydoves.sandwich.suspendOnError
@@ -141,3 +138,34 @@ class LoginViewModel @Inject constructor(
        }
     }
 }
+
+sealed interface LoginUiEvent {
+    data class UserNotFound(val msg: String) : LoginUiEvent
+    data class WrongPassword(val msg: String) : LoginUiEvent
+
+    data object Success : LoginUiEvent
+    data class Failure(val msg: String) : LoginUiEvent
+}
+
+
+sealed interface LoginUiAction {
+    data class OnUsernameChange(val username: String) : LoginUiAction
+    data class OnPasswordChange(val password: String) : LoginUiAction
+    data object Login : LoginUiAction
+    data class OnRememberLogin(val isRemember: Boolean) : LoginUiAction
+}
+
+data class LoginUiState(
+    val isLoading: Boolean = false,
+
+    val username: String = "",
+    val isUsernameEmpty: Boolean = false,
+
+    val password: String = "",
+    val isPasswordEmpty: Boolean = false,
+
+    val error: Int = 0,
+    val isError: Boolean = false,
+
+    val rememberLogin: Boolean = false
+)

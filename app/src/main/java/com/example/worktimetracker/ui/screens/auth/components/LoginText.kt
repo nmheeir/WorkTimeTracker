@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.worktimetracker.ui.screens.auth.login.LoginUiState
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
+import com.example.worktimetracker.ui.viewmodels.LoginUiState
 
 @Composable
 fun LoginTextField(

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.0"
+agp = "8.9.0"
 appcompat = "1.7.0"
 biometric = "1.1.0"
 clock = "1.3.0"
@@ -53,7 +53,6 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "core" }
 clock = { module = "com.maxkeppeler.sheets-compose-dialogs:clock", version.ref = "clock" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }

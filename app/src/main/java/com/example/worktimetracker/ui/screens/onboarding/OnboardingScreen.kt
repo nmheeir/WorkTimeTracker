@@ -1,3 +1,5 @@
+package com.example.worktimetracker.ui.screens.onboarding
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,23 +29,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.worktimetracker.ui.navigation.Screens
-import com.example.worktimetracker.ui.screens.onboarding.OnboardingUiEvent
 import com.example.worktimetracker.ui.screens.onboarding.component.OnBoardingPageData
 import com.example.worktimetracker.ui.screens.onboarding.component.PageIndicator
 import com.example.worktimetracker.ui.screens.onboarding.component.pages
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
-import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
+import com.example.worktimetracker.ui.viewmodels.OnboardingUiEvent
+import com.example.worktimetracker.ui.viewmodels.OnboardingViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
     onNavigateTo: (Screens) -> Unit,
-    event: (OnboardingUiEvent) -> Unit
+    viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     val pageState = rememberPagerState(initialPage = 0) {
         pages.size
@@ -53,7 +55,7 @@ fun OnboardingScreen(
         items = pages,
         pagerState = pageState,
         onNavigateTo = onNavigateTo,
-        event = event
+        event = viewModel::onEvent
     )
 }
 
@@ -76,8 +78,11 @@ fun OnboardingPage(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()
-        .background(Color.White)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.6f)
@@ -148,16 +153,5 @@ fun OnboardingPage(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun OnboardingScreenPreview() {
-    WorkTimeTrackerTheme {
-        OnboardingScreen(
-            onNavigateTo = {},
-            event = {}
-        )
     }
 }

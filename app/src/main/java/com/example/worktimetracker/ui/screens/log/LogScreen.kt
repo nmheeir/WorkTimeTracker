@@ -61,6 +61,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Log
@@ -71,6 +74,7 @@ import com.example.worktimetracker.ui.component.dateTimePicker.CalendarDialog
 import com.example.worktimetracker.ui.component.dateTimePicker.TimePickerDialog
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.theme.AppTheme
+import com.example.worktimetracker.ui.viewmodels.LogViewModel
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalTime
@@ -80,10 +84,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogScreen(
-    state: LogUiState,
-    onBack: () -> Unit,
-    action: (LogUiAction) -> Unit,
-    channel: Flow<LogUiEvent>
+    navController: NavHostController,
+    viewModel: LogViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
@@ -92,11 +94,14 @@ fun LogScreen(
     var selectedTab by remember { mutableStateOf(LogStatus.PENDING) }
 
     // Dialog
-    var dialogContent by remember  { mutableStateOf("") }
-    var isSuccess by remember  { mutableStateOf(true) }
-    var isVisible by remember  { mutableStateOf(false) }
-    ObserveAsEvents(channel) {
-        when(it) {
+    var dialogContent by remember { mutableStateOf("") }
+    var isSuccess by remember { mutableStateOf(true) }
+    var isVisible by remember { mutableStateOf(false) }
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.channel) {
+        when (it) {
             LogUiEvent.CreateLogSuccess -> {
                 dialogContent = context.getString(R.string.create_log_success)
                 isVisible = true
@@ -114,7 +119,7 @@ fun LogScreen(
         }
     }
 
-    if(isVisible) {
+    if (isVisible) {
         SuccessDialog(isSuccess, dialogContent, { isVisible = false })
     }
 
@@ -145,7 +150,11 @@ fun LogScreen(
                     contentDescription = if (showRegistrationForm) "Close form" else "Add log"
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(if (showRegistrationForm) stringResource(R.string.cancel_register_log) else stringResource(R.string.register_log))
+                Text(
+                    if (showRegistrationForm) stringResource(R.string.cancel_register_log) else stringResource(
+                        R.string.register_log
+                    )
+                )
             }
         }
 
@@ -157,7 +166,7 @@ fun LogScreen(
                 exit = shrinkVertically() + fadeOut()
             ) {
                 LogRegistrationForm(
-                    action = action,
+                    action = viewModel::onAction,
                     logType = state.type,
                     time = state.time,
                     date = state.date,
@@ -221,9 +230,21 @@ fun LogSummary(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                LogStatistic(LogStatus.PENDING.displayStatus(), pendingLogs.toString(), Icons.Default.Pending)
-                LogStatistic(LogStatus.APPROVED.displayStatus(), approvedLog.toString(), Icons.Default.CheckCircle)
-                LogStatistic(LogStatus.REJECTED.displayStatus(), rejectedLog.toString(), Icons.Default.Cancel)
+                LogStatistic(
+                    LogStatus.PENDING.displayStatus(),
+                    pendingLogs.toString(),
+                    Icons.Default.Pending
+                )
+                LogStatistic(
+                    LogStatus.APPROVED.displayStatus(),
+                    approvedLog.toString(),
+                    Icons.Default.CheckCircle
+                )
+                LogStatistic(
+                    LogStatus.REJECTED.displayStatus(),
+                    rejectedLog.toString(),
+                    Icons.Default.Cancel
+                )
             }
 
             Divider(color = Color.White.copy(alpha = 0.1f))
@@ -283,10 +304,10 @@ fun LogStatistic(
 @Composable
 fun LogRegistrationForm(
     action: (LogUiAction) -> Unit,
-     logType: LogType = LogType.CHECK_IN,
-     time: LocalTime = LocalTime.now(),
-     date: LocalDate = LocalDate.now(),
-     reason : String = "",
+    logType: LogType = LogType.CHECK_IN,
+    time: LocalTime = LocalTime.now(),
+    date: LocalDate = LocalDate.now(),
+    reason: String = "",
 ) {
     var showClockDialog by remember { mutableStateOf(false) }
     var showCalendarDialog by remember { mutableStateOf(false) }
@@ -366,7 +387,7 @@ fun LogRegistrationForm(
                 LogType.entries.forEach { type ->
                     FilterChip(
                         selected = logType == type,
-                        onClick = {  action(LogUiAction.OnLogTypeChange(type)) },
+                        onClick = { action(LogUiAction.OnLogTypeChange(type)) },
                         label = { Text(type.name.replace('_', ' ')) },
                         modifier = Modifier.weight(1f)
                     )
@@ -403,8 +424,7 @@ fun LogRegistrationForm(
 
     if (showClockDialog) {
         TimePickerDialog(
-            event = {
-                    selectedTime ->
+            event = { selectedTime ->
                 selectedTime?.let {
                     action(LogUiAction.OnTimeChange(it))
                 }
@@ -470,7 +490,9 @@ fun LogTabs(
 @Composable
 fun LogList(type: LogStatus, logList: List<Log>) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().heightIn(max = 80.dp * 7),
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 80.dp * 7),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
@@ -485,7 +507,9 @@ fun LogList(type: LogStatus, logList: List<Log>) {
 @Composable
 fun LogItem(log: Log) {
     Card(
-        modifier = Modifier.fillMaxWidth().height(80.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp),
         colors = CardDefaults.cardColors(
             containerColor = AppTheme.colors.regularSurface
         ),
@@ -500,7 +524,9 @@ fun LogItem(log: Log) {
         ) {
             Column {
                 Text(
-                    text = if (log.type == 0) stringResource(R.string.check_in) else stringResource(R.string.check_out),
+                    text = if (log.type == 0) stringResource(R.string.check_in) else stringResource(
+                        R.string.check_out
+                    ),
                     style = MaterialTheme.typography.titleMedium,
                     color = AppTheme.colors.onRegularSurface,
                     fontWeight = FontWeight.Bold

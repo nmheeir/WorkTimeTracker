@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,9 +15,11 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.main.component.ConnectivityStatus
-import com.example.worktimetracker.ui.navigation.NavGraph
+import com.example.worktimetracker.ui.navigation.navigationBuilder
 import com.example.worktimetracker.ui.theme.WorkTimeTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge( 
+        enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
                 Color.TRANSPARENT, Color.TRANSPARENT
             )
@@ -53,14 +56,38 @@ class MainActivity : AppCompatActivity() {
                             .safeDrawingPadding()
                             .fillMaxSize()
                     ) {
-                        Column (
+                        Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             ConnectivityStatus()
-                            NavGraph(
-                                sDestination = viewModel.startDestination.value,
-                                navController = navController,
-                            )
+                            LinearBackground {
+                                NavHost(
+                                    startDestination = viewModel.startDestination.value,
+                                    navController = navController,
+                                    enterTransition = {
+                                        slideIntoContainer(
+                                            AnimatedContentTransitionScope.SlideDirection.Left
+                                        )
+                                    },
+                                    exitTransition = {
+                                        slideOutOfContainer(
+                                            AnimatedContentTransitionScope.SlideDirection.Left
+                                        )
+                                    },
+                                    popEnterTransition = {
+                                        slideIntoContainer(
+                                            AnimatedContentTransitionScope.SlideDirection.Right
+                                        )
+                                    },
+                                    popExitTransition = {
+                                        slideOutOfContainer(
+                                            AnimatedContentTransitionScope.SlideDirection.Right
+                                        )
+                                    }
+                                ) {
+                                    navigationBuilder(navController)
+                                }
+                            }
                         }
                     }
                 }

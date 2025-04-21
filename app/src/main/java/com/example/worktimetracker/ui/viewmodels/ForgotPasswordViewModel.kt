@@ -9,7 +9,6 @@ import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiAction
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiEvent
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiState
-import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPasswordUiEvent
 import com.example.worktimetracker.ui.util.isValidEmail
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.retrofit.errorBody
@@ -171,4 +170,9 @@ class ForgotPasswordViewModel @Inject constructor(
         }
     }
 
+}
+
+sealed class CreateNewPasswordUiEvent {
+    data object ResetPasswordSuccess : CreateNewPasswordUiEvent()
+    data class ResetPasswordFailure(val msg: String) : CreateNewPasswordUiEvent()
 }

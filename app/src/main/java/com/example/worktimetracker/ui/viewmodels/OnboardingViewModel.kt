@@ -3,7 +3,6 @@ package com.example.worktimetracker.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
-import com.example.worktimetracker.ui.screens.onboarding.OnboardingUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,10 +17,6 @@ class OnboardingViewModel @Inject constructor(
             OnboardingUiEvent.SaveAppEntry -> {
                 saveAppEntry()
             }
-
-            else -> {
-                // Do nothing
-            }
         }
     }
 
@@ -30,4 +25,8 @@ class OnboardingViewModel @Inject constructor(
             appEntryUseCase.saveAppEntry()
         }
     }
+}
+
+sealed class OnboardingUiEvent {
+    data object SaveAppEntry : OnboardingUiEvent()
 }
