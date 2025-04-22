@@ -1,8 +1,11 @@
 package com.example.worktimetracker.data.remote.response
 
+import com.example.worktimetracker.data.remote.enums.EmployeeType
+import com.example.worktimetracker.data.remote.enums.Role
+
 data class User(
     val address: String,
-    val avatarURL: String,
+    val avatarUrl: String? = null,
     val company: Company? = null,
     val companyId: Int? = null,
     val companyTeam: Team? = null,
@@ -10,11 +13,11 @@ data class User(
     val department: String,
     val designation: String,
     val email: String,
-    val employeeType: Int,
+    val employeeType: EmployeeType,
     val id: Int,
     val password: String,
     val phoneNumber: String,
-    val role: Int,
+    val role: Role,
     val teamId: Int? = null,
     val userFullName: String,
     val userName: String

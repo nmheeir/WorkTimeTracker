@@ -1,5 +1,6 @@
 package com.example.worktimetracker.data.remote.response
 
+import com.example.worktimetracker.data.remote.enums.CheckType
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -12,14 +13,6 @@ data class Check(
     @SerializedName("checkTime") val checkTime: Long,
     @SerializedName("user") val user: User? = null
 ) {
-    fun checkType(): String {
-        return when (checkType) {
-            0 -> CheckType.CHECKIN.displayStatus()
-            1 -> CheckType.CHECKOUT.displayStatus()
-            else -> "UNKNOWN"
-        }
-    }
-
     fun getDateForCheck() : String {
         val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
         val date = Date(checkTime)
@@ -37,16 +30,4 @@ data class Check(
         val date = Date(checkTime)
         return dateFormat.format(date).toInt()
     }
-}
-
-enum class CheckType {
-    CHECKIN,
-    CHECKOUT;
-
-    fun displayStatus(): String {
-        return this.name.lowercase().replaceFirstChar {
-            it.uppercase()
-        }
-    }
-
 }

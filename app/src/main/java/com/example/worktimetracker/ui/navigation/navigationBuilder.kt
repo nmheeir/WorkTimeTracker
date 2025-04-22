@@ -146,4 +146,8 @@ fun NavGraphBuilder.navigationBuilder(
     composable(route = Screens.PrivacyScreen.route) {
         PrivacyPolicyScreen(navController)
     }
+
+    composable(route = Screens.Notification.route) {
+        Text(text = "Notification")
+    }
 }

@@ -5,6 +5,7 @@ import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.User
 import com.example.worktimetracker.data.remote.repo.UserRepository
 import com.skydoves.sandwich.ApiResponse
+import java.time.LocalDateTime
 
 class UserRepositoryImpl(
     private val userApi: UserApi
@@ -24,4 +25,10 @@ class UserRepositoryImpl(
     ): ApiResponse<DataResponse<User>> {
         return userApi.uploadAvatar(token, avatarUrl)
     }
+
+    override suspend fun getUserActivity(
+        token: String,
+        start: LocalDateTime?,
+        end: LocalDateTime?
+    ) = userApi.getUserActivity(token, start, end)
 }

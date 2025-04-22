@@ -1,6 +1,6 @@
 package com.example.worktimetracker.ui.screens.log
 
-import com.example.worktimetracker.data.remote.response.Log
+import com.example.worktimetracker.data.remote.response.LogModel
 import com.example.worktimetracker.data.remote.response.LogType
 import java.time.LocalDate
 import java.time.LocalTime
@@ -11,5 +11,5 @@ data class LogUiState(
     val time: LocalTime = LocalTime.now(),
     val date: LocalDate = LocalDate.now(),
     val reason : String = "",
-    val listLog: List<Log> = emptyList(),
+    val listLog: List<LogModel> = emptyList(),
 )

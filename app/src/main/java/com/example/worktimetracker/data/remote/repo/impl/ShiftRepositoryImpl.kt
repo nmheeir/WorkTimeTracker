@@ -5,16 +5,17 @@ import com.example.worktimetracker.data.remote.response.PagedDataResponse
 import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.data.remote.repo.ShiftRepository
 import com.skydoves.sandwich.ApiResponse
+import java.time.LocalDateTime
 
 class ShiftRepositoryImpl(
     private val shiftApi: ShiftApi
 ) : ShiftRepository {
     override suspend fun getMyShift(
-        start: String? ,
-        end: String? ,
-        token : String
+        start: LocalDateTime?,
+        end: LocalDateTime?,
+        token: String
     ): ApiResponse<PagedDataResponse<List<Shift>>> {
-        return shiftApi.getMyShift(start, end, token)
+        return shiftApi.getMyShift(start, end, "Bearer $token")
     }
 
     override suspend fun getMyShiftsByDate(

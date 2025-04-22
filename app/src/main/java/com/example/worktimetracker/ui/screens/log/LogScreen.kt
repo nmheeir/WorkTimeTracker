@@ -66,7 +66,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
-import com.example.worktimetracker.data.remote.response.Log
+import com.example.worktimetracker.data.remote.enums.CheckType
+import com.example.worktimetracker.data.remote.response.LogModel
 import com.example.worktimetracker.data.remote.response.LogStatus
 import com.example.worktimetracker.data.remote.response.LogType
 import com.example.worktimetracker.helper.ISOFormater
@@ -75,7 +76,6 @@ import com.example.worktimetracker.ui.component.dateTimePicker.TimePickerDialog
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.LogViewModel
-import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -202,11 +202,11 @@ fun LogScreen(
 
 @Composable
 fun LogSummary(
-    logList: List<Log>
+    logList: List<LogModel>
 ) {
-    val pendingLogs = logList.filter { it.status == 0 }.size
-    val approvedLog = logList.filter { it.status == 1 }.size
-    val rejectedLog = logList.filter { it.status == 2 }.size
+    val pendingLogs = logList.filter { it.status == LogStatus.PENDING }.size
+    val approvedLog = logList.filter { it.status == LogStatus.APPROVED }.size
+    val rejectedLog = logList.filter { it.status == LogStatus.REJECTED }.size
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -457,7 +457,7 @@ fun LogRegistrationForm(
 fun LogTabs(
     selectedTab: LogStatus,
     onTabSelected: (LogStatus) -> Unit,
-    logList: List<Log>,
+    logList: List<LogModel>,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -488,7 +488,7 @@ fun LogTabs(
 }
 
 @Composable
-fun LogList(type: LogStatus, logList: List<Log>) {
+fun LogList(type: LogStatus, logList: List<LogModel>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -496,7 +496,7 @@ fun LogList(type: LogStatus, logList: List<Log>) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        items(logList.filter { it.status == type.ordinal }) { log ->
+        items(logList.filter { it.status == type }) { log ->
             LogItem(
                 log = log
             )
@@ -505,7 +505,7 @@ fun LogList(type: LogStatus, logList: List<Log>) {
 }
 
 @Composable
-fun LogItem(log: Log) {
+fun LogItem(log: LogModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -524,7 +524,7 @@ fun LogItem(log: Log) {
         ) {
             Column {
                 Text(
-                    text = if (log.type == 0) stringResource(R.string.check_in) else stringResource(
+                    text = if (log.type == CheckType.CheckIn) stringResource(R.string.check_in) else stringResource(
                         R.string.check_out
                     ),
                     style = MaterialTheme.typography.titleMedium,
@@ -540,9 +540,9 @@ fun LogItem(log: Log) {
 
             Icon(
                 imageVector = when (log.status) {
-                    0 -> Icons.Default.Pending
-                    1 -> Icons.Default.CheckCircle
-                    else -> Icons.Default.Cancel
+                    LogStatus.PENDING -> Icons.Default.Pending
+                    LogStatus.APPROVED -> Icons.Default.CheckCircle
+                    LogStatus.REJECTED -> Icons.Default.Cancel
                 },
                 contentDescription = null,
                 tint = AppTheme.colors.onRegularSurface

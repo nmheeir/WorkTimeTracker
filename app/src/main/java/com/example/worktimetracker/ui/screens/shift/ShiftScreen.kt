@@ -187,7 +187,7 @@ fun ShiftCardForShiftScreen(
                         color = Color.White.copy(alpha = 0.7f)
                     )
                     Text(
-                        text = shift.checkRecord?.workTime.toString() ?: "0.0",
+                        text = shift.workDuration.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
                     )

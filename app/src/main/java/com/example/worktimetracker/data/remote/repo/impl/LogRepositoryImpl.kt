@@ -3,7 +3,7 @@ package com.example.worktimetracker.data.remote.repo.impl
 import com.example.worktimetracker.data.remote.api.LogApi
 import com.example.worktimetracker.data.remote.request.CreateLogRequest
 import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.data.remote.response.Log
+import com.example.worktimetracker.data.remote.response.LogModel
 import com.example.worktimetracker.data.remote.repo.LogRepository
 import com.skydoves.sandwich.ApiResponse
 
@@ -13,13 +13,13 @@ class LogRepositoryImpl(
     override suspend fun createLog(
         log: CreateLogRequest,
         token: String
-    ): ApiResponse<DataResponse<Log>> {
+    ): ApiResponse<DataResponse<LogModel>> {
         return logApi.createLog(log, "Bearer $token")
     }
 
     override suspend fun getLogs(
         token: String
-    ): ApiResponse<DataResponse<List<Log>>> {
+    ): ApiResponse<DataResponse<List<LogModel>>> {
         return logApi.getLogs("Bearer $token")
     }
 }

@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.data.remote.response.Shift
+import com.example.worktimetracker.data.remote.response.ShiftType
 import com.example.worktimetracker.ui.component.common.NoDataWarning
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.navigation.Screens
@@ -57,6 +58,7 @@ import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.util.BiometricPromptManager
 import com.example.worktimetracker.ui.viewmodels.CheckViewModel
 import timber.log.Timber
+import java.time.LocalDateTime
 
 @Composable
 fun CheckScreen(
@@ -283,7 +285,14 @@ fun CheckScreen(
                         .padding(vertical = 40.dp)
                 ) {
                     ShiftCheckDetailBottom(
-                        state.choosenShift ?: Shift(0, 0, "", "", "", "", 0.0f, 0)
+                        state.choosenShift ?: Shift(
+                            id = 0,
+                            start = LocalDateTime.now(),
+                            end = LocalDateTime.now(),
+                            checkIn = LocalDateTime.now(),
+                            workDuration = 8f,
+                            shiftType = ShiftType.Normal,
+                        )
                     ) { checkType ->
                         promptManager.showBiometricPrompt(
                             title = "Sample prompt",

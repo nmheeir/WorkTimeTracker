@@ -8,7 +8,6 @@ import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
-import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.screens.shift.ShiftUiAction
 import com.example.worktimetracker.ui.screens.shift.ShiftUiEvent
 import com.example.worktimetracker.ui.screens.shift.ShiftUiState
@@ -55,7 +54,8 @@ class ShiftViewModel @Inject constructor(
             // Xử lý các sự kiện khác nếu có
         }
     }
-    private fun getMyShiftsInMonth (month : Int, year : Int) {
+
+    private fun getMyShiftsInMonth(month: Int, year: Int) {
         viewModelScope.launch {
             val token = localUserManager.readAccessToken()
 
@@ -70,13 +70,14 @@ class ShiftViewModel @Inject constructor(
                 day = null,
                 month = month,
                 year = year,
-                includeCheckRecord = true)
+                includeCheckRecord = true
+            )
                 .suspendOnSuccess {
                     val shiftList = this.data.data ?: emptyList()
-                    val shiftMap : MutableMap<Int, MutableList<Shift>> = HashMap()
+                    val shiftMap: MutableMap<Int, MutableList<Shift>> = HashMap()
                     shiftList.forEach { shift ->
                         // Nếu date đã có trong shiftMap, thêm vào danh sách
-                        val date = ISOFormater.Companion.fromISODateTimetoLocalDateTime(shift.start).dayOfMonth
+                        val date = shift.start.dayOfMonth
                         if (shiftMap.containsKey((date))) {
                             shiftMap[date]?.add(shift)
                         } else {

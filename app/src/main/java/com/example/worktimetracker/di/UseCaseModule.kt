@@ -29,6 +29,7 @@ import com.example.worktimetracker.domain.use_case.summary.GetMyPayCheck
 import com.example.worktimetracker.domain.use_case.summary.GetTotalWorkTime
 import com.example.worktimetracker.domain.use_case.summary.GetWorkTimeEachDay
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
+import com.example.worktimetracker.domain.use_case.user.GetUserActivity
 import com.example.worktimetracker.domain.use_case.user.GetUserByUserName
 import com.example.worktimetracker.domain.use_case.user.GetUserProfile
 import com.example.worktimetracker.domain.use_case.user.UploadAvatar
@@ -74,7 +75,8 @@ class UseCaseModule {
         return UserUseCase(
             getUserByUserName = GetUserByUserName(userRepository),
             getUserProfile = GetUserProfile(userRepository),
-            uploadAvatar = UploadAvatar(userRepository)
+            uploadAvatar = UploadAvatar(userRepository),
+            getUserActivity = GetUserActivity(userRepository)
         )
     }
 

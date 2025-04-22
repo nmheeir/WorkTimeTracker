@@ -1,7 +1,7 @@
 package com.example.worktimetracker.ui.navigation
 
 sealed class Screens(
-    val route : String,
+    val route: String,
 ) {
     //Onboarding Screen
     data object OnboardingScreen : Screens("Onboarding")
@@ -16,11 +16,13 @@ sealed class Screens(
     data object HomeScreen : Screens("Home") {
         val screensWithArgs = "${Screens.HomeScreen.route}/{name}"
     }
+
     data object LeavesScreen : Screens("Leaves")
-     data object AttendanceScreen : Screens("Attendance")
+    data object AttendanceScreen : Screens("Attendance")
     data object ActivitySrceen : Screens("Activity")
+
     //Profile
-     data object ProfileScreen : Screens("Profile")
+    data object ProfileScreen : Screens("Profile")
     data object MyProfileScreen : Screens("MyProfile")
     data object SettingScreen : Screens("Setting")
     data object TermConditionScreen : Screens("TermCondition")
@@ -37,8 +39,6 @@ sealed class Screens(
     data object CheckScreen : Screens("Check")
     data object ShiftCheckScreen : Screens("ShiftCheck")
 
-    //Navigator
-    data object AuthNavigator : Screens("AuthNavigator")
-    data object CheckNavigator : Screens("CheckNavigator")
-
+    //Notification
+    data object Notification : Screens("Notification")
 }

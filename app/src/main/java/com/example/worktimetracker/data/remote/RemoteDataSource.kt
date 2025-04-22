@@ -1,11 +1,18 @@
 package com.example.worktimetracker.data.remote
 
 import com.example.worktimetracker.BuildConfig
+import com.example.worktimetracker.data.remote.adapters.EmployeeTypeAdapter
+import com.example.worktimetracker.data.remote.adapters.LocalDateTimeAdapter
+import com.example.worktimetracker.data.remote.adapters.RoleAdapter
+import com.example.worktimetracker.data.remote.enums.EmployeeType
+import com.example.worktimetracker.data.remote.enums.Role
+import com.google.gson.GsonBuilder
 import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -24,10 +31,16 @@ class RemoteDataSource @Inject constructor() {
             .writeTimeout(10, TimeUnit.SECONDS)
             .build()
 
+        val gson = GsonBuilder()
+            .registerTypeAdapter(EmployeeType::class.java, EmployeeTypeAdapter())
+            .registerTypeAdapter(Role::class.java, RoleAdapter())
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
+            .create()
+
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
             .create(api)

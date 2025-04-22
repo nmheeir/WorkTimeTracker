@@ -1,20 +1,18 @@
 package com.example.worktimetracker.data.remote.response
 
+import java.time.LocalDateTime
+
 
 data class Shift(
-    val id : Int,
-    val userId: Int,
-    val start: String,
-    val end: String,
-    val checkIn: String,
-    val checkOut: String,
+    val id: Int,
+    val start: LocalDateTime,
+    val end: LocalDateTime,
+    val checkIn: LocalDateTime? = null,
+    val checkOut: LocalDateTime? = null,
     val workDuration: Float,
-    val shiftType: Int,
-    val checkRecord: CheckRecord? = null
-) {
-    val shiftTypeEnum: ShiftType
-        get() = ShiftType.entries.toTypedArray().getOrElse(shiftType) { ShiftType.Normal }
-}
+    val shiftType: ShiftType,
+    val user: User? = null,
+)
 
 enum class ShiftType {
     Normal,
