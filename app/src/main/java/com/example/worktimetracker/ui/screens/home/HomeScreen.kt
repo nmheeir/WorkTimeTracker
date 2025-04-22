@@ -233,6 +233,9 @@ private fun HomeTopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         modifier = modifier
+            .clickable {
+                onNavigate(Screens.MyProfileScreen)
+            }
             .padding(MaterialTheme.padding.mediumSmall)
     ) {
         CircleImage(
@@ -242,9 +245,7 @@ private fun HomeTopBar(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .clickable {
-                    onNavigate(Screens.MyProfileScreen)
-                }
+
         ) {
             Text(
                 text = user.userName,

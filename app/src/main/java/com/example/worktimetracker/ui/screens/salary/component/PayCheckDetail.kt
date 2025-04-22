@@ -51,65 +51,40 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaycheckDetail(
-    item : PayCheck,
-    onBack: () -> Unit
+    item: PayCheck,
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        // Header
+        Text(
+            text = "Paycheck Detail",
+            style = MaterialTheme.typography.headlineMedium,
+            color = AppTheme.colors.onBackground,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
 
-    Scaffold(
-        containerColor = Color.Transparent,
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Paycheck Details", style = MaterialTheme.typography.titleLarge, color = AppTheme.colors.onBackground) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_left),
-                            contentDescription = null,
-                            tint = AppTheme.colors.onBackground
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
-            )
-        },
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            // Header
-            Text(
-                text = "Paycheck Detail",
-                style = MaterialTheme.typography.headlineMedium,
-                color = AppTheme.colors.onBackground,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
+        // Total Income Card
+        TotalIncomeCard(item.totalIncome)
 
-            // Total Income Card
-            TotalIncomeCard(item.totalIncome)
+        Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+        // Working Hours Breakdown
+        WorkingHoursCard(
+            totalHours = item.totalWorkTime,
+            normalHours = item.normalWork,
+            overtimeHours = item.overtimeWork,
+            nightHours = item.nightWork
+        )
 
-            // Working Hours Breakdown
-            WorkingHoursCard(
-                totalHours = item.totalWorkTime,
-                normalHours = item.normalWork,
-                overtimeHours = item.overtimeWork,
-                nightHours = item.nightWork
-            )
+        Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Allowance Card
-            AllowanceCard(item.allowanced)
-        }
+        // Allowance Card
+        AllowanceCard(item.allowanced)
     }
+
 }
 
 @Composable

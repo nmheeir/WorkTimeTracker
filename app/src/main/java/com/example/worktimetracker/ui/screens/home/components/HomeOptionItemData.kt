@@ -110,12 +110,6 @@ val listHomeOption = listOf(
         color = R.color.green
     ),
     HomeOptionItemData(
-        screens = Screens.SalaryScreen,
-        title = "Salary",
-        icon = R.drawable.ic_dollar_money,
-        color = R.color.green
-    ),
-    HomeOptionItemData(
         screens = Screens.ShiftScreen,
         title = "Shift",
         icon = R.drawable.ic_calendar,

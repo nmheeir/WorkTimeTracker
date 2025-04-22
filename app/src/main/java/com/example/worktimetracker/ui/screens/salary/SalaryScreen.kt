@@ -1,6 +1,10 @@
 package com.example.worktimetracker.ui.screens.salary
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,15 +18,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.navigation.Screens
-import com.example.worktimetracker.ui.screens.salary.component.PayCheckList
+import com.example.worktimetracker.ui.screens.salary.component.PayCheckItem
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.SalaryViewModel
 
@@ -34,7 +39,7 @@ fun SalaryScreen(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val payChecks by viewModel.payChecks.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -63,16 +68,19 @@ fun SalaryScreen(
             )
         },
     ) { paddingValues ->
-        PayCheckList(
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .padding(paddingValues),
-            state = state,
-            onShowPayCheckDetail = { payCheck ->
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    key = "paycheck", value = payCheck
-                )
-                navController.navigate(Screens.PayCheckDetail.route)
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            items(
+                items = payChecks,
+                key = { it.id }
+            ) { payCheck ->
+                PayCheckItem(item = payCheck)
             }
-        )
+        }
     }
 }

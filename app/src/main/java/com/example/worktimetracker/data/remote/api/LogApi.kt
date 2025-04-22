@@ -16,7 +16,7 @@ interface LogApi {
         @Header("Authorization") token: String
     ): ApiResponse<DataResponse<LogModel>>
 
-    @GET("Log/getLogs")
+    @GET("Log/logs")
     suspend fun getLogs(
         @Header("Authorization") token: String
     ): ApiResponse<DataResponse<List<LogModel>>>
