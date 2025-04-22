@@ -54,7 +54,7 @@ import com.example.worktimetracker.core.presentation.ui.HideOnScrollComponent
 import com.example.worktimetracker.data.remote.enums.CheckType
 import com.example.worktimetracker.data.remote.response.CheckInfo
 import com.example.worktimetracker.data.remote.response.User
-import com.example.worktimetracker.ui.component.ShiftCardItem
+import com.example.worktimetracker.ui.component.item.ShiftCardItem
 import com.example.worktimetracker.ui.component.image.CircleImage
 import com.example.worktimetracker.ui.component.preferences.PreferenceEntry
 import com.example.worktimetracker.ui.navigation.Screens

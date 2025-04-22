@@ -11,7 +11,6 @@ import com.example.worktimetracker.core.presentation.util.TokenKey
 import com.example.worktimetracker.core.presentation.util.dataStore
 import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.core.presentation.util.set
-import com.example.worktimetracker.data.local.db.dao.UserSessionDao
 import com.example.worktimetracker.data.local.db.entity.UserSession
 import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
@@ -35,7 +34,6 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val authUseCase: AuthUseCase,
-    private val userSessionDao: UserSessionDao,
     private val userUseCase: UserUseCase
 ) : ViewModel() {
 
@@ -94,15 +92,15 @@ class LoginViewModel @Inject constructor(
                     if (token != null) {
                         context.dataStore.set(TokenKey, token)
 
-                        if (state.value.rememberLogin) {
-                            userSessionDao.insertUserSession(
-                                UserSession(
-                                    username = state.value.username,
-                                    password = state.value.password,
-                                    avatarUrl = ""
-                                )
-                            )
-                        }
+//                        if (state.value.rememberLogin) {
+//                            userSessionDao.insertUserSession(
+//                                UserSession(
+//                                    username = state.value.username,
+//                                    password = state.value.password,
+//                                    avatarUrl = ""
+//                                )
+//                            )
+//                        }
 
                         _channel.send(LoginUiEvent.Success)
                     }

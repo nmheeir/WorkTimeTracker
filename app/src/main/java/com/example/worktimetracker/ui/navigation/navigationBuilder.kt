@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import com.example.worktimetracker.ui.screens.NotificationScreen
 import com.example.worktimetracker.ui.screens.auth.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPasswordScreen
@@ -148,6 +149,6 @@ fun NavGraphBuilder.navigationBuilder(
     }
 
     composable(route = Screens.Notification.route) {
-        Text(text = "Notification")
+        NotificationScreen(navController)
     }
 }
