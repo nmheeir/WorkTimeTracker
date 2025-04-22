@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.theme.Typography
 import com.example.worktimetracker.ui.util.ProfileOption
@@ -27,7 +27,7 @@ import com.example.worktimetracker.ui.util.lOptionProfile
 @Composable
 fun OptionSection(
     modifier: Modifier = Modifier,
-    onNavigateTo: (Route) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -47,7 +47,7 @@ fun OptionSection(
 fun OptionSectionItem(
     modifier: Modifier = Modifier,
     profileOption: ProfileOption = lOptionProfile[0],
-    onNavigateTo: (Route) -> Unit,
+    onNavigateTo: (Screens) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(32.dp),
@@ -58,7 +58,7 @@ fun OptionSectionItem(
             .padding(8.dp)
             .clickable {
                 onNavigateTo(
-                    profileOption.route!!
+                    profileOption.screens!!
                 )
             }
     ) {

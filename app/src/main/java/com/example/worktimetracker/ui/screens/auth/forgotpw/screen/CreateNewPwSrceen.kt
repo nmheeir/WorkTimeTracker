@@ -1,8 +1,5 @@
 package com.example.worktimetracker.ui.screens.auth.forgotpw.screen
 
-import android.content.ContentValues.TAG
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -28,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,44 +30,44 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.worktimetracker.R
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
-import com.example.worktimetracker.ui.navigation.Route
+import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiAction
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordUiState
 import com.example.worktimetracker.ui.theme.Typography
+import com.example.worktimetracker.ui.viewmodels.CreateNewPasswordUiEvent
+import com.example.worktimetracker.ui.viewmodels.ForgotPasswordViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Eye
 import compose.icons.fontawesomeicons.solid.EyeSlash
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateNewPasswordScreen(
-    channel: Flow<CreateNewPasswordUiEvent>,
-    modifier: Modifier = Modifier,
-    action: (ForgotPasswordUiAction) -> Unit,
-    state: ForgotPasswordUiState,
-    onNavigateTo: (Route) -> Unit,
-    onBack: () -> Unit
+    onNavigateTo: (Screens) -> Unit,
+    onBack: () -> Unit,
+    viewModel: ForgotPasswordViewModel = hiltViewModel()
 ) {
-    Log.d(TAG, "Navigating to CreateNewPasswordScreen")
-
     val context = LocalContext.current
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.newPassword, state.confirmPassword) {
         delay(500)
-        action(ForgotPasswordUiAction.CheckPassword)
+        viewModel.onAction(ForgotPasswordUiAction.CheckPassword)
     }
 
-    var isVisible by remember  { mutableStateOf(false) }
-    var dialogContent by remember  { mutableStateOf("") }
-    var isSuccess by remember  { mutableStateOf(true) }
-    ObserveAsEvents(channel) {
+    var isVisible by remember { mutableStateOf(false) }
+    var dialogContent by remember { mutableStateOf("") }
+    var isSuccess by remember { mutableStateOf(true) }
+    ObserveAsEvents(viewModel.channel2) {
         when (it) {
             is CreateNewPasswordUiEvent.ResetPasswordFailure -> {
                 isVisible = true
@@ -88,7 +82,7 @@ fun CreateNewPasswordScreen(
             }
         }
     }
-    if(isVisible) {
+    if (isVisible) {
         SuccessDialog(isSuccess, dialogContent, { isVisible = false })
     }
 
@@ -129,17 +123,15 @@ fun CreateNewPasswordScreen(
             PasswordInputSection(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 state = state,
-                action = {
-                    action(it)
-                }
+                action = viewModel::onAction
             )
 
             Button(
                 onClick = {
                     if (state.newPassword == state.confirmPassword) {
-                        action(ForgotPasswordUiAction.ResetNewPassword)
+                        viewModel.onAction(ForgotPasswordUiAction.ResetNewPassword)
                     } else {
-                        action(ForgotPasswordUiAction.PasswordNotMatch)
+                        viewModel.onAction(ForgotPasswordUiAction.PasswordNotMatch)
                     }
                 },
 //                colors = ButtonDefaults.buttonColors(

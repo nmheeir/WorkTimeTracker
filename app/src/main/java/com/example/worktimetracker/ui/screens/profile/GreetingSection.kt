@@ -49,7 +49,7 @@ fun GreetingSection(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     var uri: Uri by remember {
-        mutableStateOf(state.user.avatarURL.toUri())
+        mutableStateOf((state.user.avatarUrl ?: "").toUri())
     }
     val singlePhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),

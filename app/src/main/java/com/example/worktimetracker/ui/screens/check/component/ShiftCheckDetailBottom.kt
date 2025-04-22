@@ -27,9 +27,6 @@ fun ShiftCheckDetailBottom(
     shift: Shift,
     btnOnclick: ( checkType: Int ) -> Unit
 ) {
-
-
-
     Column(
     ) {
         Row (

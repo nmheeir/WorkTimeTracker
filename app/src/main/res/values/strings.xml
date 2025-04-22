@@ -126,4 +126,9 @@
     <string name="create_new_pw">Create new password</string>
     <string name="new_pw_instruction">Your new password must contain 6 characters or more.</string>
     <string name="reset_pw_success_instruction">Your request is success, please check your email</string>
+
+    <!--    Plurals-->
+    <plurals name="n_selected">
+        <item quantity="other">%d selected</item>
+    </plurals>
 </resources>

@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,31 +32,40 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.component.Calendar.CalendarView
 import com.example.worktimetracker.ui.theme.AppTheme
-import kotlinx.coroutines.flow.Flow
+import com.example.worktimetracker.ui.viewmodels.ShiftViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShiftScreen(
-    action : (ShiftUiAction) -> Unit,
-    state: ShiftUiState,
-    channel: Flow<ShiftUiEvent>,
-    onBack: () -> Unit,
+    navController: NavHostController,
+    viewModel: ShiftViewModel = hiltViewModel()
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = Color.Transparent,
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(text = "Shift", style = MaterialTheme.typography.titleLarge, color = AppTheme.colors.onBackground) },
+                title = {
+                    Text(
+                        text = "Shift",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = AppTheme.colors.onBackground
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
+                    IconButton(onClick = navController::navigateUp) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_left),
                             contentDescription = null,
@@ -76,8 +86,8 @@ fun ShiftScreen(
                 .padding(top = paddingValues.calculateTopPadding(), start = 12.dp, end = 12.dp)
         ) {
             CalendarView(
-                onDateClick = { date -> action(ShiftUiAction.DatePick(date))},
-                onMonthChange = { month -> action(ShiftUiAction.MonthChange(month)) }
+                onDateClick = { date -> viewModel.onAction(ShiftUiAction.DatePick(date)) },
+                onMonthChange = { month -> viewModel.onAction(ShiftUiAction.MonthChange(month)) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -85,14 +95,12 @@ fun ShiftScreen(
 
             state.shiftMap[state.datePicked]?.forEach { shift ->
 
-                ShiftCardForShiftScreen(shift){}
+                ShiftCardForShiftScreen(shift) {}
 
             }
         }
     }
 }
-
-
 
 
 @Composable
@@ -125,7 +133,11 @@ fun ShiftCardForShiftScreen(
                         color = Color.White.copy(alpha = 0.7f)
                     )
                     Text(
-                        text = "${ISOFormater.formatDateTimeToTime(shift.start)} - ${ISOFormater.formatDateTimeToTime(shift.end)}",
+                        text = "${ISOFormater.formatDateTimeToTime(shift.start)} - ${
+                            ISOFormater.formatDateTimeToTime(
+                                shift.end
+                            )
+                        }",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
@@ -147,36 +159,40 @@ fun ShiftCardForShiftScreen(
                 }
             }
 
-                Divider(color = Color.White.copy(alpha = 0.1f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Text(
-                            text = "Actual Time",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.7f)
-                        )
-                        Text(
-                            text = "${ISOFormater.formatDateTimeToTime(shift.checkIn)} - ${ISOFormater.formatDateTimeToTime(shift.checkOut)}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                    }
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text(
-                            text = "Actual Duration",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.7f)
-                        )
-                        Text(
-                            text = shift.checkRecord?.workTime.toString() ?: "0.0",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                    }
+            Divider(color = Color.White.copy(alpha = 0.1f))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "Actual Time",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                    Text(
+                        text = "${ISOFormater.formatDateTimeToTime(shift.checkIn)} - ${
+                            ISOFormater.formatDateTimeToTime(
+                                shift.checkOut
+                            )
+                        }",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
                 }
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "Actual Duration",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                    Text(
+                        text = shift.workDuration.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                }
+            }
 
         }
     }

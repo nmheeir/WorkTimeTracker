@@ -2,7 +2,7 @@ package com.example.worktimetracker.domain.use_case.auth
 
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.Token
-import com.example.worktimetracker.domain.repository.AuthRepository
+import com.example.worktimetracker.data.remote.repo.AuthRepository
 import com.skydoves.sandwich.ApiResponse
 
 class Login(

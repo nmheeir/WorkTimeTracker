@@ -3,7 +3,7 @@ package com.example.worktimetracker.di
 import android.content.Context
 import androidx.room.Room
 import com.example.worktimetracker.data.local.db.AppDatabase
-import com.example.worktimetracker.data.local.db.dao.UserSessionDao
+import com.example.worktimetracker.data.local.db.InternalDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,18 +17,6 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "app_database"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserSessionDao(database: AppDatabase): UserSessionDao {
-        return database.userSessionDao()
+        return InternalDatabase.newInstance(context)
     }
 }

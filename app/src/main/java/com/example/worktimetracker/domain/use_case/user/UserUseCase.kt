@@ -2,5 +2,7 @@ package com.example.worktimetracker.domain.use_case.user
 
 data class UserUseCase(
     val getUserByUserName: GetUserByUserName,
-    val uploadAvatar: UploadAvatar
+    val getUserProfile: GetUserProfile,
+    val uploadAvatar: UploadAvatar,
+    val getUserActivity: GetUserActivity
 )

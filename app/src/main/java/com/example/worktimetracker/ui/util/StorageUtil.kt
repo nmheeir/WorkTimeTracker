@@ -13,7 +13,8 @@ class StorageUtil {
             uri: Uri,
             context: Context,
             id: Int
-        ): String? {
+        ): String? {8
+
             val storage = Firebase.storage
             val storageRef = storage.reference
             val spaceRef = storageRef.child("avatars/$id/avatar.jpg")

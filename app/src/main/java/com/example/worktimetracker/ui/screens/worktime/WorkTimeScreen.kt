@@ -21,18 +21,22 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.AttendanceRecord
 import com.example.worktimetracker.data.remote.response.DayWorkTime
@@ -41,16 +45,16 @@ import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.component.common.NoDataWarning
 import com.example.worktimetracker.ui.screens.worktime.component.WorkTimeChart
 import com.example.worktimetracker.ui.theme.AppTheme
-import kotlinx.coroutines.flow.Flow
+import com.example.worktimetracker.ui.viewmodels.WorkTimeViewModel
 import java.time.LocalDate
 
 @Composable
 fun WorkTimeScreen(
-    channel: Flow<WorkTimeUiEvent>,
-    state: WorkTimeUiState,
-    onBack: () -> Unit,
-    action: (WorkTimeUiAction) -> Unit
+    navController: NavHostController,
+    viewModel: WorkTimeViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,8 +72,8 @@ fun WorkTimeScreen(
         Spacer(modifier = Modifier.height(24.dp))
         MyMonthHeader(
             month = state.month,
-            onLeftArrowClick = {action(WorkTimeUiAction.OnMonthChange(1))},
-            onRightArrowClick = {action(WorkTimeUiAction.OnMonthChange(2))}
+            onLeftArrowClick = { viewModel.onAction(WorkTimeUiAction.OnMonthChange(1)) },
+            onRightArrowClick = { viewModel.onAction(WorkTimeUiAction.OnMonthChange(2)) }
         )
 
 
@@ -133,7 +137,7 @@ fun SummaryStatistics(
                     modifier = Modifier.weight(1f)
                 )
             }
-            Divider(color = Color.White.copy(alpha = 0.1f))
+            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
             Text(
                 text = stringResource(R.string.worktime_record),
                 style = MaterialTheme.typography.titleLarge,
@@ -161,8 +165,7 @@ fun SummaryStatistics(
                 )
             }
 
-            Divider(color = Color.White.copy(alpha = 0.1f))
-
+            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
 
             StatisticItem(
                 modifier = Modifier.fillMaxWidth(),
@@ -177,11 +180,11 @@ fun SummaryStatistics(
 
 @Composable
 fun StatisticItem(
+    modifier: Modifier = Modifier,
     label: String,
     value: String,
     suffix: String = "",
     large: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
@@ -232,8 +235,7 @@ fun WorkingHoursChart(
                 WorkTimeChart(
                     chartDataState = charData
                 )
-            }
-            else {
+            } else {
                 NoDataWarning()
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -245,9 +247,12 @@ fun WorkingHoursChart(
 fun WorkingHoursDistribution(
     totalWorkTime: TotalWorkTime
 ) {
-    val normalSwipeAngle = (totalWorkTime.normalHours.toFloat() / totalWorkTime.totalHours.toFloat()) * 360f
-    val nightSwipeAngle = (totalWorkTime.nightHours.toFloat() / totalWorkTime.totalHours.toFloat()) * 360f
-    val overTimeSwipeAngle = (totalWorkTime.overtimeHours.toFloat() / totalWorkTime.totalHours.toFloat()) * 360f
+    val normalSwipeAngle =
+        (totalWorkTime.normalHours.toFloat() / totalWorkTime.totalHours.toFloat()) * 360f
+    val nightSwipeAngle =
+        (totalWorkTime.nightHours.toFloat() / totalWorkTime.totalHours.toFloat()) * 360f
+    val overTimeSwipeAngle =
+        (totalWorkTime.overtimeHours.toFloat() / totalWorkTime.totalHours.toFloat()) * 360f
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -280,13 +285,13 @@ fun WorkingHoursDistribution(
                         color = Color(0xFF64B5F6)
                     )
                     drawArc(
-                        startAngle = -90.0f + normalSwipeAngle ,
+                        startAngle = -90.0f + normalSwipeAngle,
                         sweepAngle = nightSwipeAngle,
                         useCenter = true,
-                        color =  Color(0xFF81C784)
+                        color = Color(0xFF81C784)
                     )
                     drawArc(
-                        startAngle = -90.0f + normalSwipeAngle + nightSwipeAngle ,
+                        startAngle = -90.0f + normalSwipeAngle + nightSwipeAngle,
                         sweepAngle = overTimeSwipeAngle,
                         useCenter = true,
                         color = Color(0xFFE57373)

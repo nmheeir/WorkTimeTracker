@@ -42,7 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.example.worktimetracker.ui.screens.onboarding.component.PageIndicator
 import kotlinx.coroutines.delay
 import java.lang.Thread.yield

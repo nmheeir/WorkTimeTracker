@@ -52,7 +52,7 @@ fun ShiftCard(shift: Shift, onClick: () -> Unit) {
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -115,7 +115,7 @@ fun ShiftCard(shift: Shift, onClick: () -> Unit) {
                     )
                     ShiftCardItem(
                         title = stringResource(R.string.shift_type),
-                        text = shift.shiftTypeEnum.toString(),
+                        text = shift.shiftType.name,
                         icon = FontAwesomeIcons.Solid.AddressBook
                     )
                 }
@@ -130,7 +130,7 @@ fun ShiftCardItem(
     text: String,
     icon: ImageVector
 ) {
-    Column (
+    Column(
         modifier = Modifier.padding(vertical = 10.dp)
     ) {
         Icon(
