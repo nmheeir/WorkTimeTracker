@@ -11,8 +11,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -65,44 +64,41 @@ class MainActivity : AppCompatActivity() {
                     val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
                     val navController = rememberNavController()
-                    Scaffold { pv ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(pv)
-                        ) {
-                            ConnectivityStatus()
-                            LinearBackground {
-                                NavHost(
-                                    startDestination = startDestination,
-                                    navController = navController,
-                                    enterTransition = {
-                                        slideIntoContainer(
-                                            AnimatedContentTransitionScope.SlideDirection.Left
-                                        )
-                                    },
-                                    exitTransition = {
-                                        slideOutOfContainer(
-                                            AnimatedContentTransitionScope.SlideDirection.Left
-                                        )
-                                    },
-                                    popEnterTransition = {
-                                        slideIntoContainer(
-                                            AnimatedContentTransitionScope.SlideDirection.Right
-                                        )
-                                    },
-                                    popExitTransition = {
-                                        slideOutOfContainer(
-                                            AnimatedContentTransitionScope.SlideDirection.Right
-                                        )
-                                    }
-                                ) {
-                                    navigationBuilder(navController)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeContentPadding()
+                    ) {
+                        ConnectivityStatus()
+                        LinearBackground {
+                            NavHost(
+                                startDestination = startDestination,
+                                navController = navController,
+                                enterTransition = {
+                                    slideIntoContainer(
+                                        AnimatedContentTransitionScope.SlideDirection.Left
+                                    )
+                                },
+                                exitTransition = {
+                                    slideOutOfContainer(
+                                        AnimatedContentTransitionScope.SlideDirection.Left
+                                    )
+                                },
+                                popEnterTransition = {
+                                    slideIntoContainer(
+                                        AnimatedContentTransitionScope.SlideDirection.Right
+                                    )
+                                },
+                                popExitTransition = {
+                                    slideOutOfContainer(
+                                        AnimatedContentTransitionScope.SlideDirection.Right
+                                    )
                                 }
+                            ) {
+                                navigationBuilder(navController)
                             }
                         }
                     }
-
                 }
             }
         }

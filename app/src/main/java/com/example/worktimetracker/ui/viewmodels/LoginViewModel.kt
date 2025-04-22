@@ -78,7 +78,7 @@ class LoginViewModel @Inject constructor(
     }
 
     init {
-        checkTokenExpire()
+//        checkTokenExpire()
     }
 
     private fun login() {

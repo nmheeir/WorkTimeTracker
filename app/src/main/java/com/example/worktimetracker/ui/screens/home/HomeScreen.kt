@@ -206,7 +206,10 @@ fun HomeScreen(
                 items(
                     items = checkInfos,
                 ) { checkInfo ->
-                    CheckInfoCardItem(checkInfo = checkInfo)
+                    CheckInfoCardItem(
+                        checkInfo = checkInfo,
+                        modifier = Modifier.padding(horizontal = 12.dp)
+                    )
                 }
             }
 
@@ -340,7 +343,7 @@ private fun CheckInfoCardItem(
 ) {
     Card(
         shape = MaterialTheme.shapes.small,
-        modifier = Modifier
+        modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
