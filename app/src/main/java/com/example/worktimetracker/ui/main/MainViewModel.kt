@@ -40,6 +40,7 @@ class MainViewModel @Inject constructor(
     val startDestination = MutableStateFlow<String>(Screens.LoginScreen.route)
 
     init {
+        splashCondition.value = true
         viewModelScope.launch {
             val shouldShowOnboarding = context.dataStore.get(AppEntryKey, true)
             if (shouldShowOnboarding) {
@@ -49,6 +50,7 @@ class MainViewModel @Inject constructor(
             }
             checkToken()
             Timber.d(startDestination.value)
+            splashCondition.value = false
         }
     }
 
@@ -75,8 +77,5 @@ class MainViewModel @Inject constructor(
                 context.dataStore.delete(TokenKey)
                 Timber.d(this.apiMessage)
             }
-
-        startDestination.value = "home"
-
     }
 }

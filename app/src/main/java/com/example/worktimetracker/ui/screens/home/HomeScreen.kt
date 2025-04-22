@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -126,49 +128,17 @@ fun HomeScreen(
                     }
                 }
 
-                //Function
-                item {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .height(150.dp)
-                    ) {
-                        items(5) { index ->
-                            HomeOptionItem(item = listHomeOption[index], onClick = {
-                                navController.navigate(it.route)
-                            })
-                        }
-                        item {
-                            var showBottomSheet by remember { mutableStateOf(false) }
-                            HomeOptionItem(
-                                item = HomeOptionItemData(
-                                    title = "More",
-                                    icon = R.drawable.ic_more_horiz,
-                                    color = R.color.black
-                                ),
-                                onShowDialog = {
-                                    showBottomSheet = true
-                                }
-                            )
-                            if (showBottomSheet) {
-                                HomeBottomSheet(
-                                    onDismiss = { showBottomSheet = false },
-                                    onNavigate = {
-                                        navController.navigate(it.route)
-                                        showBottomSheet = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
                 //Shift
-                if (shifts.isEmpty()) {
-                    item {
+                item(
+                    key = "shift_header"
+                ) {
+                    PreferenceEntry(
+                        title = { Text(text = "Shift") },
+                        trailingContent = {
+                            Icon(Icons.AutoMirrored.Default.ArrowForwardIos, null)
+                        }
+                    )
+                    if (shifts.isEmpty()) {
                         Text(text = "You don't have any shift today")
                     }
                 }
@@ -187,15 +157,10 @@ fun HomeScreen(
                     PreferenceEntry(
                         title = { Text(text = "Activity") },
                         trailingContent = {
-                            TextButton(
-                                onClick = {}
-                            ) {
-                                Text(text = "View all", style = MaterialTheme.typography.bodyMedium)
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                                    contentDescription = null
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                                contentDescription = null
+                            )
                         }
                     )
                     if (checkInfos.isEmpty()) {
@@ -268,10 +233,7 @@ private fun HomeTopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         modifier = modifier
-            .clickable {
-                onNavigate(Screens.MyProfileScreen)
-            }
-            .padding(MaterialTheme.padding.small)
+            .padding(MaterialTheme.padding.mediumSmall)
     ) {
         CircleImage(
             imageUrl = user.avatarUrl ?: "",
@@ -280,6 +242,9 @@ private fun HomeTopBar(
         Column(
             modifier = Modifier
                 .weight(1f)
+                .clickable {
+                    onNavigate(Screens.MyProfileScreen)
+                }
         ) {
             Text(
                 text = user.userName,
@@ -293,6 +258,19 @@ private fun HomeTopBar(
             verticalAlignment = Alignment.CenterVertically,
 //                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
         ) {
+            var showBottomSheet by remember { mutableStateOf(false) }
+            IconButton(
+                onClick = { showBottomSheet = true }
+            ) {
+                Icon(Icons.Default.MoreHoriz, null)
+            }
+
+            if (showBottomSheet) {
+                HomeBottomSheet(
+                    onDismiss = { showBottomSheet = false },
+                    onNavigate = onNavigate
+                )
+            }
 
             IconButton(
                 onClick = {
