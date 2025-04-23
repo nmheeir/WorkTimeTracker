@@ -53,6 +53,7 @@ import com.example.worktimetracker.core.ext.format2
 import com.example.worktimetracker.core.ext.parseMinute
 import com.example.worktimetracker.core.presentation.padding
 import com.example.worktimetracker.core.presentation.ui.HideOnScrollComponent
+import com.example.worktimetracker.core.presentation.util.hozPadding
 import com.example.worktimetracker.data.remote.enums.CheckType
 import com.example.worktimetracker.data.remote.response.CheckInfo
 import com.example.worktimetracker.data.remote.response.User
@@ -83,110 +84,109 @@ fun HomeScreen(
     val checkInfos by viewModel.checkInfos.collectAsStateWithLifecycle()
     val shifts by viewModel.todayShifts.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
+    Box(
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            state = lazyListState,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             if (user != null) {
-                HomeTopBar(
-                    user = user!!,
-                    onNavigate = {
-                        navController.navigate(it.route)
+                item(
+                    key = "top_bar"
+                ) {
+                    HomeTopBar(
+                        user = user!!,
+                        onNavigate = {
+                            navController.navigate(it.route)
+                        }
+                    )
+                }
+            }
+
+            item(
+                key = "calendar"
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.mediumSmall),
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                ) {
+                    currentWeekDates.fastForEach {
+                        DateItem(
+                            day = it.format(DateTimeFormatter.ofPattern("dd")),
+                            weekday = it.dayOfWeek.getDisplayName(
+                                TextStyle.SHORT,
+                                Locale.ENGLISH
+                            ),
+                            isSelected = it.dayOfMonth == LocalDate.now().dayOfMonth
+                        )
                     }
+                }
+            }
+
+            //Shift
+            item(
+                key = "shift_header"
+            ) {
+                PreferenceEntry(
+                    title = { Text(text = "Shift") },
+                    trailingContent = {
+                        Icon(Icons.AutoMirrored.Default.ArrowForwardIos, null)
+                    }
+                )
+                if (shifts.isEmpty()) {
+                    Text(text = "You don't have any shift today")
+                }
+            }
+
+            items(
+                items = shifts,
+                key = { it.id }
+            ) { shift ->
+                ShiftCardItem(shift = shift, modifier = Modifier.hozPadding())
+            }
+
+            //Activity
+            item(
+                key = "activity"
+            ) {
+                PreferenceEntry(
+                    title = { Text(text = "Activity") },
+                    trailingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                            contentDescription = null
+                        )
+                    }
+                )
+                if (checkInfos.isEmpty()) {
+                    Text(text = "No Activity")
+                }
+            }
+
+            items(
+                items = checkInfos,
+            ) { checkInfo ->
+                CheckInfoCardItem(
+                    checkInfo = checkInfo,
+                    modifier = Modifier.padding(horizontal = 12.dp)
                 )
             }
         }
-    ) { pv ->
-        Box(
-            contentAlignment = Alignment.TopCenter,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(pv)
-        ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                state = lazyListState,
+
+        // TODO: Need change to swipeable
+        HideOnScrollComponent(lazyListState = lazyListState) {
+            Button(
+                onClick = { navController.navigate(Screens.CheckScreen.route) },
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
             ) {
-                item(
-                    key = "calendar"
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.mediumSmall),
-                        modifier = Modifier.horizontalScroll(rememberScrollState())
-                    ) {
-                        currentWeekDates.fastForEach {
-                            DateItem(
-                                day = it.format(DateTimeFormatter.ofPattern("dd")),
-                                weekday = it.dayOfWeek.getDisplayName(
-                                    TextStyle.SHORT,
-                                    Locale.ENGLISH
-                                ),
-                                isSelected = it.dayOfMonth == LocalDate.now().dayOfMonth
-                            )
-                        }
-                    }
-                }
-
-                //Shift
-                item(
-                    key = "shift_header"
-                ) {
-                    PreferenceEntry(
-                        title = { Text(text = "Shift") },
-                        trailingContent = {
-                            Icon(Icons.AutoMirrored.Default.ArrowForwardIos, null)
-                        }
-                    )
-                    if (shifts.isEmpty()) {
-                        Text(text = "You don't have any shift today")
-                    }
-                }
-
-                items(
-                    items = shifts,
-                    key = { it.id }
-                ) { shift ->
-                    ShiftCardItem(shift = shift)
-                }
-
-                //Activity
-                item(
-                    key = "activity"
-                ) {
-                    PreferenceEntry(
-                        title = { Text(text = "Activity") },
-                        trailingContent = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                                contentDescription = null
-                            )
-                        }
-                    )
-                    if (checkInfos.isEmpty()) {
-                        Text(text = "No Activity")
-                    }
-                }
-
-                items(
-                    items = checkInfos,
-                ) { checkInfo ->
-                    CheckInfoCardItem(
-                        checkInfo = checkInfo,
-                        modifier = Modifier.padding(horizontal = 12.dp)
-                    )
-                }
-            }
-
-            // TODO: Need change to swipeable
-            HideOnScrollComponent(lazyListState = lazyListState) {
-                Button(
-                    onClick = { navController.navigate(Screens.CheckScreen.route) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(text = "Go to Check")
-                }
+                Text(text = "Go to Check")
             }
         }
     }

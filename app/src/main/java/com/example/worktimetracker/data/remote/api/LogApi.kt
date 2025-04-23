@@ -10,7 +10,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface LogApi {
-    @POST("Log/createLog")
+    @POST("Log/create")
     suspend fun createLog(
         @Body log: CreateLogRequest,
         @Header("Authorization") token: String

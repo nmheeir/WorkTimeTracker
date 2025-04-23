@@ -1,5 +1,6 @@
 package com.example.worktimetracker.data.remote.adapters
 
+import com.example.worktimetracker.data.remote.enums.LogStatus
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -7,26 +8,21 @@ import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class LocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
-    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-
+class LogStatusAdapter : JsonSerializer<LogStatus>, JsonDeserializer<LogStatus> {
     override fun serialize(
-        src: LocalDateTime?,
+        src: LogStatus,
         typeOfSrc: Type?,
         context: JsonSerializationContext?,
-    ): JsonElement {
-        return JsonPrimitive(src?.toString())
+    ): JsonElement? {
+        return JsonPrimitive(src.name)
     }
 
     override fun deserialize(
-        json: JsonElement?,
+        json: JsonElement,
         typeOfT: Type?,
         context: JsonDeserializationContext?,
-    ): LocalDateTime {
-        val raw = json?.asString?.removeSuffix("Z")  // hoặc regex để loại bỏ offset nếu có
-        return LocalDateTime.parse(raw, formatter)
+    ): LogStatus? {
+        return LogStatus.valueOf(json.asString)
     }
 }

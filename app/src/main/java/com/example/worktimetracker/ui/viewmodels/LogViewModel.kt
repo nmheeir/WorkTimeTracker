@@ -1,47 +1,62 @@
 package com.example.worktimetracker.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
+import com.example.worktimetracker.core.presentation.util.TokenKey
+import com.example.worktimetracker.core.presentation.util.dataStore
+import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.data.remote.request.CreateLogRequest
-import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.log.LogUseCase
+import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.ui.screens.log.LogUiAction
 import com.example.worktimetracker.ui.screens.log.LogUiEvent
 import com.example.worktimetracker.ui.screens.log.LogUiState
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnFailure
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
 class LogViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val logUseCase: LogUseCase,
-    private val localUserManager: LocalUserManager
+    private val shiftUseCase: ShiftUseCase
 ) : ViewModel() {
+
+    private val token = context.dataStore.get(TokenKey, "")
+
+    val isLoading = MutableStateFlow(false)
 
     private val _state = MutableStateFlow(LogUiState())
     val state = _state
-        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), LogUiState())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LogUiState())
 
 
     private val _channel = Channel<LogUiEvent>()
     val channel = _channel.receiveAsFlow()
 
     init {
+        isLoading.value = true
         viewModelScope.launch {
-            delay(500)
             getLogs()
+            getMyShift()
+            isLoading.value = false
         }
     }
 
@@ -86,6 +101,14 @@ class LogViewModel @Inject constructor(
                     )
                 }
             }
+
+            is LogUiAction.OnSelectedShiftChange -> {
+                _state.update {
+                    it.copy(
+                        selectedShift = action.value
+                    )
+                }
+            }
         }
     }
 
@@ -96,7 +119,6 @@ class LogViewModel @Inject constructor(
                     isLoading = true
                 )
             }
-            val token = localUserManager.readAccessToken()
 
             logUseCase.getLogs(token)
                 .suspendOnSuccess {
@@ -124,15 +146,14 @@ class LogViewModel @Inject constructor(
     }
 
     private fun createLog() {
-        // TODO: đưa phần xử lí qua bên ui để hiện thanh thông báo
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
-
             logUseCase.createLog(
                 log = CreateLogRequest(
-                    checkTime = _state.value.date.toString() + " " + _state.value.time,
+                    checkTime = LocalDateTime.of(_state.value.date, _state.value.time),
                     type = _state.value.type.ordinal,
-                    reason = _state.value.reason
+                    reason = _state.value.reason,
+                    userId = 0,
+                    shiftId = _state.value.selectedShift!!.id
                 ),
                 token = token
             )
@@ -140,10 +161,34 @@ class LogViewModel @Inject constructor(
                     _channel.send(LogUiEvent.CreateLogSuccess)
                 }
                 .suspendOnError {
+                    _channel.send(LogUiEvent.Failure(this.toString()))
+                    Timber.d("Failure $this")
+                }
+                .suspendOnException {
+                    _channel.send(LogUiEvent.Failure(this.toString()))
+                    Timber.d("Exception: $this")
+                }
+        }
+    }
+
+    private fun getMyShift() {
+        viewModelScope.launch {
+            shiftUseCase.getMyShift(
+                token = token,
+                start = LocalDateTime.now().minusDays(7).with(LocalTime.MIN),
+                end = LocalDateTime.now().with(LocalTime.MAX)
+            ).suspendOnSuccess {
+                _state.update {
+                    it.copy(
+                        shifts = this.data.data ?: emptyList()
+                    )
+                }
+            }
+                .suspendOnFailure {
                     _channel.send(LogUiEvent.Failure(this.message()))
                 }
                 .suspendOnException {
-                    _channel.send(LogUiEvent.Failure(handleException(this.throwable).showMessage()))
+                    _channel.send(LogUiEvent.Failure(this.message()))
                 }
         }
     }

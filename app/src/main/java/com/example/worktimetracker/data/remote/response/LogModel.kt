@@ -2,11 +2,15 @@ package com.example.worktimetracker.data.remote.response
 
 import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.enums.CheckType
+import com.example.worktimetracker.data.remote.enums.LogStatus
+import com.example.worktimetracker.data.remote.response.LogStatus.entries
+import com.example.worktimetracker.data.remote.response.LogType.entries
 import java.time.LocalDateTime
 
 data class LogModel(
     val id: Int,
     val userId: Int,
+    val shiftId: Int,
     val type: CheckType,
     val status: LogStatus,
     val reason: String,

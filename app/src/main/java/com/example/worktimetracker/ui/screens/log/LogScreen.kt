@@ -7,7 +7,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +38,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,6 +51,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,14 +69,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.worktimetracker.R
+import com.example.worktimetracker.core.ext.format3
+import com.example.worktimetracker.core.ext.parse
+import com.example.worktimetracker.core.presentation.padding
+import com.example.worktimetracker.core.presentation.util.Gap
 import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
+import com.example.worktimetracker.core.presentation.util.hozPadding
 import com.example.worktimetracker.data.remote.enums.CheckType
+import com.example.worktimetracker.data.remote.enums.LogStatus
 import com.example.worktimetracker.data.remote.response.LogModel
-import com.example.worktimetracker.data.remote.response.LogStatus
 import com.example.worktimetracker.data.remote.response.LogType
+import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.component.dateTimePicker.CalendarDialog
 import com.example.worktimetracker.ui.component.dateTimePicker.TimePickerDialog
+import com.example.worktimetracker.ui.component.dialog.ListDialog
 import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.LogViewModel
@@ -91,7 +102,7 @@ fun LogScreen(
 
     // form state
     var showRegistrationForm by remember { mutableStateOf(false) }
-    var selectedTab by remember { mutableStateOf(LogStatus.PENDING) }
+    var selectedTab by remember { mutableStateOf(LogStatus.Pending) }
 
     // Dialog
     var dialogContent by remember { mutableStateOf("") }
@@ -99,6 +110,8 @@ fun LogScreen(
     var isVisible by remember { mutableStateOf(false) }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.channel) {
         when (it) {
@@ -167,6 +180,8 @@ fun LogScreen(
             ) {
                 LogRegistrationForm(
                     action = viewModel::onAction,
+                    selectedShift = state.selectedShift,
+                    shifts = state.shifts,
                     logType = state.type,
                     time = state.time,
                     date = state.date,
@@ -204,9 +219,9 @@ fun LogScreen(
 fun LogSummary(
     logList: List<LogModel>
 ) {
-    val pendingLogs = logList.filter { it.status == LogStatus.PENDING }.size
-    val approvedLog = logList.filter { it.status == LogStatus.APPROVED }.size
-    val rejectedLog = logList.filter { it.status == LogStatus.REJECTED }.size
+    val pendingLogs = logList.filter { it.status == LogStatus.Pending }.size
+    val approvedLog = logList.filter { it.status == LogStatus.Approved }.size
+    val rejectedLog = logList.filter { it.status == LogStatus.Rejected }.size
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -231,17 +246,17 @@ fun LogSummary(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 LogStatistic(
-                    LogStatus.PENDING.displayStatus(),
+                    LogStatus.Pending.name,
                     pendingLogs.toString(),
                     Icons.Default.Pending
                 )
                 LogStatistic(
-                    LogStatus.APPROVED.displayStatus(),
+                    LogStatus.Approved.name,
                     approvedLog.toString(),
                     Icons.Default.CheckCircle
                 )
                 LogStatistic(
-                    LogStatus.REJECTED.displayStatus(),
+                    LogStatus.Rejected.name,
                     rejectedLog.toString(),
                     Icons.Default.Cancel
                 )
@@ -304,6 +319,8 @@ fun LogStatistic(
 @Composable
 fun LogRegistrationForm(
     action: (LogUiAction) -> Unit,
+    selectedShift: Shift? = null,
+    shifts: List<Shift>,
     logType: LogType = LogType.CHECK_IN,
     time: LocalTime = LocalTime.now(),
     date: LocalDate = LocalDate.now(),
@@ -346,7 +363,7 @@ fun LogRegistrationForm(
                         color = AppTheme.colors.onRegularSurface
                     )
                     Text(
-                        text = date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy")),
+                        text = date.parse(),
                         color = AppTheme.colors.onRegularSurface,
                         fontWeight = FontWeight.Medium
                     )
@@ -394,6 +411,58 @@ fun LogRegistrationForm(
                 }
             }
 
+            //Shift selection
+            var showShiftsDialog by remember { mutableStateOf(false) }
+            Box(
+                modifier = Modifier.wrapContentSize()
+            ) {
+                var selectedShift by remember { mutableStateOf<Shift?>(selectedShift) }
+                TextButton(
+                    border = BorderStroke(
+                        1.dp,
+                        AppTheme.colors.regularSurface
+                    ),
+                    shape = MaterialTheme.shapes.small,
+                    onClick = { showShiftsDialog = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (selectedShift == null) {
+                        Text(text = "Select Shift")
+                    } else {
+                        Text(text = "${selectedShift?.start?.format3()} - ${selectedShift?.end?.format3()}")
+                    }
+                }
+                if (showShiftsDialog) {
+                    ListDialog(
+                        onDismiss = { showShiftsDialog = false },
+                    ) {
+                        items(
+                            items = shifts
+                        ) { shift ->
+                            ShiftDialogItem(
+                                shift = shift,
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    selectedShift = shift
+                                    showShiftsDialog = false
+                                    action(LogUiAction.OnSelectedShiftChange(selectedShift))
+                                },
+                                trailingContent = {
+                                    Checkbox(
+                                        checked = selectedShift == shift,
+                                        onCheckedChange = {
+                                            selectedShift = if (it) shift else null
+                                            action(LogUiAction.OnSelectedShiftChange(selectedShift))
+                                        }
+                                    )
+                                }
+                            )
+                            Gap(MaterialTheme.padding.mediumSmall)
+                        }
+                    }
+                }
+            }
+
             // Reason Input
             OutlinedTextField(
                 value = reason,
@@ -415,7 +484,8 @@ fun LogRegistrationForm(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AppTheme.colors.actionSurface,
                     contentColor = AppTheme.colors.onActionSurface
-                )
+                ),
+                enabled = selectedShift != null
             ) {
                 Text("Submit Log")
             }
@@ -479,7 +549,7 @@ fun LogTabs(
         AnimatedContent(
             targetState = selectedTab,
             transitionSpec = {
-                fadeIn() with fadeOut()
+                fadeIn().togetherWith(fadeOut())
             }, label = ""
         ) { type ->
             LogList(type, logList)
@@ -540,9 +610,9 @@ fun LogItem(log: LogModel) {
 
             Icon(
                 imageVector = when (log.status) {
-                    LogStatus.PENDING -> Icons.Default.Pending
-                    LogStatus.APPROVED -> Icons.Default.CheckCircle
-                    LogStatus.REJECTED -> Icons.Default.Cancel
+                    LogStatus.Pending -> Icons.Default.Pending
+                    LogStatus.Approved -> Icons.Default.CheckCircle
+                    LogStatus.Rejected -> Icons.Default.Cancel
                 },
                 contentDescription = null,
                 tint = AppTheme.colors.onRegularSurface
@@ -551,5 +621,32 @@ fun LogItem(log: LogModel) {
     }
 }
 
-
-
+@Composable
+private fun ShiftDialogItem(
+    modifier: Modifier = Modifier,
+    shift: Shift,
+    onClick: () -> Unit,
+    trailingContent: @Composable () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable { onClick() }
+            .hozPadding()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = "Start: ${shift.start.format3()}"
+            )
+            Text(
+                text = "End: ${shift.end.format3()}"
+            )
+        }
+        trailingContent()
+    }
+}

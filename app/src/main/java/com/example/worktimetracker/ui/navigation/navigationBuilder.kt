@@ -10,6 +10,7 @@ import com.example.worktimetracker.ui.screens.auth.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPasswordScreen
 import com.example.worktimetracker.ui.screens.check.checkPage.CheckScreen
+import com.example.worktimetracker.ui.screens.furlough.FurloughScreen
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.log.LogScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
@@ -150,5 +151,9 @@ fun NavGraphBuilder.navigationBuilder(
 
     composable(route = Screens.Notification.route) {
         NotificationScreen(navController)
+    }
+
+    composable(route = Screens.ApplyLeaveScreen.route) {
+
     }
 }

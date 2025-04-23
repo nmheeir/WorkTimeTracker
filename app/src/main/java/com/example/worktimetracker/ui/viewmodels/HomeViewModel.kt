@@ -98,8 +98,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             userUseCase.getUserActivity(
                 token = token,
-//                start = LocalDateTime.now().with(LocalTime.MIN),
-//                end = LocalDateTime.now().with(LocalTime.MAX)
+                start = LocalDateTime.now().with(LocalTime.MIN),
+                end = LocalDateTime.now().with(LocalTime.MAX)
             ).suspendOnSuccess {
                 checkInfos.value = this.data.data?.checkInfos ?: emptyList()
                 Timber.d(this.data.data.toString())
