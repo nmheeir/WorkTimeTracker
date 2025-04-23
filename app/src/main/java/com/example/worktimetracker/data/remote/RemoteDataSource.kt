@@ -3,8 +3,10 @@ package com.example.worktimetracker.data.remote
 import com.example.worktimetracker.BuildConfig
 import com.example.worktimetracker.data.remote.adapters.EmployeeTypeAdapter
 import com.example.worktimetracker.data.remote.adapters.LocalDateTimeAdapter
+import com.example.worktimetracker.data.remote.adapters.LogStatusAdapter
 import com.example.worktimetracker.data.remote.adapters.RoleAdapter
 import com.example.worktimetracker.data.remote.enums.EmployeeType
+import com.example.worktimetracker.data.remote.enums.LogStatus
 import com.example.worktimetracker.data.remote.enums.Role
 import com.google.gson.GsonBuilder
 import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
@@ -35,6 +37,7 @@ class RemoteDataSource @Inject constructor() {
             .registerTypeAdapter(EmployeeType::class.java, EmployeeTypeAdapter())
             .registerTypeAdapter(Role::class.java, RoleAdapter())
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
+            .registerTypeAdapter(LogStatus::class.java, LogStatusAdapter())
             .create()
 
         return Retrofit.Builder()

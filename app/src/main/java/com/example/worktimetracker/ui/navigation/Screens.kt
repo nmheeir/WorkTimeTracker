@@ -18,6 +18,7 @@ sealed class Screens(
     }
 
     data object LeavesScreen : Screens("Leaves")
+    data object ApplyLeaveScreen : Screens("ApplyLeave")
     data object AttendanceScreen : Screens("Attendance")
     data object ActivitySrceen : Screens("Activity")
 
