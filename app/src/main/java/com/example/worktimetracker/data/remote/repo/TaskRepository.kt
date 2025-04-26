@@ -3,6 +3,7 @@ package com.example.worktimetracker.data.remote.repo
 import com.example.worktimetracker.data.remote.enums.ProjectStatus
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.PagedDataResponse
+import com.example.worktimetracker.data.remote.response.Report
 import com.example.worktimetracker.data.remote.response.Task
 import com.skydoves.sandwich.ApiResponse
 
@@ -18,4 +19,9 @@ interface TaskRepository {
         token: String,
         id: Int
     ) : ApiResponse<DataResponse<Task>>
+
+    suspend fun getReportsByTaskId(
+        token: String,
+        taskId: Int
+    ) : ApiResponse<PagedDataResponse<List<Report>>>
 }

@@ -3,8 +3,8 @@ package com.example.worktimetracker.data.remote.repo.impl
 import com.example.worktimetracker.data.remote.api.TaskApi
 import com.example.worktimetracker.data.remote.enums.ProjectStatus
 import com.example.worktimetracker.data.remote.repo.TaskRepository
-import com.example.worktimetracker.data.remote.response.DataResponse
-import com.example.worktimetracker.data.remote.response.Task
+import com.example.worktimetracker.data.remote.response.PagedDataResponse
+import com.example.worktimetracker.data.remote.response.Report
 import com.skydoves.sandwich.ApiResponse
 
 class TaskRepositoryImpl(
@@ -21,4 +21,9 @@ class TaskRepositoryImpl(
         token: String,
         id: Int
     ) = taskApi.getTaskDetail(token, id)
+
+    override suspend fun getReportsByTaskId(
+        token: String,
+        taskId: Int
+    ) = taskApi.getReportsByTaskId(token, taskId)
 }

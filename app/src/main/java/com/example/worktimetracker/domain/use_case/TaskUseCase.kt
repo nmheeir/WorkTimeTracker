@@ -5,7 +5,8 @@ import com.example.worktimetracker.data.remote.repo.TaskRepository
 
 data class TaskUseCase(
     val myTasks: MyTasks,
-    val getTaskDetail: GetTaskDetail
+    val getTaskDetail: GetTaskDetail,
+    val getReportsByTaskId: GetReportsByTaskId
 )
 
 class MyTasks(
@@ -26,4 +27,13 @@ class GetTaskDetail(
         token: String,
         id: Int
     ) = taskRepo.getTaskDetail("Bearer $token", id)
+}
+
+class GetReportsByTaskId(
+    private val taskRepo: TaskRepository
+) {
+    suspend operator fun invoke(
+        token: String,
+        taskId: Int
+    ) = taskRepo.getReportsByTaskId("Bearer $token", taskId)
 }

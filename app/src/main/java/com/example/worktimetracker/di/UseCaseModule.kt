@@ -12,6 +12,7 @@ import com.example.worktimetracker.data.remote.repo.SummaryRepository
 import com.example.worktimetracker.data.remote.repo.TaskRepository
 import com.example.worktimetracker.data.remote.repo.UserRepository
 import com.example.worktimetracker.domain.manager.LocalUserManager
+import com.example.worktimetracker.domain.use_case.GetReportsByTaskId
 import com.example.worktimetracker.domain.use_case.GetTaskDetail
 import com.example.worktimetracker.domain.use_case.MyProjects
 import com.example.worktimetracker.domain.use_case.MyTasks
@@ -142,7 +143,8 @@ class UseCaseModule {
     fun provideTaskUseCase(iTaskRepo: TaskRepository): TaskUseCase {
         return TaskUseCase(
             myTasks = MyTasks(iTaskRepo),
-            getTaskDetail = GetTaskDetail(iTaskRepo)
+            getTaskDetail = GetTaskDetail(iTaskRepo),
+            getReportsByTaskId = GetReportsByTaskId(iTaskRepo)
         )
     }
 

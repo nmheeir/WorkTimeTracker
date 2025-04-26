@@ -3,6 +3,7 @@ package com.example.worktimetracker.data.remote.api
 import com.example.worktimetracker.data.remote.enums.ProjectStatus
 import com.example.worktimetracker.data.remote.response.DataResponse
 import com.example.worktimetracker.data.remote.response.PagedDataResponse
+import com.example.worktimetracker.data.remote.response.Report
 import com.example.worktimetracker.data.remote.response.Task
 import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.GET
@@ -25,4 +26,10 @@ interface TaskApi {
         @Header("Authorization") token: String,
         @Path("id") id: Int,
     ): ApiResponse<DataResponse<Task>>
+
+    @GET("Task/{taskId}/reports")
+    suspend fun getReportsByTaskId(
+        @Header("Authorization") token: String,
+        @Path("taskId") taskId: Int,
+    ): ApiResponse<PagedDataResponse<List<Report>>>
 }

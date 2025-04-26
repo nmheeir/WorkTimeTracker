@@ -6,3 +6,10 @@ data class UserProfileDto(
     val userFullName: String,
     val avatarUrl: String,
 )
+
+val fakeUserProfileDto = UserProfileDto(
+    id = 1,
+    userName = "Alice",
+    userFullName = "Alice Johnson",
+    avatarUrl = "https://picsum.photos/200"
+)

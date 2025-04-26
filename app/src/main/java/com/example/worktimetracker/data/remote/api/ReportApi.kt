@@ -16,9 +16,9 @@ interface ReportApi {
     @POST("Report/upload")
     suspend fun upload(
         @Header("Authorization") token: String,
-        @Part("title") title: RequestBody,
-        @Part("description") description: RequestBody,
-        @Part("taskId") taskId: RequestBody,
+        @Part("Title") title: RequestBody,
+        @Part("Description") description: RequestBody,
+        @Part("TaskId") taskId: RequestBody,
         @Part reportFile: MultipartBody.Part
     ): ApiResponse<DataResponse<ReportInformation>>
 }

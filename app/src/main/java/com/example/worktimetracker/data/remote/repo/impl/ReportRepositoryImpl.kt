@@ -10,6 +10,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 import java.io.File
 
 class ReportRepositoryImpl(
@@ -22,10 +23,12 @@ class ReportRepositoryImpl(
         taskId: Int,
         file: File
     ): ApiResponse<DataResponse<ReportInformation>> {
+        Timber.d(
+            "title: $title, description: $description, taskId: $taskId, file: ${file.name}"
+        )
         val title = title.toRequestBody("text/plain".toMediaTypeOrNull())
         val description = description.toRequestBody("text/plain".toMediaTypeOrNull())
         val taskId = taskId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val token = "Bearer $token"
         val fileBody = file.asRequestBody("application/octet-stream".toMediaType())
         val filePart = MultipartBody.Part.createFormData("reportFile", file.name, fileBody)
 

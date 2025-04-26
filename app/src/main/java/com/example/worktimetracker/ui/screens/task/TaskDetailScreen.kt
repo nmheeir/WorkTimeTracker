@@ -27,9 +27,11 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CreateNewFolder
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,6 +64,7 @@ import androidx.navigation.NavHostController
 import com.example.worktimetracker.core.ext.format2
 import com.example.worktimetracker.ui.component.dialog.DefaultDialog
 import com.example.worktimetracker.ui.component.image.CircleImage
+import com.example.worktimetracker.ui.component.preferences.PreferenceEntry
 import com.example.worktimetracker.ui.viewmodels.TaskDetailUiAction
 import com.example.worktimetracker.ui.viewmodels.TaskDetailViewModel
 import java.io.File
@@ -74,6 +77,7 @@ fun TaskDetailsScreen(
     viewModel: TaskDetailViewModel = hiltViewModel()
 ) {
     val task by viewModel.task.collectAsStateWithLifecycle()
+    val isUploading by viewModel.isUploading.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -104,7 +108,19 @@ fun TaskDetailsScreen(
                     if (showCreateReportDialog) {
                         CreateReportDialog(
                             onDismiss = { showCreateReportDialog = false },
+                            isUploading = isUploading,
                             action = viewModel::onAction
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            navController.navigate("task_report/${task?.id}")
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Description,
+                            contentDescription = null
                         )
                     }
                 }
@@ -122,7 +138,6 @@ fun TaskDetailsScreen(
                 )
             }
         }
-
         task.takeIf { it != null }?.let { task ->
             LazyColumn(
                 modifier = Modifier
@@ -317,6 +332,14 @@ fun TaskDetailsScreen(
                 }
 
                 // Assignee Section
+                item(
+                    key = "assignee_header"
+                ) {
+                    PreferenceEntry(
+                        title = { Text(text = "Assignees") }
+                    )
+                }
+
                 items(
                     items = task.assignees
                 ) { assignee ->
@@ -327,45 +350,33 @@ fun TaskDetailsScreen(
                         ),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Column(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Assignee",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
+                            // Profile Image
+                            CircleImage(
+                                imageUrl = assignee.avatarUrl,
+                                size = 24.dp
                             )
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // Profile Image
-                                CircleImage(
-                                    imageUrl = assignee.avatarUrl,
-                                    size = 24.dp
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            // Assignee Details
+                            Column {
+                                Text(
+                                    text = assignee.userName,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
 
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                // Assignee Details
-                                Column {
-                                    Text(
-                                        text = assignee.userName,
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    Text(
-                                        text = "Front End Developer",
-                                        fontSize = 12.sp,
-                                        color = Color.Gray
-                                    )
-                                }
+                                Text(
+                                    text = "Front End Developer",
+                                    fontSize = 12.sp,
+                                    color = Color.Gray
+                                )
                             }
                         }
                     }
@@ -446,6 +457,7 @@ fun TaskDetailsScreen(
                 }
             }
         }
+
     }
 }
 
@@ -453,6 +465,7 @@ fun TaskDetailsScreen(
 private fun CreateReportDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+    isUploading: Boolean,
     action: (TaskDetailUiAction) -> Unit
 ) {
     val context = LocalContext.current
@@ -484,27 +497,49 @@ private fun CreateReportDialog(
             }
         }
     ) {
-        val (title, onTitleChange) = remember { mutableStateOf("") }
-        OutlinedTextField(
-            value = title,
-            onValueChange = onTitleChange,
-            label = { Text("Title") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        val (description, onDescriptionChange) = remember { mutableStateOf("") }
-        OutlinedTextField(
-            value = description,
-            onValueChange = onDescriptionChange,
-            label = { Text("Description") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        Box {
+            Column {
+                val (title, onTitleChange) = remember { mutableStateOf("") }
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = {
+                        onTitleChange(it)
+                        action(TaskDetailUiAction.ChangeTitle(it))
+                    },
+                    label = { Text("Title") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                val (description, onDescriptionChange) = remember { mutableStateOf("") }
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = {
+                        onDescriptionChange(it)
+                        action(TaskDetailUiAction.ChangeDescription(it))
+                    },
+                    label = { Text("Description") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        Button(onClick = { pdfPickerLauncher.launch("application/pdf") }) {
-            Text("Chọn file PDF")
-        }
+                TextButton(onClick = { pdfPickerLauncher.launch("application/pdf") }) {
+                    if (selectedFile == null) {
+                        Text("Select PDF file")
+                    }
+                    selectedFileName?.let {
+                        Text("Selected File: $it", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
 
-        selectedFileName?.let {
-            Text("Đã chọn: $it", style = MaterialTheme.typography.bodySmall)
+            if (isUploading) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.3f))
+                        .matchParentSize()
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }

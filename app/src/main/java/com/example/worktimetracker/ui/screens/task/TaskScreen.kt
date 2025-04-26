@@ -10,11 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -36,6 +42,7 @@ import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.ProjectFilter
 import com.example.worktimetracker.ui.viewmodels.TaskViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen(
     navController: NavHostController,
@@ -79,35 +86,19 @@ fun TaskScreen(
                     .align(Alignment.TopCenter)
             ) {
                 item(
-                    key = "project_summary"
+                    key = "top_bar"
                 ) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .hozPadding()
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-                            modifier = Modifier
-                                .padding(vertical = MaterialTheme.padding.small)
-                        ) {
-                            Text(
-                                text = "Summary of your work",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.hozPadding()
-                            )
-                            Text(
-                                text = "Your current project progress",
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.hozPadding()
-                            )
+                    TopAppBar(
+                        title = { Text(text = "Task") },
+                        navigationIcon = {
+                            IconButton(
+                                onClick = navController::navigateUp
+                            ) {
+                                Icon(Icons.AutoMirrored.Default.ArrowBack, null)
+                            }
                         }
-                    }
+                    )
                 }
-
                 item(
                     key = "filter_task"
                 ) {

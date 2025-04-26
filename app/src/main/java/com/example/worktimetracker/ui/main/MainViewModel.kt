@@ -46,6 +46,7 @@ class MainViewModel @Inject constructor(
             if (shouldShowOnboarding) {
                 startDestination.value = Screens.OnboardingScreen.route
                 Timber.d(startDestination.value)
+                splashCondition.value = false
                 return@launch
             }
             checkToken()

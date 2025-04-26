@@ -54,6 +54,14 @@ class TaskDetailViewModel @Inject constructor(
             is TaskDetailUiAction.UploadReportFile -> {
                 uploadReport(action.file)
             }
+
+            is TaskDetailUiAction.ChangeDescription -> {
+                reportDescription.value = action.description
+            }
+
+            is TaskDetailUiAction.ChangeTitle -> {
+                reportTitle.value = action.title
+            }
         }
     }
 
@@ -102,4 +110,6 @@ class TaskDetailViewModel @Inject constructor(
 
 sealed interface TaskDetailUiAction {
     data class UploadReportFile(val file: File) : TaskDetailUiAction
+    data class ChangeTitle(val title: String) : TaskDetailUiAction
+    data class ChangeDescription(val description: String) : TaskDetailUiAction
 }

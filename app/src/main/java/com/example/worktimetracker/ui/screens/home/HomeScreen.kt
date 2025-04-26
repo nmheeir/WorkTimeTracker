@@ -236,7 +236,7 @@ private fun HomeTopBar(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         modifier = modifier
             .clickable {
-                onNavigate(Screens.MyProfileScreen)
+                onNavigate(Screens.ProfileScreen)
             }
             .padding(MaterialTheme.padding.mediumSmall)
     ) {

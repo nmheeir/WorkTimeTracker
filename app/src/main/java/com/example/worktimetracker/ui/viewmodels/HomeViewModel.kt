@@ -6,11 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.presentation.util.TokenKey
 import com.example.worktimetracker.core.presentation.util.dataStore
 import com.example.worktimetracker.core.presentation.util.get
+import com.example.worktimetracker.data.remote.enums.CheckType
 import com.example.worktimetracker.data.remote.response.CheckInfo
 import com.example.worktimetracker.data.remote.response.Shift
+import com.example.worktimetracker.data.remote.response.ShiftType
 import com.example.worktimetracker.data.remote.response.User
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
+import com.example.worktimetracker.ui.util.exampleUser
 import com.skydoves.sandwich.getOrThrow
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnException
@@ -39,9 +42,9 @@ class HomeViewModel @Inject constructor(
     val isLoading = MutableStateFlow(false)
 
     val user = MutableStateFlow<User?>(null)
-    val todayShifts = MutableStateFlow<List<Shift>>(emptyList())
+    val todayShifts = MutableStateFlow<List<Shift>>(fakeShifts)
     val currentWeekDates = MutableStateFlow<List<LocalDate>>(emptyList())
-    val checkInfos = MutableStateFlow<List<CheckInfo>>(emptyList())
+    val checkInfos = MutableStateFlow<List<CheckInfo>>(fakeCheckInfos)
 
     init {
         viewModelScope.launch {
@@ -82,7 +85,11 @@ class HomeViewModel @Inject constructor(
                 end = LocalDateTime.now().with(LocalTime.MAX)
             )
                 .suspendOnSuccess {
-                    todayShifts.value = this.data.data ?: emptyList()
+                    if (this.data.data.isNullOrEmpty()) {
+                        todayShifts.value = fakeShifts
+                    } else {
+                        todayShifts.value = this.data.data ?: fakeShifts
+                    }
                     Timber.d(this.data.data.toString())
                 }
                 .suspendOnException {
@@ -101,7 +108,7 @@ class HomeViewModel @Inject constructor(
                 start = LocalDateTime.now().with(LocalTime.MIN),
                 end = LocalDateTime.now().with(LocalTime.MAX)
             ).suspendOnSuccess {
-                checkInfos.value = this.data.data?.checkInfos ?: emptyList()
+                checkInfos.value = this.data.data?.checkInfos ?: fakeCheckInfos
                 Timber.d(this.data.data.toString())
             }.suspendOnException {
                 Timber.d(this.message())
@@ -109,3 +116,85 @@ class HomeViewModel @Inject constructor(
         }
     }
 }
+
+val fakeShifts = listOf(
+    Shift(
+        id = 1,
+        start = LocalDateTime.parse("2024-04-01T09:00:00"),
+        end = LocalDateTime.parse("2024-04-01T17:00:00"),
+        checkIn = LocalDateTime.parse("2024-04-01T09:05:00"),
+        checkOut = LocalDateTime.parse("2024-04-01T16:55:00"),
+        workDuration = 7.8f,
+        shiftType = ShiftType.entries.random(),
+        user = exampleUser
+    ),
+    Shift(
+        id = 2,
+        start = LocalDateTime.parse("2024-04-02T13:00:00"),
+        end = LocalDateTime.parse("2024-04-02T21:00:00"),
+        checkIn = LocalDateTime.parse("2024-04-02T13:00:00"),
+        checkOut = LocalDateTime.parse("2024-04-02T20:45:00"),
+        workDuration = 7.75f,
+        shiftType = ShiftType.entries.random(),
+        user = exampleUser
+    ),
+    Shift(
+        id = 3,
+        start = LocalDateTime.parse("2024-04-03T22:00:00"),
+        end = LocalDateTime.parse("2024-04-04T06:00:00"),
+        checkIn = LocalDateTime.parse("2024-04-03T22:10:00"),
+        checkOut = LocalDateTime.parse("2024-04-04T05:50:00"),
+        workDuration = 7.67f,
+        shiftType = ShiftType.entries.random(),
+        user = exampleUser
+    ),
+    Shift(
+        id = 4,
+        start = LocalDateTime.parse("2024-04-04T09:00:00"),
+        end = LocalDateTime.parse("2024-04-04T17:00:00"),
+        checkIn = null,
+        checkOut = null,
+        workDuration = 0f,
+        shiftType = ShiftType.entries.random(),
+        user = exampleUser
+    ),
+    Shift(
+        id = 5,
+        start = LocalDateTime.parse("2024-04-05T08:00:00"),
+        end = LocalDateTime.parse("2024-04-05T16:00:00"),
+        checkIn = LocalDateTime.parse("2024-04-05T08:00:00"),
+        checkOut = LocalDateTime.parse("2024-04-05T16:00:00"),
+        workDuration = 8.0f,
+        shiftType = ShiftType.entries.random(),
+        user = exampleUser
+    )
+)
+
+val fakeCheckInfos = listOf(
+    CheckInfo(
+        type = CheckType.CheckIn,
+        time = LocalDateTime.parse("2024-04-01T08:59:00"),
+        status = "On time"
+    ),
+    CheckInfo(
+        type = CheckType.CheckOut,
+        time = LocalDateTime.parse("2024-04-01T17:05:00"),
+        status = "On time"
+    ),
+    CheckInfo(
+        type = CheckType.CheckIn,
+        time = LocalDateTime.parse("2024-04-02T09:15:00"),
+        status = "Late"
+    ),
+    CheckInfo(
+        type = CheckType.CheckOut,
+        time = LocalDateTime.parse("2024-04-02T16:45:00"),
+        status = "Left early"
+    ),
+    CheckInfo(
+        type = CheckType.CheckIn,
+        time = LocalDateTime.parse("2024-04-03T08:50:00"),
+        status = "Early"
+    )
+)
+
