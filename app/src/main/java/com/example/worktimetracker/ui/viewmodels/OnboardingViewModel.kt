@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.presentation.util.AppEntryKey
 import com.example.worktimetracker.core.presentation.util.dataStore
 import com.example.worktimetracker.core.presentation.util.set
-import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch

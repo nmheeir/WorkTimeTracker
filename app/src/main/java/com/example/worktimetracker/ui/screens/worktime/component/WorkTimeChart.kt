@@ -71,17 +71,17 @@ fun WorkTimeChart(
 
     val normalWork by remember {
         derivedStateOf {
-            chartData.filter { it.type == ShiftType.Normal.ordinal }
+            chartData.filter { it.type == ShiftType.Normal }
         }
     }
     val overtimeWork by remember {
         derivedStateOf {
-            chartData.filter { it.type == ShiftType.Overtime.ordinal }
+            chartData.filter { it.type == ShiftType.Overtime }
         }
     }
     val nightWork by remember {
         derivedStateOf {
-            chartData.filter { it.type == ShiftType.NightShift.ordinal }
+            chartData.filter { it.type == ShiftType.NightShift }
         }
     }
 
@@ -101,21 +101,24 @@ fun WorkTimeChart(
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
-                                val normalWorkItem = normalWork.find { it.dateTime.dayOfMonth == dayDate }
+                                val normalWorkItem =
+                                    normalWork.find { it.dateTime.dayOfMonth == dayDate }
                                 normalWorkItem?.workTime ?: 0
                             }
                         )
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
-                                val overtimeWorkItem = overtimeWork.find {  it.dateTime.dayOfMonth == dayDate }
+                                val overtimeWorkItem =
+                                    overtimeWork.find { it.dateTime.dayOfMonth == dayDate }
                                 overtimeWorkItem?.workTime ?: 0
                             }
                         )
                         series(
                             List(days.size) { index ->
                                 val dayDate = days[index]
-                                val nightWorkItem = nightWork.find {  it.dateTime.dayOfMonth == dayDate }
+                                val nightWorkItem =
+                                    nightWork.find { it.dateTime.dayOfMonth == dayDate }
                                 nightWorkItem?.workTime ?: 0
                             }
                         )
@@ -143,22 +146,22 @@ fun ExampleChart(
         chart = rememberCartesianChart(
             rememberColumnCartesianLayer(
                 columnProvider =
-                ColumnCartesianLayer.ColumnProvider.series(
-                    chartColors.map { color ->
-                        rememberLineComponent(
-                            color = color,
-                            thickness = 8.dp,
-                            shape =
-                            CorneredShape(
-                                bottomLeft = Corner.Absolute(2F, RoundedCornerTreatment),
-                                bottomRight = Corner.Absolute(2F, RoundedCornerTreatment),
-                                topRight = Corner.Absolute(2F, RoundedCornerTreatment),
-                                topLeft = Corner.Absolute(2F, RoundedCornerTreatment),
-                            ),
-                        )
-                    },
+                    ColumnCartesianLayer.ColumnProvider.series(
+                        chartColors.map { color ->
+                            rememberLineComponent(
+                                color = color,
+                                thickness = 8.dp,
+                                shape =
+                                    CorneredShape(
+                                        bottomLeft = Corner.Absolute(2F, RoundedCornerTreatment),
+                                        bottomRight = Corner.Absolute(2F, RoundedCornerTreatment),
+                                        topRight = Corner.Absolute(2F, RoundedCornerTreatment),
+                                        topLeft = Corner.Absolute(2F, RoundedCornerTreatment),
+                                    ),
+                            )
+                        },
 
-                ),
+                        ),
                 mergeMode = { ColumnCartesianLayer.MergeMode.Stacked }
             ),
             startAxis = rememberStartAxis(),
@@ -207,15 +210,18 @@ private fun rememberHorizontalLine() =
             thickness = 2.dp
         ),
         labelComponent =
-        rememberTextComponent(
-            margins = Dimensions.of(5.dp),
-            padding =
-            Dimensions.of(
-                5.dp,
-                5.dp,
-            ),
-            background = rememberShapeComponent(colorResource(id = R.color.black).copy(alpha = 0.3f), Shape.Pill),
-        )
+            rememberTextComponent(
+                margins = Dimensions.of(5.dp),
+                padding =
+                    Dimensions.of(
+                        5.dp,
+                        5.dp,
+                    ),
+                background = rememberShapeComponent(
+                    colorResource(id = R.color.black).copy(alpha = 0.3f),
+                    Shape.Pill
+                ),
+            )
     )
 
 private const val COLUMN_ROUNDNESS_PERCENT: Int = 40

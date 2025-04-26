@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.worktimetracker.core.presentation.padding
 import com.example.worktimetracker.core.presentation.util.Gap
+import com.example.worktimetracker.ui.theme.AppTheme
 
 @Composable
 fun <E> ChipsRow(
@@ -20,7 +21,7 @@ fun <E> ChipsRow(
     currentValue: E,
     onValueUpdate: (E) -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
+    containerColor: Color = AppTheme.colors.regularSurface,
 ) {
     Row(
         modifier = modifier
@@ -31,15 +32,12 @@ fun <E> ChipsRow(
 
         chips.forEach { (value, label) ->
             FilterChip(
-                leadingIcon = {
-                    Text(
-                        text = "abc",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                },
-                label = { Text(label) },
+                label = { Text(label, color = Color.White) },
                 selected = currentValue == value,
-                colors = FilterChipDefaults.filterChipColors(containerColor = containerColor),
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = containerColor,
+                    selectedLabelColor = Color.Black
+                ),
                 onClick = { onValueUpdate(value) }
             )
 

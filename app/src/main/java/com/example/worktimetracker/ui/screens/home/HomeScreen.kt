@@ -24,7 +24,9 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,6 +59,7 @@ import com.example.worktimetracker.core.presentation.util.hozPadding
 import com.example.worktimetracker.data.remote.enums.CheckType
 import com.example.worktimetracker.data.remote.response.CheckInfo
 import com.example.worktimetracker.data.remote.response.User
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.component.item.ShiftCardItem
 import com.example.worktimetracker.ui.component.image.CircleImage
 import com.example.worktimetracker.ui.component.preferences.PreferenceEntry
@@ -89,7 +92,6 @@ fun HomeScreen(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .fillMaxSize()
-            .background(AppTheme.colors.onBackground)
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
@@ -136,13 +138,13 @@ fun HomeScreen(
                 key = "shift_header"
             ) {
                 PreferenceEntry(
-                    title = { Text(text = "Shift") },
+                    title = { Text(text = "Shift", color = Color.White) },
                     trailingContent = {
-                        Icon(Icons.AutoMirrored.Default.ArrowForwardIos, null)
+                        Icon(Icons.AutoMirrored.Default.ArrowForwardIos, null, tint = Color.White)
                     }
                 )
                 if (shifts.isEmpty()) {
-                    Text(text = "You don't have any shift today")
+                    Text(text = "You don't have any shift today", color = Color.White)
                 }
             }
 
@@ -158,16 +160,17 @@ fun HomeScreen(
                 key = "activity"
             ) {
                 PreferenceEntry(
-                    title = { Text(text = "Activity") },
+                    title = { Text(text = "Activity", color = Color.White) },
                     trailingContent = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 )
                 if (checkInfos.isEmpty()) {
-                    Text(text = "No Activity")
+                    Text(text = "No Activity", color = Color.White)
                 }
             }
 
@@ -181,12 +184,18 @@ fun HomeScreen(
             }
         }
 
-        // TODO: Need change to swipeable
         HideOnScrollComponent(lazyListState = lazyListState) {
             Button(
+                shape = MaterialTheme.shapes.small,
                 onClick = { navController.navigate(Screens.CheckScreen.route) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AppTheme.colors.regularSurface,
+                    contentColor = AppTheme.colors.onRegularSurface
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+                    .hozPadding()
             ) {
                 Text(text = "Go to Check")
             }
@@ -201,8 +210,8 @@ fun DateItem(
     isSelected: Boolean
 ) {
     val backgroundColor =
-        if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
-    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.Black
+        if (isSelected) AppTheme.colors.regularSurface else Color.Transparent
+    val textColor = if (isSelected) AppTheme.colors.onRegularSurface else Color.White
 
     Column(
         modifier = Modifier
@@ -251,9 +260,11 @@ private fun HomeTopBar(
         ) {
             Text(
                 text = user.userName,
+                color = Color.White
             )
             Text(
-                text = user.department
+                text = user.department,
+                color = Color.White
             )
         }
 
@@ -265,7 +276,7 @@ private fun HomeTopBar(
             IconButton(
                 onClick = { showBottomSheet = true }
             ) {
-                Icon(Icons.Default.MoreHoriz, null)
+                Icon(Icons.Default.MoreHoriz, null, tint = Color.White)
             }
 
             if (showBottomSheet) {
@@ -282,7 +293,8 @@ private fun HomeTopBar(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Notifications,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }
@@ -300,18 +312,20 @@ private fun HomeBottomSheet(
         onDismissRequest = onDismiss,
         modifier = modifier
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.mediumSmall),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            items(
-                items = listHomeOption
-            ) { option ->
-                HomeOptionItem(
-                    item = option,
-                    onClick = { onNavigate(it) }
-                )
+        LinearBackground {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.mediumSmall),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                items(
+                    items = listHomeOption
+                ) { option ->
+                    HomeOptionItem(
+                        item = option,
+                        onClick = { onNavigate(it) }
+                    )
+                }
             }
         }
     }
@@ -324,6 +338,9 @@ private fun CheckInfoCardItem(
 ) {
     Card(
         shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(
+            containerColor = AppTheme.colors.regularSurface
+        ),
         modifier = modifier
     ) {
         Row(
@@ -346,10 +363,12 @@ private fun CheckInfoCardItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = checkInfo.type.value
+                    text = checkInfo.type.value,
+                    color = Color.White
                 )
                 Text(
-                    text = checkInfo.time.format2()
+                    text = checkInfo.time.format2(),
+                    color = Color.White
                 )
             }
             Column(
@@ -357,10 +376,12 @@ private fun CheckInfoCardItem(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = checkInfo.time.parseMinute()
+                    text = checkInfo.time.parseMinute(),
+                    color = Color.White
                 )
                 Text(
-                    text = checkInfo.status
+                    text = checkInfo.status,
+                    color = Color.White
                 )
             }
         }

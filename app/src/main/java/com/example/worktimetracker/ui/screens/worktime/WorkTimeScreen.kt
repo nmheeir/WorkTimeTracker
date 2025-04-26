@@ -46,6 +46,7 @@ import com.example.worktimetracker.ui.component.common.NoDataWarning
 import com.example.worktimetracker.ui.screens.worktime.component.WorkTimeChart
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.WorkTimeViewModel
+import timber.log.Timber
 import java.time.LocalDate
 
 @Composable

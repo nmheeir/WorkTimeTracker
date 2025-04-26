@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.presentation.util.TokenKey
+import com.example.worktimetracker.core.presentation.util.UsernameKey
 import com.example.worktimetracker.core.presentation.util.dataStore
 import com.example.worktimetracker.core.presentation.util.get
+import com.example.worktimetracker.core.presentation.util.set
 import com.example.worktimetracker.data.remote.enums.CheckType
 import com.example.worktimetracker.data.remote.response.CheckInfo
 import com.example.worktimetracker.data.remote.response.Shift
@@ -42,16 +44,16 @@ class HomeViewModel @Inject constructor(
     val isLoading = MutableStateFlow(false)
 
     val user = MutableStateFlow<User?>(null)
-    val todayShifts = MutableStateFlow<List<Shift>>(fakeShifts)
+    val todayShifts = MutableStateFlow<List<Shift>>(emptyList())
     val currentWeekDates = MutableStateFlow<List<LocalDate>>(emptyList())
-    val checkInfos = MutableStateFlow<List<CheckInfo>>(fakeCheckInfos)
+    val checkInfos = MutableStateFlow<List<CheckInfo>>(emptyList())
 
     init {
         viewModelScope.launch {
-            currentWeekDates.value = getCurrentWeekDates()
             fetchUserProfile()
             getTodayShift()
             getUserActivities()
+            currentWeekDates.value = getCurrentWeekDates()
         }
     }
 
@@ -60,6 +62,7 @@ class HomeViewModel @Inject constructor(
             userUseCase.getUserProfile(token)
                 .suspendOnSuccess {
                     user.value = this.data.data
+                    context.dataStore.set(UsernameKey, this.data.data?.userName ?: "")
                     Timber.d(this.data.data.toString())
                 }
                 .suspendOnFailure {

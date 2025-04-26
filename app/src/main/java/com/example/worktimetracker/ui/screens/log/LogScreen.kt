@@ -427,9 +427,12 @@ fun LogRegistrationForm(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     if (selectedShift == null) {
-                        Text(text = "Select Shift")
+                        Text(text = "Select Shift", color = Color.White)
                     } else {
-                        Text(text = "${selectedShift?.start?.format3()} - ${selectedShift?.end?.format3()}")
+                        Text(
+                            text = "${selectedShift?.start?.format3()} - ${selectedShift?.end?.format3()}",
+                            color = Color.White
+                        )
                     }
                 }
                 if (showShiftsDialog) {

@@ -41,6 +41,8 @@ class LoginViewModel @Inject constructor(
 
     val state = MutableStateFlow(LoginUiState())
 
+    val isLoading = MutableStateFlow(false)
+
     private val _channel = Channel<LoginUiEvent>()
     val channel = _channel.receiveAsFlow()
 
@@ -82,6 +84,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login() {
+        isLoading.value = true
         viewModelScope.launch {
             val deviceToken = context.dataStore.get(DeviceTokenKey, "")
 
@@ -144,7 +147,7 @@ class LoginViewModel @Inject constructor(
                     _channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
                     Log.d("LoginViewModel", this.throwable.toString())
                 }
-
+            isLoading.value = false
 
         }
     }

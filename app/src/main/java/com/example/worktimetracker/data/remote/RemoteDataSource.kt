@@ -5,9 +5,11 @@ import com.example.worktimetracker.data.remote.adapters.EmployeeTypeAdapter
 import com.example.worktimetracker.data.remote.adapters.LocalDateTimeAdapter
 import com.example.worktimetracker.data.remote.adapters.LogStatusAdapter
 import com.example.worktimetracker.data.remote.adapters.RoleAdapter
+import com.example.worktimetracker.data.remote.adapters.ShiftTypeAdapter
 import com.example.worktimetracker.data.remote.enums.EmployeeType
 import com.example.worktimetracker.data.remote.enums.LogStatus
 import com.example.worktimetracker.data.remote.enums.Role
+import com.example.worktimetracker.data.remote.response.ShiftType
 import com.google.gson.GsonBuilder
 import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -38,6 +40,7 @@ class RemoteDataSource @Inject constructor() {
             .registerTypeAdapter(Role::class.java, RoleAdapter())
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
             .registerTypeAdapter(LogStatus::class.java, LogStatusAdapter())
+            .registerTypeAdapter(ShiftType::class.java, ShiftTypeAdapter())
             .create()
 
         return Retrofit.Builder()

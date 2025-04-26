@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.worktimetracker.data.local.db.entity.CheckInfoEntity
 import com.example.worktimetracker.data.local.db.entity.NotificationEntity
 import com.example.worktimetracker.data.local.db.entity.UserSession
 import kotlinx.coroutines.flow.Flow
@@ -18,10 +19,14 @@ interface DatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(notification: NotificationEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(checkInfo: CheckInfoEntity)
+
 
     //    ================ Update ============================
     @Update
     suspend fun update(notifications: List<NotificationEntity>)
+
     @Update
     suspend fun update(notification: NotificationEntity)
 

@@ -10,8 +10,6 @@ import com.example.worktimetracker.core.presentation.util.dataStore
 import com.example.worktimetracker.core.presentation.util.delete
 import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.core.presentation.util.set
-import com.example.worktimetracker.domain.manager.LocalUserManager
-import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
 import com.example.worktimetracker.domain.use_case.user.UserUseCase
 import com.example.worktimetracker.ui.navigation.Screens
 import com.skydoves.sandwich.retrofit.apiMessage
@@ -20,16 +18,15 @@ import com.skydoves.sandwich.suspendOnFailure
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.text.set
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val appEntryUseCase: AppEntryUseCase,
     private val userUseCase: UserUseCase
 ) : ViewModel() {
 
@@ -65,8 +62,8 @@ class MainViewModel @Inject constructor(
         userUseCase.getUserProfile(token)
             .suspendOnSuccess {
                 Timber.d(this.data.data.toString())
-                startDestination.value = Screens.HomeScreen.route
                 context.dataStore.set(UsernameKey, this.data.data!!.userName)
+                startDestination.value = Screens.HomeScreen.route
             }
             .suspendOnFailure {
                 startDestination.value = Screens.LoginScreen.route
@@ -78,5 +75,6 @@ class MainViewModel @Inject constructor(
                 context.dataStore.delete(TokenKey)
                 Timber.d(this.apiMessage)
             }
+        delay(500)
     }
 }

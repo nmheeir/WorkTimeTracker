@@ -24,6 +24,8 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.example.worktimetracker.core.presentation.util.AppThemeKey
 import com.example.worktimetracker.ui.component.image.CoilImage
 import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.theme.AppTheme
@@ -58,7 +61,6 @@ fun ProfileScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(AppTheme.colors.onBackground),
     ) {
         if (isLoading) {
             CircularProgressIndicator()
@@ -114,14 +116,14 @@ fun ProfileScreen(
                         text = profile.userFullName,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.White
                     )
 
                     // Job Title
                     Text(
                         text = profile.designation,
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = Color.White,
                         modifier = Modifier.padding(top = 4.dp)
                     )
 
@@ -135,13 +137,15 @@ fun ProfileScreen(
                             .height(48.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2D7CFF)
+                            containerColor = AppTheme.colors.regularSurface,
+                            contentColor = AppTheme.colors.onRegularSurface
                         )
                     ) {
                         Text(
                             text = "Edit Profile",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
                         )
                     }
 
@@ -265,35 +269,42 @@ fun MenuItemRow(
     icon: @Composable () -> Unit,
     title: String
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = AppTheme.colors.regularSurface,
+            contentColor = AppTheme.colors.onRegularSurface
+        )
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color(0xFFF5F5F5)),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            icon()
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFF5F5F5)),
+                contentAlignment = Alignment.Center
+            ) {
+                icon()
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.weight(1f)
+            )
+
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Navigate",
+                tint = Color.Gray
+            )
         }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Text(
-            text = title,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1f)
-        )
-
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = "Navigate",
-            tint = Color.Gray
-        )
     }
 }

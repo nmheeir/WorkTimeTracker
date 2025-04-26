@@ -62,10 +62,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.worktimetracker.core.ext.format2
+import com.example.worktimetracker.core.presentation.util.ObserveAsEvents
 import com.example.worktimetracker.ui.component.dialog.DefaultDialog
+import com.example.worktimetracker.ui.component.dialog.SuccessDialog
 import com.example.worktimetracker.ui.component.image.CircleImage
 import com.example.worktimetracker.ui.component.preferences.PreferenceEntry
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.TaskDetailUiAction
+import com.example.worktimetracker.ui.viewmodels.TaskDetailUiEvent
 import com.example.worktimetracker.ui.viewmodels.TaskDetailViewModel
 import java.io.File
 
@@ -78,32 +82,73 @@ fun TaskDetailsScreen(
 ) {
     val task by viewModel.task.collectAsStateWithLifecycle()
     val isUploading by viewModel.isUploading.collectAsStateWithLifecycle()
+    if (task == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "No task",
+                color = Color.White
+            )
+        }
+    }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Task Details", fontWeight = FontWeight.Medium) },
-                navigationIcon = {
-                    IconButton(onClick = navController::navigateUp) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+    ObserveAsEvents(viewModel.channel) {
+        when (it) {
+            TaskDetailUiEvent.UploadFileSuccess -> {
+                showSuccessDialog = true
+            }
+        }
+    }
+
+    if (showSuccessDialog) {
+        SuccessDialog(true, "Upload file success", { showSuccessDialog = false })
+    }
+
+
+    task.takeIf { it != null }?.let { task ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            //Top bar
+            item(
+                key = "top_bar"
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    IconButton(
+                        onClick = navController::navigateUp
+                    ) {
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, null, tint = Color.White)
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black
-                ),
-                actions = {
+                    Text(
+                        text = "Task Details",
+                        modifier = Modifier.weight(1f),
+                        color = Color.White,
+                        fontSize = 22.sp
+                    )
+                    IconButton(
+                        onClick = {
+                            navController.navigate("task_report/${task.id}")
+                        }
+                    ) {
+                        Icon(Icons.Default.Description, null, tint = Color.White)
+                    }
                     var showCreateReportDialog by remember { mutableStateOf(false) }
                     IconButton(
-                        onClick = { showCreateReportDialog = true }
+                        onClick = {
+                            showCreateReportDialog = true
+                        }
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.CreateNewFolder,
-                            contentDescription = null
-                        )
+                        Icon(Icons.Default.CreateNewFolder, null, tint = Color.White)
                     }
                     if (showCreateReportDialog) {
                         CreateReportDialog(
@@ -112,354 +157,329 @@ fun TaskDetailsScreen(
                             action = viewModel::onAction
                         )
                     }
+                }
+            }
 
-                    IconButton(
-                        onClick = {
-                            navController.navigate("task_report/${task?.id}")
-                        }
+            // Main Card
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = AppTheme.colors.regularSurface
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    // Task Header (Title, Status, Date)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Description,
-                            contentDescription = null
+                        // Task Title and Status
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = task.name,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                color = Color(0xFFECE1FF)
+                            ) {
+                                Text(
+                                    text = task.status.title,
+                                    color = Color(0xFF7B3DFF),
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    modifier = Modifier.padding(
+                                        horizontal = 12.dp,
+                                        vertical = 6.dp
+                                    )
+                                )
+                            }
+                        }
+
+                        // Creation Date
+                        Text(
+                            text = "Created at " + task.createdAt.format2(),
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(top = 4.dp)
                         )
                     }
                 }
-            )
-        },
-        containerColor = Color(0xFFF5F5F5)
-    ) { paddingValues ->
-        if (task == null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No task"
-                )
             }
-        }
-        task.takeIf { it != null }?.let { task ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                // Main Card
-                item {
-                    Card(
+
+            // Description Section
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = AppTheme.colors.regularSurface
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(16.dp)
+                            .padding(16.dp)
                     ) {
-                        // Task Header (Title, Status, Date)
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            // Task Title and Status
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = task.name,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                        Text(
+                            text = "Description",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
 
-                                Surface(
-                                    shape = RoundedCornerShape(16.dp),
-                                    color = Color(0xFFECE1FF)
+                        Text(
+                            text = "Create on boarding page based on pic, pixel perfect, with the user story of i want to know what for i know what is this so i need to view onboarding screen to leverage my knowledge so that i know what kind of apps is this",
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                }
+            }
+
+            // Priority and Difficulty Section
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = AppTheme.colors.regularSurface
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        // Priority
+                        Column {
+                            Text(
+                                text = task.priority.name,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.White
+                            )
+
+                            Surface(
+                                modifier = Modifier.padding(top = 8.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                color = Color(0xFFFFECEC)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(
+                                        horizontal = 12.dp,
+                                        vertical = 6.dp
+                                    )
                                 ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(8.dp)
+                                            .background(Color(0xFFFF3B3B), CircleShape)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
                                     Text(
-                                        text = task.status.title,
-                                        color = Color(0xFF7B3DFF),
+                                        text = "High",
+                                        color = Color(0xFFFF3B3B),
                                         fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 6.dp
-                                        )
+                                        fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
-
-                            // Creation Date
-                            Text(
-                                text = "Created at " + task.createdAt.format2(),
-                                fontSize = 12.sp,
-                                color = Color.Gray,
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
                         }
-                    }
-                }
 
-                // Description Section
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(16.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
+                        // Difficulty
+                        Column(horizontalAlignment = Alignment.End) {
                             Text(
-                                text = "Description",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            Text(
-                                text = "Create on boarding page based on pic, pixel perfect, with the user story of i want to know what for i know what is this so i need to view onboarding screen to leverage my knowledge so that i know what kind of apps is this",
+                                text = "Difficulty",
                                 fontSize = 14.sp,
-                                color = Color.DarkGray,
-                                modifier = Modifier.padding(top = 8.dp)
+                                fontWeight = FontWeight.Medium,
+                                color = Color.White
+                            )
+
+                            Surface(
+                                modifier = Modifier.padding(top = 8.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                color = Color(0xFFECFFF5)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(
+                                        horizontal = 12.dp,
+                                        vertical = 6.dp
+                                    )
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .background(Color(0xFF00C853), CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Check",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(12.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Very Easy (Less Than a Day)",
+                                        color = Color(0xFF00C853),
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Assignee Section
+            item(
+                key = "assignee_header"
+            ) {
+                PreferenceEntry(
+                    title = { Text(text = "Assignees", color = Color.White) }
+                )
+            }
+
+            items(
+                items = task.assignees
+            ) { assignee ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = AppTheme.colors.regularSurface
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Profile Image
+                        CircleImage(
+                            imageUrl = assignee.avatarUrl,
+                            size = 24.dp
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        // Assignee Details
+                        Column {
+                            Text(
+                                text = assignee.userName,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+
+                            Text(
+                                text = "Front End Developer",
+                                fontSize = 12.sp,
+                                color = Color.White
                             )
                         }
                     }
                 }
+            }
 
-                // Priority and Difficulty Section
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(16.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            // Priority
-                            Column {
-                                Text(
-                                    text = task.priority.name,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-
-                                Surface(
-                                    modifier = Modifier.padding(top = 8.dp),
-                                    shape = RoundedCornerShape(16.dp),
-                                    color = Color(0xFFFFECEC)
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 6.dp
-                                        )
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(8.dp)
-                                                .background(Color(0xFFFF3B3B), CircleShape)
-                                        )
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = "High",
-                                            color = Color(0xFFFF3B3B),
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    }
-                                }
-                            }
-
-                            // Difficulty
-                            Column(horizontalAlignment = Alignment.End) {
-                                Text(
-                                    text = "Difficulty",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-
-                                Surface(
-                                    modifier = Modifier.padding(top = 8.dp),
-                                    shape = RoundedCornerShape(16.dp),
-                                    color = Color(0xFFECFFF5)
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 6.dp
-                                        )
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .background(Color(0xFF00C853), CircleShape),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Check,
-                                                contentDescription = "Check",
-                                                tint = Color.White,
-                                                modifier = Modifier.size(12.dp)
-                                            )
-                                        }
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = "Very Easy (Less Than a Day)",
-                                            color = Color(0xFF00C853),
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Assignee Section
-                item(
-                    key = "assignee_header"
+            // Comment Section
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = AppTheme.colors.regularSurface
+                    ),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
-                    PreferenceEntry(
-                        title = { Text(text = "Assignees") }
-                    )
-                }
-
-                items(
-                    items = task.assignees
-                ) { assignee ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(16.dp)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     ) {
+                        Text(
+                            text = "Comment Section",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(12.dp),
+                                .padding(top = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             // Profile Image
-                            CircleImage(
-                                imageUrl = assignee.avatarUrl,
-                                size = 24.dp
+                            Image(
+                                painter = painterResource(id = android.R.drawable.ic_menu_gallery),
+                                contentDescription = "User Profile",
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
                             )
 
                             Spacer(modifier = Modifier.width(12.dp))
 
-                            // Assignee Details
-                            Column {
-                                Text(
-                                    text = assignee.userName,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-
-                                Text(
-                                    text = "Front End Developer",
-                                    fontSize = 12.sp,
-                                    color = Color.Gray
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Comment Section
-                item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(16.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                text = "Comment Section",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            Row(
+                            // Comment Input Field
+                            OutlinedTextField(
+                                value = "",
+                                onValueChange = {},
+                                placeholder = {
+                                    Text(
+                                        "Write a comment...",
+                                        color = Color.Gray
+                                    )
+                                },
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // Profile Image
-                                Image(
-                                    painter = painterResource(id = android.R.drawable.ic_menu_gallery),
-                                    contentDescription = "User Profile",
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .clip(CircleShape)
-                                )
-
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                // Comment Input Field
-                                OutlinedTextField(
-                                    value = "",
-                                    onValueChange = {},
-                                    placeholder = {
-                                        Text(
-                                            "Write a comment...",
-                                            color = Color.Gray
+                                    .weight(1f)
+                                    .height(48.dp),
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    containerColor = Color(0xFFF5F5F5),
+                                    unfocusedBorderColor = Color.Transparent,
+                                    focusedBorderColor = Color.Transparent
+                                ),
+                                shape = RoundedCornerShape(24.dp),
+                                trailingIcon = {
+                                    IconButton(onClick = { /* Handle send comment */ }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.Send,
+                                            contentDescription = "Send Comment",
+                                            tint = Color.Gray
                                         )
-                                    },
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .height(48.dp),
-                                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                                        containerColor = Color(0xFFF5F5F5),
-                                        unfocusedBorderColor = Color.Transparent,
-                                        focusedBorderColor = Color.Transparent
-                                    ),
-                                    shape = RoundedCornerShape(24.dp),
-                                    trailingIcon = {
-                                        IconButton(onClick = { /* Handle send comment */ }) {
-                                            Icon(
-                                                imageVector = Icons.AutoMirrored.Filled.Send,
-                                                contentDescription = "Send Comment",
-                                                tint = Color.Gray
-                                            )
-                                        }
-                                    },
-                                    singleLine = true
-                                )
-                            }
+                                    }
+                                },
+                                singleLine = true
+                            )
                         }
                     }
                 }
             }
         }
-
     }
+
 }
+
 
 @Composable
 private fun CreateReportDialog(
@@ -485,15 +505,22 @@ private fun CreateReportDialog(
         onDismiss = onDismiss,
         buttons = {
             TextButton(
+                enabled = isUploading == false,
                 onClick = onDismiss
             ) {
                 Text(text = "Cancel")
             }
             TextButton(
-                enabled = selectedFile != null,
-                onClick = { action(TaskDetailUiAction.UploadReportFile(selectedFile!!)) }
+                enabled = selectedFile != null || isUploading == false,
+                onClick = {
+                    action(TaskDetailUiAction.UploadReportFile(selectedFile!!))
+                }
             ) {
-                Text(text = "Upload")
+                if (isUploading) {
+                    CircularProgressIndicator()
+                } else {
+                    Text(text = "Upload")
+                }
             }
         }
     ) {
@@ -501,6 +528,7 @@ private fun CreateReportDialog(
             Column {
                 val (title, onTitleChange) = remember { mutableStateOf("") }
                 OutlinedTextField(
+                    enabled = isUploading == false,
                     value = title,
                     onValueChange = {
                         onTitleChange(it)
@@ -511,6 +539,7 @@ private fun CreateReportDialog(
                 )
                 val (description, onDescriptionChange) = remember { mutableStateOf("") }
                 OutlinedTextField(
+                    enabled = isUploading == false,
                     value = description,
                     onValueChange = {
                         onDescriptionChange(it)
@@ -520,24 +549,15 @@ private fun CreateReportDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                TextButton(onClick = { pdfPickerLauncher.launch("application/pdf") }) {
+                TextButton(
+                    enabled = isUploading == false,
+                    onClick = { pdfPickerLauncher.launch("application/pdf") }) {
                     if (selectedFile == null) {
                         Text("Select PDF file")
                     }
                     selectedFileName?.let {
                         Text("Selected File: $it", style = MaterialTheme.typography.bodySmall)
                     }
-                }
-            }
-
-            if (isUploading) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.3f))
-                        .matchParentSize()
-                ) {
-                    CircularProgressIndicator()
                 }
             }
         }

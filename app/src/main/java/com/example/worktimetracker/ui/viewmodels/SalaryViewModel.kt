@@ -8,9 +8,7 @@ import com.example.worktimetracker.core.presentation.util.TokenKey
 import com.example.worktimetracker.core.presentation.util.dataStore
 import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.data.remote.response.PayCheck
-import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
-import com.example.worktimetracker.ui.screens.salary.SalaryState
 import com.example.worktimetracker.ui.screens.salary.SalaryUiEvent
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.suspendOnError
@@ -20,10 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class DayWorkTime(
     val date: String,
     val workTime: Double,
-    val type: Int
+    val type: ShiftType
 )
 {
     val dateTime: LocalDateTime

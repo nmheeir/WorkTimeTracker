@@ -1,11 +1,14 @@
 package com.example.worktimetracker.ui.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
+import com.example.worktimetracker.core.presentation.util.TokenKey
+import com.example.worktimetracker.core.presentation.util.dataStore
+import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.data.remote.response.Shift
-import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.ui.screens.shift.ShiftUiAction
@@ -16,6 +19,7 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,10 +31,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShiftViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val shiftUseCase: ShiftUseCase,
-    private val localUserManager: LocalUserManager,
     private val checkUseCase: CheckUseCase
 ) : ViewModel() {
+    private val token = context.dataStore.get(TokenKey, "")
+
     private val _state = MutableStateFlow(ShiftUiState())
     val state = _state
         .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), ShiftUiState())
@@ -57,7 +63,6 @@ class ShiftViewModel @Inject constructor(
 
     private fun getMyShiftsInMonth(month: Int, year: Int) {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
 
             _state.update {
                 it.copy(
@@ -92,9 +97,6 @@ class ShiftViewModel @Inject constructor(
                             isLoading = false,
                         )
                     }
-
-
-
                     _channel.send(ShiftUiEvent.Success)
                 }
                 .suspendOnError {

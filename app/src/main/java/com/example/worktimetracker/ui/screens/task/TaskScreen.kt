@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,6 +31,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -73,7 +78,6 @@ fun TaskScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppTheme.colors.onBackground)
     ) {
         if (isLoading) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
@@ -88,16 +92,16 @@ fun TaskScreen(
                 item(
                     key = "top_bar"
                 ) {
-                    TopAppBar(
-                        title = { Text(text = "Task") },
-                        navigationIcon = {
-                            IconButton(
-                                onClick = navController::navigateUp
-                            ) {
-                                Icon(Icons.AutoMirrored.Default.ArrowBack, null)
-                            }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        IconButton(onClick = navController::navigateUp) {
+                            Icon(Icons.AutoMirrored.Default.ArrowBack, null, tint = Color.White)
                         }
-                    )
+                        Text(text = "Task", color = Color.White, fontSize = 22.sp)
+                    }
                 }
                 item(
                     key = "filter_task"
@@ -125,7 +129,6 @@ fun TaskScreen(
                     )
                 }
 
-
                 items(
                     items = taskPage.orEmpty(),
                     key = { it.id }
@@ -149,11 +152,13 @@ fun TaskScreen(
                     item {
                         if (taskPage.isNullOrEmpty()) {
                             Text(
-                                text = "No result found"
+                                text = "No result found",
+                                color = Color.White
                             )
                         } else {
                             Text(
-                                text = "No more result"
+                                text = "No more result",
+                                color = Color.White
                             )
                         }
                     }

@@ -33,7 +33,8 @@ fun PayCheckItem(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = AppTheme.colors.regularSurface
+            containerColor = AppTheme.colors.regularSurface,
+            contentColor = AppTheme.colors.onRegularSurface
         ),
         shape = RoundedCornerShape(8.dp),
         modifier = modifier
@@ -46,11 +47,6 @@ fun PayCheckItem(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 12.dp)
         ) {
-            Text(
-                text = "June 2024 Paycheck",
-                style = Typography.bodyLarge,
-                color = AppTheme.colors.onBackgroundBlue
-            )
             Text(
                 text = "From ${item.start.format2()} to ${item.end.format2()}",
                 style = Typography.bodyMedium,
