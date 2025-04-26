@@ -2,6 +2,8 @@ package com.example.worktimetracker.ui.screens.report
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -14,8 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,41 +37,41 @@ fun TaskReportScreen(
 ) {
     val reports by viewModel.reports.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        item(
+            key = "top_bar"
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                IconButton(
+                    onClick = navController::navigateUp
+                ) {
+                    Icon(Icons.AutoMirrored.Default.ArrowBack, null, tint = Color.White)
+                }
+                Text(text = "Reports", fontSize = 22.sp)
+            }
+        }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Report") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = navController::navigateUp
-                    ) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, null)
-                    }
+        items(
+            items = reports
+        ) { report ->
+            ReportCardItem(
+                report = report,
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.setDataAndType(
+                        report.reportUrl.toUri(),
+                        "application/pdf"
+                    )
+                    intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                    context.startActivity(intent)
                 }
             )
-        }
-    ) { pv ->
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = pv
-        ) {
-            items(
-                items = reports
-            ) { report ->
-                ReportCardItem(
-                    report = report,
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.setDataAndType(
-                            report.reportUrl.toUri(),
-                            "application/pdf"
-                        )
-                        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-                        context.startActivity(intent)
-                    }
-                )
-            }
         }
     }
 }

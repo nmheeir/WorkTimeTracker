@@ -1,11 +1,16 @@
 package com.example.worktimetracker.ui.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
+import com.example.worktimetracker.core.presentation.util.TokenKey
+import com.example.worktimetracker.core.presentation.util.dataStore
+import com.example.worktimetracker.core.presentation.util.get
+import com.example.worktimetracker.data.local.db.AppDatabase
+import com.example.worktimetracker.data.local.db.entity.CheckInfoEntity
 import com.example.worktimetracker.data.remote.request.CheckRequest
-import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.check.CheckUseCase
 import com.example.worktimetracker.domain.use_case.shift.ShiftUseCase
 import com.example.worktimetracker.ui.screens.check.checkPage.CheckUiAction
@@ -16,6 +21,7 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -26,14 +32,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class CheckViewModel @Inject constructor(
-    private val checkUseCase : CheckUseCase,
+    private val checkUseCase: CheckUseCase,
     private val shiftUseCase: ShiftUseCase,
-    private val localUserManager: LocalUserManager,
+    @ApplicationContext private val context: Context,
+    private val database: AppDatabase
 ) : ViewModel() {
+
+    private val token = context.dataStore.get(TokenKey, "")
 
     private val _state = MutableStateFlow(CheckUiState())
     val state = _state
@@ -54,6 +64,7 @@ class CheckViewModel @Inject constructor(
             is CheckUiAction.Check -> {
                 check(action.checkType)
             }
+
             is CheckUiAction.ChooseShift -> {
                 _state.update {
                     it.copy(
@@ -74,7 +85,6 @@ class CheckViewModel @Inject constructor(
 
     private fun getTodayShift() {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
 
             _state.update {
                 it.copy(
@@ -86,7 +96,8 @@ class CheckViewModel @Inject constructor(
                 token = token,
                 day = LocalDate.Companion.now().dayOfMonth,
                 month = LocalDate.Companion.now().monthNumber,
-                year = LocalDate.Companion.now().year)
+                year = LocalDate.Companion.now().year
+            )
                 .suspendOnSuccess {
                     _state.update {
                         it.copy(
@@ -111,7 +122,6 @@ class CheckViewModel @Inject constructor(
 
     private fun check(checkType: Int) {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
             _state.update {
                 it.copy(
                     isChecking = true
@@ -135,6 +145,8 @@ class CheckViewModel @Inject constructor(
                     }
 
                     _channel.send(CheckUiEvent.CheckSuccess)
+
+                    getTodayShift()
                 }
 
                 .suspendOnError {
@@ -145,4 +157,4 @@ class CheckViewModel @Inject constructor(
                 }
         }
     }
- }
+}

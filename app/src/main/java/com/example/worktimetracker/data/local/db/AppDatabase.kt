@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.worktimetracker.data.local.Converters
 import com.example.worktimetracker.data.local.db.dao.DatabaseDao
+import com.example.worktimetracker.data.local.db.entity.CheckInfoEntity
 import com.example.worktimetracker.data.local.db.entity.NotificationEntity
 import com.example.worktimetracker.data.local.db.entity.UserSession
 
@@ -33,10 +34,10 @@ class AppDatabase(
 
 @Database(
     entities = [
-        NotificationEntity::class, UserSession::class
+        NotificationEntity::class, UserSession::class, CheckInfoEntity::class
     ],
     exportSchema = true,
-    version = 3,
+    version = 4,
 )
 @TypeConverters(Converters::class)
 abstract class InternalDatabase : RoomDatabase() {

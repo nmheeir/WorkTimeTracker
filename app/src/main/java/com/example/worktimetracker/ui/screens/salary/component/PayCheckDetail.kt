@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.screens.salary.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +43,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
+import com.example.worktimetracker.core.presentation.util.hozPadding
 import com.example.worktimetracker.data.remote.response.PayCheck
+import com.example.worktimetracker.ui.component.background.LinearBackground
 import com.example.worktimetracker.ui.theme.AppTheme
 import java.text.NumberFormat
 import java.util.Currency
@@ -53,38 +56,40 @@ import java.util.Locale
 fun PaycheckDetail(
     item: PayCheck,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        // Header
-        Text(
-            text = "Paycheck Detail",
-            style = MaterialTheme.typography.headlineMedium,
-            color = AppTheme.colors.onBackground,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
+    LinearBackground {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .hozPadding()
+        ) {
+            // Header
+            Text(
+                text = "Paycheck Detail",
+                style = MaterialTheme.typography.headlineMedium,
+                color = AppTheme.colors.onBackground,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
 
-        // Total Income Card
-        TotalIncomeCard(item.totalIncome)
+            // Total Income Card
+            TotalIncomeCard(item.totalIncome)
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Working Hours Breakdown
-        WorkingHoursCard(
-            totalHours = item.totalWorkTime,
-            normalHours = item.normalWork,
-            overtimeHours = item.overtimeWork,
-            nightHours = item.nightWork
-        )
+            // Working Hours Breakdown
+            WorkingHoursCard(
+                totalHours = item.totalWorkTime,
+                normalHours = item.normalWork,
+                overtimeHours = item.overtimeWork,
+                nightHours = item.nightWork
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Allowance Card
-        AllowanceCard(item.allowanced)
+            // Allowance Card
+            AllowanceCard(item.allowanced)
+        }
     }
-
 }
 
 @Composable

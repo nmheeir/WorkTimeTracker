@@ -11,12 +11,14 @@ import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgeDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.R
@@ -26,6 +28,7 @@ import com.example.worktimetracker.core.presentation.padding
 import com.example.worktimetracker.core.presentation.util.hozPadding
 import com.example.worktimetracker.data.remote.response.Task
 import com.example.worktimetracker.ui.component.image.AvatarGroup
+import com.example.worktimetracker.ui.theme.AppTheme
 import kotlin.toString
 
 @Composable
@@ -36,6 +39,10 @@ fun TaskCardItem(
     Card(
         onClick = onClick,
         shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(
+            containerColor = AppTheme.colors.regularSurface,
+            contentColor = AppTheme.colors.onRegularSurface
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .hozPadding()
@@ -49,7 +56,8 @@ fun TaskCardItem(
         ) {
             Text(
                 text = task.name,
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
+                color = Color.White
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,

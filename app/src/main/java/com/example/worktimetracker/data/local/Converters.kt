@@ -1,6 +1,7 @@
 package com.example.worktimetracker.data.local
 
 import androidx.room.TypeConverter
+import com.example.worktimetracker.data.remote.enums.CheckType
 import com.example.worktimetracker.data.remote.enums.EmployeeType
 import com.example.worktimetracker.data.remote.enums.NotificationType
 import com.example.worktimetracker.data.remote.enums.Role
@@ -25,6 +26,16 @@ class Converters {
     @TypeConverter
     fun stringToNotificationType(value: String?): NotificationType? {
         return value?.let { NotificationType.valueOf(it) }
+    }
+
+    @TypeConverter
+    fun checkTypeToString(value: CheckType?): String? {
+        return value?.name
+    }
+
+    @TypeConverter
+    fun stringToCheckType(value: String?): CheckType? {
+        return value?.let { CheckType.valueOf(it) }
     }
 
     @TypeConverter

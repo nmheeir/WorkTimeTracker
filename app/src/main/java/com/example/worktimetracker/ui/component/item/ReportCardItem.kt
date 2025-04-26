@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.core.presentation.util.hozPadding
 import com.example.worktimetracker.data.remote.response.Report
+import com.example.worktimetracker.ui.theme.AppTheme
 
 @Composable
 fun ReportCardItem(
@@ -25,6 +27,10 @@ fun ReportCardItem(
     onClick: () -> Unit = {}
 ) {
     Card(
+        colors = CardDefaults.cardColors(
+            contentColor = AppTheme.colors.onRegularSurface,
+            containerColor = AppTheme.colors.regularSurface
+        ),
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()

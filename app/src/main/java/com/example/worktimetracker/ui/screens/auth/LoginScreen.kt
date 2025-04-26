@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -82,15 +83,31 @@ fun LoginScreen(
     }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     LinearBackground {
-        LoginContent(
-            state = state,
-            action = viewModel::onAction,
-            onNavigateTo = {
-                onNavigateTo(it)
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            LoginContent(
+                state = state,
+                action = viewModel::onAction,
+                onNavigateTo = {
+                    onNavigateTo(it)
+                }
+            )
+
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        )
+        }
     }
 }
 

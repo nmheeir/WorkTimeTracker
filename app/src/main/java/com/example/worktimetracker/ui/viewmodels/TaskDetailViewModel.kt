@@ -16,7 +16,9 @@ import com.skydoves.sandwich.suspendOnFailure
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -40,6 +42,9 @@ class TaskDetailViewModel @Inject constructor(
 
     val reportTitle = MutableStateFlow("")
     val reportDescription = MutableStateFlow("")
+
+    private val _channel = Channel<TaskDetailUiEvent>()
+    val channel = _channel.receiveAsFlow()
 
     init {
         isLoading.value = true
@@ -94,7 +99,7 @@ class TaskDetailViewModel @Inject constructor(
                 file = file
             )
                 .suspendOnSuccess {
-
+                    _channel.send(TaskDetailUiEvent.UploadFileSuccess)
                 }
                 .suspendOnFailure {
                     Timber.d("Failure: %s", this.message())
@@ -112,4 +117,8 @@ sealed interface TaskDetailUiAction {
     data class UploadReportFile(val file: File) : TaskDetailUiAction
     data class ChangeTitle(val title: String) : TaskDetailUiAction
     data class ChangeDescription(val description: String) : TaskDetailUiAction
+}
+
+sealed interface TaskDetailUiEvent {
+    data object UploadFileSuccess : TaskDetailUiEvent
 }

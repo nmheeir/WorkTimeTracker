@@ -1,10 +1,13 @@
 package com.example.worktimetracker.ui.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worktimetracker.core.data.network.handleException
-import com.example.worktimetracker.domain.manager.LocalUserManager
+import com.example.worktimetracker.core.presentation.util.TokenKey
+import com.example.worktimetracker.core.presentation.util.dataStore
+import com.example.worktimetracker.core.presentation.util.get
 import com.example.worktimetracker.domain.use_case.summary.SummaryUseCase
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiAction
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeUiEvent
@@ -14,6 +17,7 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,14 +26,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkTimeViewModel @Inject constructor(
     private val summaryUseCase: SummaryUseCase,
-    private val localUserManager: LocalUserManager
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
+    private val token = context.dataStore.get(TokenKey, "")
+
     private val _state = MutableStateFlow(WorkTimeUiState())
     var state = _state
         .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), WorkTimeUiState())
@@ -48,7 +55,7 @@ class WorkTimeViewModel @Inject constructor(
     }
 
     fun onAction(action: WorkTimeUiAction) {
-        when(action) {
+        when (action) {
             is WorkTimeUiAction.OnMonthChange -> {
                 _state.update {
                     it.copy(
@@ -58,7 +65,8 @@ class WorkTimeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         startTime = _state.value.month.withDayOfMonth(1).atStartOfDay().toString(),
-                        endTime = _state.value.month.with(TemporalAdjusters.lastDayOfMonth()).atTime(23,59,59).toString()
+                        endTime = _state.value.month.with(TemporalAdjusters.lastDayOfMonth())
+                            .atTime(23, 59, 59).toString()
                     )
                 }
                 viewModelScope.launch {
@@ -72,34 +80,37 @@ class WorkTimeViewModel @Inject constructor(
 
     private fun getWorkTime() {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
 
-           summaryUseCase.getWorkTimeEachDay(token, _state.value.startTime, _state.value.endTime)
-               .suspendOnSuccess {
-                   _state.update {
-                       it.copy(
-                           chartData = this.data.data!!,
-                           isChartDataLoading = false
-                       )
-                   }
-                   Log.d("ShiftTest", this.data.data.toString())
-                   _channel.send(WorkTimeUiEvent.Success)
-               }
-               .suspendOnError {
-                   _channel.send(WorkTimeUiEvent.Failure(this.message()))
-                   Log.d("ShiftTest", this.message())
-               }
-               .suspendOnException {
-                   _channel.send(WorkTimeUiEvent.Failure(handleException(this.throwable).showMessage()))
-                   Log.d("ShiftTest", handleException(this.throwable).showMessage())
+            summaryUseCase.getWorkTimeEachDay(token, _state.value.startTime, _state.value.endTime)
+                .suspendOnSuccess {
+                    _state.update {
+                        it.copy(
+                            chartData = this.data.data!!,
+                            isChartDataLoading = false
+                        )
+                    }
+                    Timber.d("Chart Data :%s", this.data.data.toString())
+                    _channel.send(WorkTimeUiEvent.Success)
+                }
+                .suspendOnError {
+                    _channel.send(WorkTimeUiEvent.Failure(this.message()))
+                    Timber.d("Chart Data Failure: %s", this.message())
+                    Log.d("ShiftTest", this.message())
+                }
+                .suspendOnException {
+                    _channel.send(WorkTimeUiEvent.Failure(handleException(this.throwable).showMessage()))
+                    Timber.d(
+                        "Chart Data Exception: %s",
+                        this.message()
+                    )
+                    Log.d("ShiftTest", handleException(this.throwable).showMessage())
 
-               }
+                }
         }
     }
 
     private fun getTotalWorkTime() {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
             _state.update {
                 it.copy(
                     isChartDataLoading = true
@@ -132,9 +143,9 @@ class WorkTimeViewModel @Inject constructor(
             }
         }
     }
-    private fun getAttendanceRecord () {
+
+    private fun getAttendanceRecord() {
         viewModelScope.launch {
-            val token = localUserManager.readAccessToken()
 
             summaryUseCase.getAttendanceRecord(token, _state.value.startTime, _state.value.endTime)
                 .suspendOnSuccess {

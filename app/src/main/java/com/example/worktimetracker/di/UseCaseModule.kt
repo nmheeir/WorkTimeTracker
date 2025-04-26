@@ -1,7 +1,5 @@
 package com.example.worktimetracker.di
 
-import android.app.Application
-import com.example.worktimetracker.data.local.LocalUserManagerImpl
 import com.example.worktimetracker.data.remote.repo.AuthRepository
 import com.example.worktimetracker.data.remote.repo.CheckRepository
 import com.example.worktimetracker.data.remote.repo.LogRepository
@@ -11,7 +9,6 @@ import com.example.worktimetracker.data.remote.repo.ShiftRepository
 import com.example.worktimetracker.data.remote.repo.SummaryRepository
 import com.example.worktimetracker.data.remote.repo.TaskRepository
 import com.example.worktimetracker.data.remote.repo.UserRepository
-import com.example.worktimetracker.domain.manager.LocalUserManager
 import com.example.worktimetracker.domain.use_case.GetReportsByTaskId
 import com.example.worktimetracker.domain.use_case.GetTaskDetail
 import com.example.worktimetracker.domain.use_case.MyProjects
@@ -20,9 +17,6 @@ import com.example.worktimetracker.domain.use_case.ProjectUseCase
 import com.example.worktimetracker.domain.use_case.ReportUseCase
 import com.example.worktimetracker.domain.use_case.TaskUseCase
 import com.example.worktimetracker.domain.use_case.UploadReportFile
-import com.example.worktimetracker.domain.use_case.app_entry.AppEntryUseCase
-import com.example.worktimetracker.domain.use_case.app_entry.ReadAppEntry
-import com.example.worktimetracker.domain.use_case.app_entry.SaveAppEntry
 import com.example.worktimetracker.domain.use_case.auth.AuthUseCase
 import com.example.worktimetracker.domain.use_case.auth.Login
 import com.example.worktimetracker.domain.use_case.auth.RequestPasswordReset
@@ -54,21 +48,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class UseCaseModule {
-
-    @Provides
-    @Singleton
-    fun provideLocalUserManager(application: Application): LocalUserManager {
-        return LocalUserManagerImpl(application)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAppEntryUseCase(localUserManager: LocalUserManager): AppEntryUseCase {
-        return AppEntryUseCase(
-            saveAppEntry = SaveAppEntry(localUserManager),
-            readAppEntry = ReadAppEntry(localUserManager),
-        )
-    }
 
     @Provides
     @Singleton

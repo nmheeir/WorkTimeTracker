@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.worktimetracker.core.ext.format3
 import com.example.worktimetracker.core.presentation.padding
 import com.example.worktimetracker.data.remote.response.Shift
+import com.example.worktimetracker.ui.theme.AppTheme
 
 @Composable
 fun ShiftCardItem(
@@ -25,6 +28,9 @@ fun ShiftCardItem(
     Card(
         shape = MaterialTheme.shapes.small,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
+        colors = CardDefaults.cardColors(
+            containerColor = AppTheme.colors.regularSurface
+        ),
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -62,10 +68,12 @@ private fun ShiftTimeSection(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = label1
+                text = label1,
+                color = Color.White
             )
             Text(
-                text = value1
+                text = value1,
+                color = Color.White
             )
         }
 
@@ -75,10 +83,12 @@ private fun ShiftTimeSection(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = label2
+                text = label2,
+                color = Color.White
             )
             Text(
-                text = value2
+                text = value2,
+                color = Color.White
             )
         }
     }

@@ -39,6 +39,7 @@ import com.example.worktimetracker.R
 import com.example.worktimetracker.data.remote.response.Shift
 import com.example.worktimetracker.helper.ISOFormater
 import com.example.worktimetracker.ui.component.Calendar.CalendarView
+import com.example.worktimetracker.ui.component.common.NoDataWarning
 import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.ShiftViewModel
 
@@ -93,10 +94,12 @@ fun ShiftScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            state.shiftMap[state.datePicked]?.forEach { shift ->
-
-                ShiftCardForShiftScreen(shift) {}
-
+            if (state.shiftMap[state.datePicked].isNullOrEmpty()) {
+                NoDataWarning()
+            } else {
+                state.shiftMap[state.datePicked]?.forEach { shift ->
+                    ShiftCardForShiftScreen(shift) {}
+                }
             }
         }
     }
