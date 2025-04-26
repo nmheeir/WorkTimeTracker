@@ -4,8 +4,11 @@ import com.example.worktimetracker.data.remote.RemoteDataSource
 import com.example.worktimetracker.data.remote.api.AuthApi
 import com.example.worktimetracker.data.remote.api.CheckApi
 import com.example.worktimetracker.data.remote.api.LogApi
+import com.example.worktimetracker.data.remote.api.ProjectApi
+import com.example.worktimetracker.data.remote.api.ReportApi
 import com.example.worktimetracker.data.remote.api.ShiftApi
 import com.example.worktimetracker.data.remote.api.SummaryApi
+import com.example.worktimetracker.data.remote.api.TaskApi
 import com.example.worktimetracker.data.remote.api.UserApi
 import com.example.worktimetracker.data.remote.repo.impl.AuthRepositoryImpl
 import com.example.worktimetracker.data.remote.repo.impl.CheckRepositoryImpl
@@ -16,9 +19,15 @@ import com.example.worktimetracker.data.remote.repo.impl.UserRepositoryImpl
 import com.example.worktimetracker.data.remote.repo.AuthRepository
 import com.example.worktimetracker.data.remote.repo.CheckRepository
 import com.example.worktimetracker.data.remote.repo.LogRepository
+import com.example.worktimetracker.data.remote.repo.ProjectRepository
+import com.example.worktimetracker.data.remote.repo.ReportRepository
 import com.example.worktimetracker.data.remote.repo.ShiftRepository
 import com.example.worktimetracker.data.remote.repo.SummaryRepository
+import com.example.worktimetracker.data.remote.repo.TaskRepository
 import com.example.worktimetracker.data.remote.repo.UserRepository
+import com.example.worktimetracker.data.remote.repo.impl.ProjectRepositoryImpl
+import com.example.worktimetracker.data.remote.repo.impl.ReportRepositoryImpl
+import com.example.worktimetracker.data.remote.repo.impl.TaskRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -122,5 +131,45 @@ object AppModule {
         summaryApi: SummaryApi
     ): SummaryRepository {
         return SummaryRepositoryImpl(summaryApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProjectApi(
+        remoteDataSource: RemoteDataSource
+    ): ProjectApi {
+        return remoteDataSource.buildApi(ProjectApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProjectRepo(projectApi: ProjectApi): ProjectRepository {
+        return ProjectRepositoryImpl(projectApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTaskApi(
+        remoteDataSource: RemoteDataSource
+    ): TaskApi {
+        return remoteDataSource.buildApi(TaskApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTaskRepository(taskApi: TaskApi): TaskRepository {
+        return TaskRepositoryImpl(taskApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReportApi(remoteDataSource: RemoteDataSource): ReportApi {
+        return remoteDataSource.buildApi(ReportApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReportRepository(reportApi: ReportApi): ReportRepository {
+        return ReportRepositoryImpl(reportApi)
     }
 }

@@ -3,22 +3,27 @@ package com.example.worktimetracker.ui.navigation
 import androidx.compose.material3.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.example.worktimetracker.ui.screens.NotificationScreen
 import com.example.worktimetracker.ui.screens.auth.LoginScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.ForgotPasswordScreen
 import com.example.worktimetracker.ui.screens.auth.forgotpw.screen.CreateNewPasswordScreen
 import com.example.worktimetracker.ui.screens.check.checkPage.CheckScreen
-import com.example.worktimetracker.ui.screens.furlough.FurloughScreen
 import com.example.worktimetracker.ui.screens.home.HomeScreen
 import com.example.worktimetracker.ui.screens.log.LogScreen
 import com.example.worktimetracker.ui.screens.onboarding.OnboardingScreen
+import com.example.worktimetracker.ui.screens.profile.ProfileScreen
 import com.example.worktimetracker.ui.screens.profile.setting.SettingScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.PrivacyPolicyScreen
 import com.example.worktimetracker.ui.screens.profile.term_condition.TermConditionScreen
+import com.example.worktimetracker.ui.screens.report.TaskReportScreen
 import com.example.worktimetracker.ui.screens.salary.SalaryScreen
 import com.example.worktimetracker.ui.screens.shift.ShiftScreen
+import com.example.worktimetracker.ui.screens.task.TaskDetailsScreen
+import com.example.worktimetracker.ui.screens.task.TaskScreen
 import com.example.worktimetracker.ui.screens.worktime.WorkTimeScreen
 
 fun NavGraphBuilder.navigationBuilder(
@@ -90,7 +95,7 @@ fun NavGraphBuilder.navigationBuilder(
     composable(
         route = Screens.ProfileScreen.route
     ) {
-//        ProfileScreen() { }
+        ProfileScreen(navController)
     }
 
     composable(
@@ -155,5 +160,33 @@ fun NavGraphBuilder.navigationBuilder(
 
     composable(route = Screens.ApplyLeaveScreen.route) {
 
+    }
+
+    composable(
+        route = Screens.TaskScreen.route
+    ) {
+        TaskScreen(navController)
+    }
+
+    composable(
+        route = "task_detail/{id}",
+        arguments = listOf(
+            navArgument("id") {
+                type = NavType.IntType
+            }
+        )
+    ) {
+        TaskDetailsScreen(navController)
+    }
+
+    composable(
+        route = "task_report/{taskId}",
+        arguments = listOf(
+            navArgument("taskId") {
+                type = NavType.IntType
+            }
+        )
+    ) {
+        TaskReportScreen(navController)
     }
 }

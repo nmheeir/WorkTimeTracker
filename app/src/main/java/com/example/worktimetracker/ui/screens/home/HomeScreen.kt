@@ -64,6 +64,7 @@ import com.example.worktimetracker.ui.navigation.Screens
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItem
 import com.example.worktimetracker.ui.screens.home.components.HomeOptionItemData
 import com.example.worktimetracker.ui.screens.home.components.listHomeOption
+import com.example.worktimetracker.ui.theme.AppTheme
 import com.example.worktimetracker.ui.viewmodels.HomeViewModel
 import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
 import kotlinx.datetime.LocalDate
@@ -88,6 +89,7 @@ fun HomeScreen(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .fillMaxSize()
+            .background(AppTheme.colors.onBackground)
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
@@ -234,7 +236,7 @@ private fun HomeTopBar(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         modifier = modifier
             .clickable {
-                onNavigate(Screens.MyProfileScreen)
+                onNavigate(Screens.ProfileScreen)
             }
             .padding(MaterialTheme.padding.mediumSmall)
     ) {

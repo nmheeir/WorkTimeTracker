@@ -42,4 +42,8 @@ sealed class Screens(
 
     //Notification
     data object Notification : Screens("Notification")
+
+    //Task
+    data object TaskScreen : Screens("Task")
+    data object TaskDetailScreen : Screens("TaskDetail")
 }

@@ -115,7 +115,10 @@ val listHomeOption = listOf(
         icon = R.drawable.ic_calendar,
         color = R.color.green
     ),
-
-
-
+    HomeOptionItemData(
+        screens = Screens.TaskScreen,
+        title = "Task",
+        icon = R.drawable.ic_date_range,
+        color = R.color.orange
+    )
 )
