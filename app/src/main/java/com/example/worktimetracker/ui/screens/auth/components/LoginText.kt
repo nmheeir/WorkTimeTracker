@@ -1,5 +1,6 @@
 package com.example.worktimetracker.ui.screens.auth.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,6 +80,7 @@ fun LoginPasswordTextField(
     modifier: Modifier = Modifier
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
+    Log.d("TAG", "LoginPasswordTextField: Recompose")
     Column(
         modifier = modifier
     ) {

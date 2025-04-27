@@ -89,7 +89,6 @@ class LoginViewModel @Inject constructor(
                                )
                            )
                        }
-
                        _channel.send(LoginUiEvent.Success)
                    }
                }
@@ -131,8 +130,6 @@ class LoginViewModel @Inject constructor(
                .suspendOnException {
                    _channel.send(LoginUiEvent.Failure(handleException(this.throwable).showMessage()))
                }
-
-
        }
     }
 }

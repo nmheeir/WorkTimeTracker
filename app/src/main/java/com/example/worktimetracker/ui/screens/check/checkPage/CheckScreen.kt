@@ -175,7 +175,7 @@ fun CheckScreen(
                 Text(
                     text = stringResource(R.string.your_shift),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Color.White,
+                    color = AppTheme.colors.onBackground,
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
