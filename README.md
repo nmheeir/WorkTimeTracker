@@ -15,11 +15,24 @@
 ---
 
 ## 🎥 **Application Showcase**
-
-<div align="center">
-  
-
-</div>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://drive.google.com/file/d/1Cr6DU6YwGncMenVkB-NhcFxTnCzQ4D2b/view?usp=drive_link">
+        <img src="./thumbnail.png" alt="Demo Video 1" width="300"/>
+      </a>
+      <br/>
+      <em>Fig.1: Demo video</em>
+    </td>
+    <td align="center">
+      <a href="https://drive.google.com/file/d/1ZjqmlPorcSlQTE2zzXUn6kDr0IzC6be2/view?usp=drive_link">
+        <img src="./thumbnail2.png" alt="Demo Video 2" width="300"/>
+      </a>
+      <br/>
+      <em>Fig.2: Chatbox</em>
+    </td>
+  </tr>
+</table>
 
 ---
 
